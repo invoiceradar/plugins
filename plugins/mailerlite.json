@@ -3,7 +3,7 @@
   "id": "mailerlite",
   "name": "Mailerlite",
   "description": "Mailerlite is an email sending service.",
-  "homepage": "https://dashboard.mailerlite.com/login",
+  "homepage": "https://mailerlite.com",
   "configSchema": {
     "username": {
       "type": "string",
