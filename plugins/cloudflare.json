@@ -1,0 +1,93 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoice-snatcher/plugins/main/schema.json",
+  "id": "cloudflare",
+  "name": "Cloudflare",
+  "description": "Cloudflare is an a global CDN and DNS provider",
+  "homepage": "https://cloudflare.com",
+  "configSchema": {
+    "username": {
+      "type": "string",
+      "title": "Username",
+      "required": false
+    },
+    "password": {
+      "type": "password",
+      "title": "Password",
+      "required": false
+    },
+    "accountId": {
+      "type": "string",
+      "title": "Account ID",
+      "required": true
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://dash.cloudflare.com/login"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[data-testid='header']"
+    },
+    {
+      "action": "checkElementExists",
+      "selector": "[data-testid='user-selector-dropdown-button']"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://dash.cloudflare.com/login"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[name='login-form']"
+    },
+    { "action": "type", "selector": "#email", "value": "{{config.username}}" },
+    {
+      "action": "type",
+      "selector": "#password",
+      "value": "{{config.password}}"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[data-testid='page-account-selector']",
+      "timeout": 120000
+    }
+  ],
+  "getInvoices": [
+    {
+      "action": "navigate",
+      "url": "https://dash.cloudflare.com/{{config.accountId}}/billing"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "tbody tr"
+    },
+    {
+      "action": "extractInvoices",
+      "itemSelector": "tbody tr",
+      "itemFields": {
+        "id": {
+          "selector": "td:nth-child(3) a > span:last-of-type"
+        },
+        "date": {
+          "selector": "td:nth-child(1)"
+        },
+        "amount": {
+          "selector": "td:nth-child(4)"
+        }
+      },
+      "forEach": [
+        {
+          "action": "runJs",
+          "script": "Array.from(document.querySelectorAll('tbody tr td:nth-child(3) a > span:last-of-type')).filter(el=>el.innerText === `{{invoice.id}}`)[0].click()"
+        },
+        {
+          "action": "waitForPdfDownload"
+        }
+      ]
+    }
+  ]
+}
