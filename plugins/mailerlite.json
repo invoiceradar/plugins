@@ -1,0 +1,85 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoice-snatcher/plugins/main/schema.json",
+  "id": "mailerlite",
+  "name": "Mailerlite",
+  "description": "Mailerlite is an email sending service.",
+  "homepage": "https://dashboard.mailerlite.com/login",
+  "configSchema": {
+    "username": {
+      "type": "string",
+      "title": "Username",
+      "required": false
+    },
+    "password": {
+      "type": "password",
+      "title": "Password",
+      "required": false
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://dashboard.mailerlite.com/login"
+    },
+    {
+      "action": "checkElementExists",
+      "selector": "[data-test-id='user-dropdown']"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://dashboard.mailerlite.com/login"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "#email"
+    },
+    { "action": "type", "selector": "#email", "value": "{{config.username}}" },
+    {
+      "action": "type",
+      "selector": "#password",
+      "value": "{{config.password}}"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[data-test-id='user-dropdown']",
+      "timeout": 120000
+    }
+  ],
+  "getInvoices": [
+    {
+      "action": "navigate",
+      "url": "https://dashboard.mailerlite.com/billing/invoices"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "table"
+    },
+    {
+      "action": "extractInvoices",
+      "itemSelector": "tbody tr",
+      "itemFields": {
+        "id": {
+          "selector": "td:nth-child(2) a"
+        },
+        "date": {
+          "selector": "td:nth-child(1)"
+        },
+        "url": {
+          "selector": "td:nth-child(6) a",
+          "attribute": "href"
+        },
+        "amount": {
+          "selector": "td:nth-child(3)"
+        }
+      },
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "{{invoice.url}}"
+        }
+      ]
+    }
+  ]
+}
