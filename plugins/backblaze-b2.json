@@ -3,7 +3,7 @@
   "id": "backblaze-b2",
   "name": "Backblaze B2",
   "description": "Backblaze B2 is a cloud storage service.",
-  "homepage": "https://www.backblaze.com",
+  "homepage": "https://backblaze.com",
   "configSchema": {
     "username": {
       "type": "string",

@@ -3,7 +3,7 @@
   "id": "namecheap",
   "name": "Namecheap",
   "description": "Namecheap is a domain name registrar and web hosting provider.",
-  "homepage": "https://www.namecheap.com/",
+  "homepage": "https://namecheap.com/",
   "configSchema": {
     "username": {
       "type": "string",
