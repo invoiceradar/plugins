@@ -1,0 +1,4618 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "configSchema",
+    "startAuth",
+    "checkAuth",
+    "getInvoices"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "The URL of the JSON schema used to validate the plugin",
+      "title": "JSON Schema"
+    },
+    "id": {
+      "type": "string",
+      "description": "The unique ID of the plugin",
+      "title": "Plugin ID"
+    },
+    "name": {
+      "type": "string",
+      "description": "The unique name of the plugin",
+      "title": "Plugin Name"
+    },
+    "description": {
+      "type": "string",
+      "description": "A short summary describing what the plugin does",
+      "title": "Plugin Description"
+    },
+    "homepage": {
+      "type": "string",
+      "description": "The URL of the service the plugin is for. Used for linking to the service and for the plugin logo.",
+      "title": "Plugin Homepage"
+    },
+    "configSchema": {
+      "type": "object",
+      "required": [],
+      "properties": {},
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "properties": {
+          "required": {
+            "type": "boolean",
+            "description": "Whether or not this property is required for the plugin to function",
+            "title": "Required"
+          },
+          "title": {
+            "type": "string",
+            "description": "The human-readable title of the property",
+            "title": "Title"
+          },
+          "description": {
+            "type": "string",
+            "description": "A brief description of what this property is used for",
+            "title": "Description"
+          },
+          "example": {
+            "type": "string",
+            "description": "An example value for this property",
+            "title": "Example"
+          },
+          "type": {
+            "enum": [
+              "string",
+              "number",
+              "boolean",
+              "password"
+            ],
+            "description": "The type of the property.",
+            "title": "Type"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Defines a single property in the plugin configuration schema",
+        "title": "Configuration Property",
+        "examples": [
+          {
+            "type": "string",
+            "title": "Username",
+            "description": "The username for login",
+            "required": true
+          }
+        ]
+      },
+      "description": "A list of properties that can be configured for the plugin",
+      "title": "Configuration Properties"
+    },
+    "startAuth": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "itemSelector",
+              "itemFields",
+              "forEach"
+            ],
+            "properties": {
+              "action": {
+                "const": "extractInvoices"
+              },
+              "itemSelector": {
+                "type": "string",
+                "description": "The CSS selector to use to find the element",
+                "title": "Selector",
+                "examples": [
+                  "#example"
+                ]
+              },
+              "itemFields": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "date"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "object",
+                    "required": [
+                      "selector"
+                    ],
+                    "properties": {
+                      "attribute": {
+                        "type": "string",
+                        "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                        "title": "Attribute"
+                      },
+                      "transform": {
+                        "type": "string",
+                        "description": "A JavaScript function to transform the value",
+                        "title": "Transform",
+                        "examples": [
+                          "(v) => Number(v.replace('$', ''))"
+                        ]
+                      },
+                      "selector": {
+                        "type": "string",
+                        "description": "The CSS selector to use to find the element",
+                        "title": "Selector",
+                        "examples": [
+                          "#example"
+                        ]
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "date": {
+                    "type": "object",
+                    "required": [
+                      "selector"
+                    ],
+                    "properties": {
+                      "attribute": {
+                        "type": "string",
+                        "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                        "title": "Attribute"
+                      },
+                      "transform": {
+                        "type": "string",
+                        "description": "A JavaScript function to transform the value",
+                        "title": "Transform",
+                        "examples": [
+                          "(v) => Number(v.replace('$', ''))"
+                        ]
+                      },
+                      "selector": {
+                        "type": "string",
+                        "description": "The CSS selector to use to find the element",
+                        "title": "Selector",
+                        "examples": [
+                          "#example"
+                        ]
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "additionalProperties": {
+                  "type": "object",
+                  "required": [
+                    "selector"
+                  ],
+                  "properties": {
+                    "attribute": {
+                      "type": "string",
+                      "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                      "title": "Attribute"
+                    },
+                    "transform": {
+                      "type": "string",
+                      "description": "A JavaScript function to transform the value",
+                      "title": "Transform",
+                      "examples": [
+                        "(v) => Number(v.replace('$', ''))"
+                      ]
+                    },
+                    "selector": {
+                      "type": "string",
+                      "description": "The CSS selector to use to find the element",
+                      "title": "Selector",
+                      "examples": [
+                        "#example"
+                      ]
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "forEach": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "selector"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "waitForElement"
+                        },
+                        "selector": {
+                          "type": "string",
+                          "description": "The CSS selector to use to find the element",
+                          "title": "Selector",
+                          "examples": [
+                            "#example"
+                          ]
+                        },
+                        "timeout": {
+                          "type": "number",
+                          "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                          "title": "Timeout",
+                          "examples": [
+                            15000
+                          ],
+                          "default": 15000
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Waits for the given selector to appear on the page, optionally with a timeout",
+                      "title": "Wait for Element",
+                      "examples": [
+                        {
+                          "action": "waitForElement",
+                          "selector": "#example",
+                          "timeout": 3000
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "selector",
+                        "value"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "type"
+                        },
+                        "selector": {
+                          "type": "string",
+                          "description": "The CSS selector to use to find the element",
+                          "title": "Selector",
+                          "examples": [
+                            "#example"
+                          ]
+                        },
+                        "value": {
+                          "type": "string",
+                          "description": "a string",
+                          "title": "string"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Types the given text into the element specified by the given selector on the page",
+                      "title": "Type Text",
+                      "examples": [
+                        {
+                          "action": "type",
+                          "selector": "#input",
+                          "text": "Hello World"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "url"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "navigate"
+                        },
+                        "url": {
+                          "type": "string",
+                          "description": "The URL to navigate to",
+                          "title": "URL"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Navigates to the given URL and waits for the page to load",
+                      "title": "Navigate to URL",
+                      "examples": [
+                        {
+                          "action": "navigate",
+                          "url": "https://example.com"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "script"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "runJs"
+                        },
+                        "script": {
+                          "type": "string",
+                          "description": "a string",
+                          "title": "string"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Runs the given JavaScript in the page context",
+                      "title": "Run JavaScript",
+                      "examples": [
+                        {
+                          "action": "runJs",
+                          "script": "console.log(\"Hello World\");"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "selector"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "checkElementExists"
+                        },
+                        "selector": {
+                          "type": "string",
+                          "description": "The CSS selector to use to find the element",
+                          "title": "Selector",
+                          "examples": [
+                            "#example"
+                          ]
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Checks if the given selector exists on the page",
+                      "title": "Check Element Exists",
+                      "examples": [
+                        {
+                          "action": "checkElementExists",
+                          "selector": "#example"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "selector"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "click"
+                        },
+                        "selector": {
+                          "type": "string",
+                          "description": "The CSS selector to use to find the element",
+                          "title": "Selector",
+                          "examples": [
+                            "#example"
+                          ]
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Clicks the element specified by the given selector on the page",
+                      "title": "Click Element",
+                      "examples": [
+                        {
+                          "action": "click",
+                          "selector": "#button"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "waitForPdfDownload"
+                        },
+                        "timeout": {
+                          "type": "number",
+                          "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                          "title": "Timeout",
+                          "examples": [
+                            15000
+                          ],
+                          "default": 15000
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Waits and checks for a PDF download to complete. Timeout defaults to 15s.",
+                      "title": "Wait for PDF Download",
+                      "examples": [
+                        {
+                          "action": "waitForPdfDownload",
+                          "timeout": 10000
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "fields"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "extractInvoice"
+                        },
+                        "fields": {
+                          "type": "object",
+                          "required": [
+                            "id",
+                            "date"
+                          ],
+                          "properties": {
+                            "id": {
+                              "type": "object",
+                              "required": [
+                                "selector"
+                              ],
+                              "properties": {
+                                "selector": {
+                                  "type": "string",
+                                  "description": "The CSS selector to use to find the element",
+                                  "title": "Selector",
+                                  "examples": [
+                                    "#example"
+                                  ]
+                                },
+                                "attribute": {
+                                  "type": "string",
+                                  "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                                  "title": "Attribute"
+                                },
+                                "transform": {
+                                  "type": "string",
+                                  "description": "A JavaScript function to transform the value",
+                                  "title": "Transform",
+                                  "examples": [
+                                    "(v) => Number(v.replace('$', ''))"
+                                  ]
+                                }
+                              },
+                              "additionalProperties": false
+                            },
+                            "date": {
+                              "type": "object",
+                              "required": [
+                                "selector"
+                              ],
+                              "properties": {
+                                "selector": {
+                                  "type": "string",
+                                  "description": "The CSS selector to use to find the element",
+                                  "title": "Selector",
+                                  "examples": [
+                                    "#example"
+                                  ]
+                                },
+                                "attribute": {
+                                  "type": "string",
+                                  "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                                  "title": "Attribute"
+                                },
+                                "transform": {
+                                  "type": "string",
+                                  "description": "A JavaScript function to transform the value",
+                                  "title": "Transform",
+                                  "examples": [
+                                    "(v) => Number(v.replace('$', ''))"
+                                  ]
+                                }
+                              },
+                              "additionalProperties": false
+                            }
+                          },
+                          "additionalProperties": {
+                            "type": "object",
+                            "required": [
+                              "selector"
+                            ],
+                            "properties": {
+                              "attribute": {
+                                "type": "string",
+                                "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                                "title": "Attribute"
+                              },
+                              "transform": {
+                                "type": "string",
+                                "description": "A JavaScript function to transform the value",
+                                "title": "Transform",
+                                "examples": [
+                                  "(v) => Number(v.replace('$', ''))"
+                                ]
+                              },
+                              "selector": {
+                                "type": "string",
+                                "description": "The CSS selector to use to find the element",
+                                "title": "Selector",
+                                "examples": [
+                                  "#example"
+                                ]
+                              }
+                            },
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Extracts an invoice from the page",
+                      "title": "Extract Invoice"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "waitForNavigation"
+                        },
+                        "timeout": {
+                          "type": "number",
+                          "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                          "title": "Timeout",
+                          "examples": [
+                            15000
+                          ],
+                          "default": 15000
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Waits for the page to finish navigating. Timeout defaults to 15s.",
+                      "title": "Wait for Navigation",
+                      "examples": [
+                        {
+                          "action": "waitForNavigation",
+                          "timeout": 10000
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "duration"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "sleep"
+                        },
+                        "duration": {
+                          "type": "number",
+                          "description": "The number of milliseconds to wait for",
+                          "title": "Duration"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Waits for the given amount of time in milliseconds",
+                      "title": "Sleep",
+                      "examples": [
+                        {
+                          "action": "sleep",
+                          "timeout": 10000
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "url"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "downloadPdf"
+                        },
+                        "url": {
+                          "type": "string",
+                          "description": "The URL to download the PDF from",
+                          "title": "URL"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Downloads a PDF from the given URL",
+                      "title": "Download PDF"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "url"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "getInvoiceFromStripeUrl"
+                        },
+                        "url": {
+                          "type": "string",
+                          "description": "The URL of the Stripe invoice",
+                          "title": "Stripe Invoice URL"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Navigates to the given Stripe Invoice URL and extracts the invoice",
+                      "title": "Get Invoice from Stripe URL"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "printPdf"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Prints the current page to a PDF file",
+                      "title": "Print Page as PDF",
+                      "examples": [
+                        {
+                          "action": "printPdf"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "additionalProperties": false,
+            "description": "Extracts a list of invoices from the page, and runs the given steps for each invoice",
+            "title": "Extract Invoices"
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "selector"
+            ],
+            "properties": {
+              "action": {
+                "const": "waitForElement"
+              },
+              "selector": {
+                "type": "string",
+                "description": "The CSS selector to use to find the element",
+                "title": "Selector",
+                "examples": [
+                  "#example"
+                ]
+              },
+              "timeout": {
+                "type": "number",
+                "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                "title": "Timeout",
+                "examples": [
+                  15000
+                ],
+                "default": 15000
+              }
+            },
+            "additionalProperties": false,
+            "description": "Waits for the given selector to appear on the page, optionally with a timeout",
+            "title": "Wait for Element",
+            "examples": [
+              {
+                "action": "waitForElement",
+                "selector": "#example",
+                "timeout": 3000
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "selector",
+              "value"
+            ],
+            "properties": {
+              "action": {
+                "const": "type"
+              },
+              "selector": {
+                "type": "string",
+                "description": "The CSS selector to use to find the element",
+                "title": "Selector",
+                "examples": [
+                  "#example"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "description": "a string",
+                "title": "string"
+              }
+            },
+            "additionalProperties": false,
+            "description": "Types the given text into the element specified by the given selector on the page",
+            "title": "Type Text",
+            "examples": [
+              {
+                "action": "type",
+                "selector": "#input",
+                "text": "Hello World"
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "script",
+              "forEach"
+            ],
+            "properties": {
+              "action": {
+                "const": "getInvoiceList"
+              },
+              "script": {
+                "type": "string",
+                "description": "a string",
+                "title": "string"
+              },
+              "forEach": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "selector"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "waitForElement"
+                        },
+                        "selector": {
+                          "type": "string",
+                          "description": "The CSS selector to use to find the element",
+                          "title": "Selector",
+                          "examples": [
+                            "#example"
+                          ]
+                        },
+                        "timeout": {
+                          "type": "number",
+                          "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                          "title": "Timeout",
+                          "examples": [
+                            15000
+                          ],
+                          "default": 15000
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Waits for the given selector to appear on the page, optionally with a timeout",
+                      "title": "Wait for Element",
+                      "examples": [
+                        {
+                          "action": "waitForElement",
+                          "selector": "#example",
+                          "timeout": 3000
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "selector",
+                        "value"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "type"
+                        },
+                        "selector": {
+                          "type": "string",
+                          "description": "The CSS selector to use to find the element",
+                          "title": "Selector",
+                          "examples": [
+                            "#example"
+                          ]
+                        },
+                        "value": {
+                          "type": "string",
+                          "description": "a string",
+                          "title": "string"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Types the given text into the element specified by the given selector on the page",
+                      "title": "Type Text",
+                      "examples": [
+                        {
+                          "action": "type",
+                          "selector": "#input",
+                          "text": "Hello World"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "url"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "navigate"
+                        },
+                        "url": {
+                          "type": "string",
+                          "description": "The URL to navigate to",
+                          "title": "URL"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Navigates to the given URL and waits for the page to load",
+                      "title": "Navigate to URL",
+                      "examples": [
+                        {
+                          "action": "navigate",
+                          "url": "https://example.com"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "script"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "runJs"
+                        },
+                        "script": {
+                          "type": "string",
+                          "description": "a string",
+                          "title": "string"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Runs the given JavaScript in the page context",
+                      "title": "Run JavaScript",
+                      "examples": [
+                        {
+                          "action": "runJs",
+                          "script": "console.log(\"Hello World\");"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "selector"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "checkElementExists"
+                        },
+                        "selector": {
+                          "type": "string",
+                          "description": "The CSS selector to use to find the element",
+                          "title": "Selector",
+                          "examples": [
+                            "#example"
+                          ]
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Checks if the given selector exists on the page",
+                      "title": "Check Element Exists",
+                      "examples": [
+                        {
+                          "action": "checkElementExists",
+                          "selector": "#example"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "selector"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "click"
+                        },
+                        "selector": {
+                          "type": "string",
+                          "description": "The CSS selector to use to find the element",
+                          "title": "Selector",
+                          "examples": [
+                            "#example"
+                          ]
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Clicks the element specified by the given selector on the page",
+                      "title": "Click Element",
+                      "examples": [
+                        {
+                          "action": "click",
+                          "selector": "#button"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "waitForPdfDownload"
+                        },
+                        "timeout": {
+                          "type": "number",
+                          "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                          "title": "Timeout",
+                          "examples": [
+                            15000
+                          ],
+                          "default": 15000
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Waits and checks for a PDF download to complete. Timeout defaults to 15s.",
+                      "title": "Wait for PDF Download",
+                      "examples": [
+                        {
+                          "action": "waitForPdfDownload",
+                          "timeout": 10000
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "fields"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "extractInvoice"
+                        },
+                        "fields": {
+                          "type": "object",
+                          "required": [
+                            "id",
+                            "date"
+                          ],
+                          "properties": {
+                            "id": {
+                              "type": "object",
+                              "required": [
+                                "selector"
+                              ],
+                              "properties": {
+                                "selector": {
+                                  "type": "string",
+                                  "description": "The CSS selector to use to find the element",
+                                  "title": "Selector",
+                                  "examples": [
+                                    "#example"
+                                  ]
+                                },
+                                "attribute": {
+                                  "type": "string",
+                                  "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                                  "title": "Attribute"
+                                },
+                                "transform": {
+                                  "type": "string",
+                                  "description": "A JavaScript function to transform the value",
+                                  "title": "Transform",
+                                  "examples": [
+                                    "(v) => Number(v.replace('$', ''))"
+                                  ]
+                                }
+                              },
+                              "additionalProperties": false
+                            },
+                            "date": {
+                              "type": "object",
+                              "required": [
+                                "selector"
+                              ],
+                              "properties": {
+                                "selector": {
+                                  "type": "string",
+                                  "description": "The CSS selector to use to find the element",
+                                  "title": "Selector",
+                                  "examples": [
+                                    "#example"
+                                  ]
+                                },
+                                "attribute": {
+                                  "type": "string",
+                                  "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                                  "title": "Attribute"
+                                },
+                                "transform": {
+                                  "type": "string",
+                                  "description": "A JavaScript function to transform the value",
+                                  "title": "Transform",
+                                  "examples": [
+                                    "(v) => Number(v.replace('$', ''))"
+                                  ]
+                                }
+                              },
+                              "additionalProperties": false
+                            }
+                          },
+                          "additionalProperties": {
+                            "type": "object",
+                            "required": [
+                              "selector"
+                            ],
+                            "properties": {
+                              "attribute": {
+                                "type": "string",
+                                "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                                "title": "Attribute"
+                              },
+                              "transform": {
+                                "type": "string",
+                                "description": "A JavaScript function to transform the value",
+                                "title": "Transform",
+                                "examples": [
+                                  "(v) => Number(v.replace('$', ''))"
+                                ]
+                              },
+                              "selector": {
+                                "type": "string",
+                                "description": "The CSS selector to use to find the element",
+                                "title": "Selector",
+                                "examples": [
+                                  "#example"
+                                ]
+                              }
+                            },
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Extracts an invoice from the page",
+                      "title": "Extract Invoice"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "waitForNavigation"
+                        },
+                        "timeout": {
+                          "type": "number",
+                          "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                          "title": "Timeout",
+                          "examples": [
+                            15000
+                          ],
+                          "default": 15000
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Waits for the page to finish navigating. Timeout defaults to 15s.",
+                      "title": "Wait for Navigation",
+                      "examples": [
+                        {
+                          "action": "waitForNavigation",
+                          "timeout": 10000
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "duration"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "sleep"
+                        },
+                        "duration": {
+                          "type": "number",
+                          "description": "The number of milliseconds to wait for",
+                          "title": "Duration"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Waits for the given amount of time in milliseconds",
+                      "title": "Sleep",
+                      "examples": [
+                        {
+                          "action": "sleep",
+                          "timeout": 10000
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "url"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "downloadPdf"
+                        },
+                        "url": {
+                          "type": "string",
+                          "description": "The URL to download the PDF from",
+                          "title": "URL"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Downloads a PDF from the given URL",
+                      "title": "Download PDF"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "url"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "getInvoiceFromStripeUrl"
+                        },
+                        "url": {
+                          "type": "string",
+                          "description": "The URL of the Stripe invoice",
+                          "title": "Stripe Invoice URL"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Navigates to the given Stripe Invoice URL and extracts the invoice",
+                      "title": "Get Invoice from Stripe URL"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "printPdf"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Prints the current page to a PDF file",
+                      "title": "Print Page as PDF",
+                      "examples": [
+                        {
+                          "action": "printPdf"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "description": "Steps to run for each invoice",
+                "title": "For Each Invoice"
+              }
+            },
+            "additionalProperties": false,
+            "description": "Gets a list of invoices from the given script",
+            "title": "Get Invoice List",
+            "examples": [
+              {
+                "action": "getInvoiceList",
+                "script": "\n        const invoices = []\n        for (let i = 0; i < 10; i++) {\n          invoices.push({\n            id: i.toString(),\n            date: new Date().toISOString()\n          })\n        }\n        return invoices\n      "
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "url"
+            ],
+            "properties": {
+              "action": {
+                "const": "navigate"
+              },
+              "url": {
+                "type": "string",
+                "description": "The URL to navigate to",
+                "title": "URL"
+              }
+            },
+            "additionalProperties": false,
+            "description": "Navigates to the given URL and waits for the page to load",
+            "title": "Navigate to URL",
+            "examples": [
+              {
+                "action": "navigate",
+                "url": "https://example.com"
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "script"
+            ],
+            "properties": {
+              "action": {
+                "const": "runJs"
+              },
+              "script": {
+                "type": "string",
+                "description": "a string",
+                "title": "string"
+              }
+            },
+            "additionalProperties": false,
+            "description": "Runs the given JavaScript in the page context",
+            "title": "Run JavaScript",
+            "examples": [
+              {
+                "action": "runJs",
+                "script": "console.log(\"Hello World\");"
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "selector"
+            ],
+            "properties": {
+              "action": {
+                "const": "checkElementExists"
+              },
+              "selector": {
+                "type": "string",
+                "description": "The CSS selector to use to find the element",
+                "title": "Selector",
+                "examples": [
+                  "#example"
+                ]
+              }
+            },
+            "additionalProperties": false,
+            "description": "Checks if the given selector exists on the page",
+            "title": "Check Element Exists",
+            "examples": [
+              {
+                "action": "checkElementExists",
+                "selector": "#example"
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "selector"
+            ],
+            "properties": {
+              "action": {
+                "const": "click"
+              },
+              "selector": {
+                "type": "string",
+                "description": "The CSS selector to use to find the element",
+                "title": "Selector",
+                "examples": [
+                  "#example"
+                ]
+              }
+            },
+            "additionalProperties": false,
+            "description": "Clicks the element specified by the given selector on the page",
+            "title": "Click Element",
+            "examples": [
+              {
+                "action": "click",
+                "selector": "#button"
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "required": [
+              "action"
+            ],
+            "properties": {
+              "action": {
+                "const": "waitForPdfDownload"
+              },
+              "timeout": {
+                "type": "number",
+                "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                "title": "Timeout",
+                "examples": [
+                  15000
+                ],
+                "default": 15000
+              }
+            },
+            "additionalProperties": false,
+            "description": "Waits and checks for a PDF download to complete. Timeout defaults to 15s.",
+            "title": "Wait for PDF Download",
+            "examples": [
+              {
+                "action": "waitForPdfDownload",
+                "timeout": 10000
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "fields"
+            ],
+            "properties": {
+              "action": {
+                "const": "extractInvoice"
+              },
+              "fields": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "date"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "object",
+                    "required": [
+                      "selector"
+                    ],
+                    "properties": {
+                      "selector": {
+                        "type": "string",
+                        "description": "The CSS selector to use to find the element",
+                        "title": "Selector",
+                        "examples": [
+                          "#example"
+                        ]
+                      },
+                      "attribute": {
+                        "type": "string",
+                        "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                        "title": "Attribute"
+                      },
+                      "transform": {
+                        "type": "string",
+                        "description": "A JavaScript function to transform the value",
+                        "title": "Transform",
+                        "examples": [
+                          "(v) => Number(v.replace('$', ''))"
+                        ]
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "date": {
+                    "type": "object",
+                    "required": [
+                      "selector"
+                    ],
+                    "properties": {
+                      "selector": {
+                        "type": "string",
+                        "description": "The CSS selector to use to find the element",
+                        "title": "Selector",
+                        "examples": [
+                          "#example"
+                        ]
+                      },
+                      "attribute": {
+                        "type": "string",
+                        "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                        "title": "Attribute"
+                      },
+                      "transform": {
+                        "type": "string",
+                        "description": "A JavaScript function to transform the value",
+                        "title": "Transform",
+                        "examples": [
+                          "(v) => Number(v.replace('$', ''))"
+                        ]
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "additionalProperties": {
+                  "type": "object",
+                  "required": [
+                    "selector"
+                  ],
+                  "properties": {
+                    "attribute": {
+                      "type": "string",
+                      "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                      "title": "Attribute"
+                    },
+                    "transform": {
+                      "type": "string",
+                      "description": "A JavaScript function to transform the value",
+                      "title": "Transform",
+                      "examples": [
+                        "(v) => Number(v.replace('$', ''))"
+                      ]
+                    },
+                    "selector": {
+                      "type": "string",
+                      "description": "The CSS selector to use to find the element",
+                      "title": "Selector",
+                      "examples": [
+                        "#example"
+                      ]
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            },
+            "additionalProperties": false,
+            "description": "Extracts an invoice from the page",
+            "title": "Extract Invoice"
+          },
+          {
+            "type": "object",
+            "required": [
+              "action"
+            ],
+            "properties": {
+              "action": {
+                "const": "waitForNavigation"
+              },
+              "timeout": {
+                "type": "number",
+                "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                "title": "Timeout",
+                "examples": [
+                  15000
+                ],
+                "default": 15000
+              }
+            },
+            "additionalProperties": false,
+            "description": "Waits for the page to finish navigating. Timeout defaults to 15s.",
+            "title": "Wait for Navigation",
+            "examples": [
+              {
+                "action": "waitForNavigation",
+                "timeout": 10000
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "duration"
+            ],
+            "properties": {
+              "action": {
+                "const": "sleep"
+              },
+              "duration": {
+                "type": "number",
+                "description": "The number of milliseconds to wait for",
+                "title": "Duration"
+              }
+            },
+            "additionalProperties": false,
+            "description": "Waits for the given amount of time in milliseconds",
+            "title": "Sleep",
+            "examples": [
+              {
+                "action": "sleep",
+                "timeout": 10000
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "url"
+            ],
+            "properties": {
+              "action": {
+                "const": "downloadPdf"
+              },
+              "url": {
+                "type": "string",
+                "description": "The URL to download the PDF from",
+                "title": "URL"
+              }
+            },
+            "additionalProperties": false,
+            "description": "Downloads a PDF from the given URL",
+            "title": "Download PDF"
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "url"
+            ],
+            "properties": {
+              "action": {
+                "const": "getInvoiceFromStripeUrl"
+              },
+              "url": {
+                "type": "string",
+                "description": "The URL of the Stripe invoice",
+                "title": "Stripe Invoice URL"
+              }
+            },
+            "additionalProperties": false,
+            "description": "Navigates to the given Stripe Invoice URL and extracts the invoice",
+            "title": "Get Invoice from Stripe URL"
+          },
+          {
+            "type": "object",
+            "required": [
+              "action"
+            ],
+            "properties": {
+              "action": {
+                "const": "printPdf"
+              }
+            },
+            "additionalProperties": false,
+            "description": "Prints the current page to a PDF file",
+            "title": "Print Page as PDF",
+            "examples": [
+              {
+                "action": "printPdf"
+              }
+            ]
+          }
+        ]
+      },
+      "description": "Steps to authenticate the user",
+      "title": "Authentication"
+    },
+    "checkAuth": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "itemSelector",
+              "itemFields",
+              "forEach"
+            ],
+            "properties": {
+              "action": {
+                "const": "extractInvoices"
+              },
+              "itemSelector": {
+                "type": "string",
+                "description": "The CSS selector to use to find the element",
+                "title": "Selector",
+                "examples": [
+                  "#example"
+                ]
+              },
+              "itemFields": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "date"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "object",
+                    "required": [
+                      "selector"
+                    ],
+                    "properties": {
+                      "attribute": {
+                        "type": "string",
+                        "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                        "title": "Attribute"
+                      },
+                      "transform": {
+                        "type": "string",
+                        "description": "A JavaScript function to transform the value",
+                        "title": "Transform",
+                        "examples": [
+                          "(v) => Number(v.replace('$', ''))"
+                        ]
+                      },
+                      "selector": {
+                        "type": "string",
+                        "description": "The CSS selector to use to find the element",
+                        "title": "Selector",
+                        "examples": [
+                          "#example"
+                        ]
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "date": {
+                    "type": "object",
+                    "required": [
+                      "selector"
+                    ],
+                    "properties": {
+                      "attribute": {
+                        "type": "string",
+                        "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                        "title": "Attribute"
+                      },
+                      "transform": {
+                        "type": "string",
+                        "description": "A JavaScript function to transform the value",
+                        "title": "Transform",
+                        "examples": [
+                          "(v) => Number(v.replace('$', ''))"
+                        ]
+                      },
+                      "selector": {
+                        "type": "string",
+                        "description": "The CSS selector to use to find the element",
+                        "title": "Selector",
+                        "examples": [
+                          "#example"
+                        ]
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "additionalProperties": {
+                  "type": "object",
+                  "required": [
+                    "selector"
+                  ],
+                  "properties": {
+                    "attribute": {
+                      "type": "string",
+                      "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                      "title": "Attribute"
+                    },
+                    "transform": {
+                      "type": "string",
+                      "description": "A JavaScript function to transform the value",
+                      "title": "Transform",
+                      "examples": [
+                        "(v) => Number(v.replace('$', ''))"
+                      ]
+                    },
+                    "selector": {
+                      "type": "string",
+                      "description": "The CSS selector to use to find the element",
+                      "title": "Selector",
+                      "examples": [
+                        "#example"
+                      ]
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "forEach": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "selector"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "waitForElement"
+                        },
+                        "selector": {
+                          "type": "string",
+                          "description": "The CSS selector to use to find the element",
+                          "title": "Selector",
+                          "examples": [
+                            "#example"
+                          ]
+                        },
+                        "timeout": {
+                          "type": "number",
+                          "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                          "title": "Timeout",
+                          "examples": [
+                            15000
+                          ],
+                          "default": 15000
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Waits for the given selector to appear on the page, optionally with a timeout",
+                      "title": "Wait for Element",
+                      "examples": [
+                        {
+                          "action": "waitForElement",
+                          "selector": "#example",
+                          "timeout": 3000
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "selector",
+                        "value"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "type"
+                        },
+                        "selector": {
+                          "type": "string",
+                          "description": "The CSS selector to use to find the element",
+                          "title": "Selector",
+                          "examples": [
+                            "#example"
+                          ]
+                        },
+                        "value": {
+                          "type": "string",
+                          "description": "a string",
+                          "title": "string"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Types the given text into the element specified by the given selector on the page",
+                      "title": "Type Text",
+                      "examples": [
+                        {
+                          "action": "type",
+                          "selector": "#input",
+                          "text": "Hello World"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "url"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "navigate"
+                        },
+                        "url": {
+                          "type": "string",
+                          "description": "The URL to navigate to",
+                          "title": "URL"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Navigates to the given URL and waits for the page to load",
+                      "title": "Navigate to URL",
+                      "examples": [
+                        {
+                          "action": "navigate",
+                          "url": "https://example.com"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "script"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "runJs"
+                        },
+                        "script": {
+                          "type": "string",
+                          "description": "a string",
+                          "title": "string"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Runs the given JavaScript in the page context",
+                      "title": "Run JavaScript",
+                      "examples": [
+                        {
+                          "action": "runJs",
+                          "script": "console.log(\"Hello World\");"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "selector"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "checkElementExists"
+                        },
+                        "selector": {
+                          "type": "string",
+                          "description": "The CSS selector to use to find the element",
+                          "title": "Selector",
+                          "examples": [
+                            "#example"
+                          ]
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Checks if the given selector exists on the page",
+                      "title": "Check Element Exists",
+                      "examples": [
+                        {
+                          "action": "checkElementExists",
+                          "selector": "#example"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "selector"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "click"
+                        },
+                        "selector": {
+                          "type": "string",
+                          "description": "The CSS selector to use to find the element",
+                          "title": "Selector",
+                          "examples": [
+                            "#example"
+                          ]
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Clicks the element specified by the given selector on the page",
+                      "title": "Click Element",
+                      "examples": [
+                        {
+                          "action": "click",
+                          "selector": "#button"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "waitForPdfDownload"
+                        },
+                        "timeout": {
+                          "type": "number",
+                          "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                          "title": "Timeout",
+                          "examples": [
+                            15000
+                          ],
+                          "default": 15000
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Waits and checks for a PDF download to complete. Timeout defaults to 15s.",
+                      "title": "Wait for PDF Download",
+                      "examples": [
+                        {
+                          "action": "waitForPdfDownload",
+                          "timeout": 10000
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "fields"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "extractInvoice"
+                        },
+                        "fields": {
+                          "type": "object",
+                          "required": [
+                            "id",
+                            "date"
+                          ],
+                          "properties": {
+                            "id": {
+                              "type": "object",
+                              "required": [
+                                "selector"
+                              ],
+                              "properties": {
+                                "selector": {
+                                  "type": "string",
+                                  "description": "The CSS selector to use to find the element",
+                                  "title": "Selector",
+                                  "examples": [
+                                    "#example"
+                                  ]
+                                },
+                                "attribute": {
+                                  "type": "string",
+                                  "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                                  "title": "Attribute"
+                                },
+                                "transform": {
+                                  "type": "string",
+                                  "description": "A JavaScript function to transform the value",
+                                  "title": "Transform",
+                                  "examples": [
+                                    "(v) => Number(v.replace('$', ''))"
+                                  ]
+                                }
+                              },
+                              "additionalProperties": false
+                            },
+                            "date": {
+                              "type": "object",
+                              "required": [
+                                "selector"
+                              ],
+                              "properties": {
+                                "selector": {
+                                  "type": "string",
+                                  "description": "The CSS selector to use to find the element",
+                                  "title": "Selector",
+                                  "examples": [
+                                    "#example"
+                                  ]
+                                },
+                                "attribute": {
+                                  "type": "string",
+                                  "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                                  "title": "Attribute"
+                                },
+                                "transform": {
+                                  "type": "string",
+                                  "description": "A JavaScript function to transform the value",
+                                  "title": "Transform",
+                                  "examples": [
+                                    "(v) => Number(v.replace('$', ''))"
+                                  ]
+                                }
+                              },
+                              "additionalProperties": false
+                            }
+                          },
+                          "additionalProperties": {
+                            "type": "object",
+                            "required": [
+                              "selector"
+                            ],
+                            "properties": {
+                              "attribute": {
+                                "type": "string",
+                                "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                                "title": "Attribute"
+                              },
+                              "transform": {
+                                "type": "string",
+                                "description": "A JavaScript function to transform the value",
+                                "title": "Transform",
+                                "examples": [
+                                  "(v) => Number(v.replace('$', ''))"
+                                ]
+                              },
+                              "selector": {
+                                "type": "string",
+                                "description": "The CSS selector to use to find the element",
+                                "title": "Selector",
+                                "examples": [
+                                  "#example"
+                                ]
+                              }
+                            },
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Extracts an invoice from the page",
+                      "title": "Extract Invoice"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "waitForNavigation"
+                        },
+                        "timeout": {
+                          "type": "number",
+                          "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                          "title": "Timeout",
+                          "examples": [
+                            15000
+                          ],
+                          "default": 15000
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Waits for the page to finish navigating. Timeout defaults to 15s.",
+                      "title": "Wait for Navigation",
+                      "examples": [
+                        {
+                          "action": "waitForNavigation",
+                          "timeout": 10000
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "duration"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "sleep"
+                        },
+                        "duration": {
+                          "type": "number",
+                          "description": "The number of milliseconds to wait for",
+                          "title": "Duration"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Waits for the given amount of time in milliseconds",
+                      "title": "Sleep",
+                      "examples": [
+                        {
+                          "action": "sleep",
+                          "timeout": 10000
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "url"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "downloadPdf"
+                        },
+                        "url": {
+                          "type": "string",
+                          "description": "The URL to download the PDF from",
+                          "title": "URL"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Downloads a PDF from the given URL",
+                      "title": "Download PDF"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "url"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "getInvoiceFromStripeUrl"
+                        },
+                        "url": {
+                          "type": "string",
+                          "description": "The URL of the Stripe invoice",
+                          "title": "Stripe Invoice URL"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Navigates to the given Stripe Invoice URL and extracts the invoice",
+                      "title": "Get Invoice from Stripe URL"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "printPdf"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Prints the current page to a PDF file",
+                      "title": "Print Page as PDF",
+                      "examples": [
+                        {
+                          "action": "printPdf"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "additionalProperties": false,
+            "description": "Extracts a list of invoices from the page, and runs the given steps for each invoice",
+            "title": "Extract Invoices"
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "selector"
+            ],
+            "properties": {
+              "action": {
+                "const": "waitForElement"
+              },
+              "selector": {
+                "type": "string",
+                "description": "The CSS selector to use to find the element",
+                "title": "Selector",
+                "examples": [
+                  "#example"
+                ]
+              },
+              "timeout": {
+                "type": "number",
+                "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                "title": "Timeout",
+                "examples": [
+                  15000
+                ],
+                "default": 15000
+              }
+            },
+            "additionalProperties": false,
+            "description": "Waits for the given selector to appear on the page, optionally with a timeout",
+            "title": "Wait for Element",
+            "examples": [
+              {
+                "action": "waitForElement",
+                "selector": "#example",
+                "timeout": 3000
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "selector",
+              "value"
+            ],
+            "properties": {
+              "action": {
+                "const": "type"
+              },
+              "selector": {
+                "type": "string",
+                "description": "The CSS selector to use to find the element",
+                "title": "Selector",
+                "examples": [
+                  "#example"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "description": "a string",
+                "title": "string"
+              }
+            },
+            "additionalProperties": false,
+            "description": "Types the given text into the element specified by the given selector on the page",
+            "title": "Type Text",
+            "examples": [
+              {
+                "action": "type",
+                "selector": "#input",
+                "text": "Hello World"
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "script",
+              "forEach"
+            ],
+            "properties": {
+              "action": {
+                "const": "getInvoiceList"
+              },
+              "script": {
+                "type": "string",
+                "description": "a string",
+                "title": "string"
+              },
+              "forEach": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "selector"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "waitForElement"
+                        },
+                        "selector": {
+                          "type": "string",
+                          "description": "The CSS selector to use to find the element",
+                          "title": "Selector",
+                          "examples": [
+                            "#example"
+                          ]
+                        },
+                        "timeout": {
+                          "type": "number",
+                          "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                          "title": "Timeout",
+                          "examples": [
+                            15000
+                          ],
+                          "default": 15000
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Waits for the given selector to appear on the page, optionally with a timeout",
+                      "title": "Wait for Element",
+                      "examples": [
+                        {
+                          "action": "waitForElement",
+                          "selector": "#example",
+                          "timeout": 3000
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "selector",
+                        "value"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "type"
+                        },
+                        "selector": {
+                          "type": "string",
+                          "description": "The CSS selector to use to find the element",
+                          "title": "Selector",
+                          "examples": [
+                            "#example"
+                          ]
+                        },
+                        "value": {
+                          "type": "string",
+                          "description": "a string",
+                          "title": "string"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Types the given text into the element specified by the given selector on the page",
+                      "title": "Type Text",
+                      "examples": [
+                        {
+                          "action": "type",
+                          "selector": "#input",
+                          "text": "Hello World"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "url"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "navigate"
+                        },
+                        "url": {
+                          "type": "string",
+                          "description": "The URL to navigate to",
+                          "title": "URL"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Navigates to the given URL and waits for the page to load",
+                      "title": "Navigate to URL",
+                      "examples": [
+                        {
+                          "action": "navigate",
+                          "url": "https://example.com"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "script"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "runJs"
+                        },
+                        "script": {
+                          "type": "string",
+                          "description": "a string",
+                          "title": "string"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Runs the given JavaScript in the page context",
+                      "title": "Run JavaScript",
+                      "examples": [
+                        {
+                          "action": "runJs",
+                          "script": "console.log(\"Hello World\");"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "selector"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "checkElementExists"
+                        },
+                        "selector": {
+                          "type": "string",
+                          "description": "The CSS selector to use to find the element",
+                          "title": "Selector",
+                          "examples": [
+                            "#example"
+                          ]
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Checks if the given selector exists on the page",
+                      "title": "Check Element Exists",
+                      "examples": [
+                        {
+                          "action": "checkElementExists",
+                          "selector": "#example"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "selector"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "click"
+                        },
+                        "selector": {
+                          "type": "string",
+                          "description": "The CSS selector to use to find the element",
+                          "title": "Selector",
+                          "examples": [
+                            "#example"
+                          ]
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Clicks the element specified by the given selector on the page",
+                      "title": "Click Element",
+                      "examples": [
+                        {
+                          "action": "click",
+                          "selector": "#button"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "waitForPdfDownload"
+                        },
+                        "timeout": {
+                          "type": "number",
+                          "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                          "title": "Timeout",
+                          "examples": [
+                            15000
+                          ],
+                          "default": 15000
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Waits and checks for a PDF download to complete. Timeout defaults to 15s.",
+                      "title": "Wait for PDF Download",
+                      "examples": [
+                        {
+                          "action": "waitForPdfDownload",
+                          "timeout": 10000
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "fields"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "extractInvoice"
+                        },
+                        "fields": {
+                          "type": "object",
+                          "required": [
+                            "id",
+                            "date"
+                          ],
+                          "properties": {
+                            "id": {
+                              "type": "object",
+                              "required": [
+                                "selector"
+                              ],
+                              "properties": {
+                                "selector": {
+                                  "type": "string",
+                                  "description": "The CSS selector to use to find the element",
+                                  "title": "Selector",
+                                  "examples": [
+                                    "#example"
+                                  ]
+                                },
+                                "attribute": {
+                                  "type": "string",
+                                  "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                                  "title": "Attribute"
+                                },
+                                "transform": {
+                                  "type": "string",
+                                  "description": "A JavaScript function to transform the value",
+                                  "title": "Transform",
+                                  "examples": [
+                                    "(v) => Number(v.replace('$', ''))"
+                                  ]
+                                }
+                              },
+                              "additionalProperties": false
+                            },
+                            "date": {
+                              "type": "object",
+                              "required": [
+                                "selector"
+                              ],
+                              "properties": {
+                                "selector": {
+                                  "type": "string",
+                                  "description": "The CSS selector to use to find the element",
+                                  "title": "Selector",
+                                  "examples": [
+                                    "#example"
+                                  ]
+                                },
+                                "attribute": {
+                                  "type": "string",
+                                  "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                                  "title": "Attribute"
+                                },
+                                "transform": {
+                                  "type": "string",
+                                  "description": "A JavaScript function to transform the value",
+                                  "title": "Transform",
+                                  "examples": [
+                                    "(v) => Number(v.replace('$', ''))"
+                                  ]
+                                }
+                              },
+                              "additionalProperties": false
+                            }
+                          },
+                          "additionalProperties": {
+                            "type": "object",
+                            "required": [
+                              "selector"
+                            ],
+                            "properties": {
+                              "attribute": {
+                                "type": "string",
+                                "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                                "title": "Attribute"
+                              },
+                              "transform": {
+                                "type": "string",
+                                "description": "A JavaScript function to transform the value",
+                                "title": "Transform",
+                                "examples": [
+                                  "(v) => Number(v.replace('$', ''))"
+                                ]
+                              },
+                              "selector": {
+                                "type": "string",
+                                "description": "The CSS selector to use to find the element",
+                                "title": "Selector",
+                                "examples": [
+                                  "#example"
+                                ]
+                              }
+                            },
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Extracts an invoice from the page",
+                      "title": "Extract Invoice"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "waitForNavigation"
+                        },
+                        "timeout": {
+                          "type": "number",
+                          "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                          "title": "Timeout",
+                          "examples": [
+                            15000
+                          ],
+                          "default": 15000
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Waits for the page to finish navigating. Timeout defaults to 15s.",
+                      "title": "Wait for Navigation",
+                      "examples": [
+                        {
+                          "action": "waitForNavigation",
+                          "timeout": 10000
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "duration"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "sleep"
+                        },
+                        "duration": {
+                          "type": "number",
+                          "description": "The number of milliseconds to wait for",
+                          "title": "Duration"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Waits for the given amount of time in milliseconds",
+                      "title": "Sleep",
+                      "examples": [
+                        {
+                          "action": "sleep",
+                          "timeout": 10000
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "url"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "downloadPdf"
+                        },
+                        "url": {
+                          "type": "string",
+                          "description": "The URL to download the PDF from",
+                          "title": "URL"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Downloads a PDF from the given URL",
+                      "title": "Download PDF"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "url"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "getInvoiceFromStripeUrl"
+                        },
+                        "url": {
+                          "type": "string",
+                          "description": "The URL of the Stripe invoice",
+                          "title": "Stripe Invoice URL"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Navigates to the given Stripe Invoice URL and extracts the invoice",
+                      "title": "Get Invoice from Stripe URL"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "printPdf"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Prints the current page to a PDF file",
+                      "title": "Print Page as PDF",
+                      "examples": [
+                        {
+                          "action": "printPdf"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "description": "Steps to run for each invoice",
+                "title": "For Each Invoice"
+              }
+            },
+            "additionalProperties": false,
+            "description": "Gets a list of invoices from the given script",
+            "title": "Get Invoice List",
+            "examples": [
+              {
+                "action": "getInvoiceList",
+                "script": "\n        const invoices = []\n        for (let i = 0; i < 10; i++) {\n          invoices.push({\n            id: i.toString(),\n            date: new Date().toISOString()\n          })\n        }\n        return invoices\n      "
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "url"
+            ],
+            "properties": {
+              "action": {
+                "const": "navigate"
+              },
+              "url": {
+                "type": "string",
+                "description": "The URL to navigate to",
+                "title": "URL"
+              }
+            },
+            "additionalProperties": false,
+            "description": "Navigates to the given URL and waits for the page to load",
+            "title": "Navigate to URL",
+            "examples": [
+              {
+                "action": "navigate",
+                "url": "https://example.com"
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "script"
+            ],
+            "properties": {
+              "action": {
+                "const": "runJs"
+              },
+              "script": {
+                "type": "string",
+                "description": "a string",
+                "title": "string"
+              }
+            },
+            "additionalProperties": false,
+            "description": "Runs the given JavaScript in the page context",
+            "title": "Run JavaScript",
+            "examples": [
+              {
+                "action": "runJs",
+                "script": "console.log(\"Hello World\");"
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "selector"
+            ],
+            "properties": {
+              "action": {
+                "const": "checkElementExists"
+              },
+              "selector": {
+                "type": "string",
+                "description": "The CSS selector to use to find the element",
+                "title": "Selector",
+                "examples": [
+                  "#example"
+                ]
+              }
+            },
+            "additionalProperties": false,
+            "description": "Checks if the given selector exists on the page",
+            "title": "Check Element Exists",
+            "examples": [
+              {
+                "action": "checkElementExists",
+                "selector": "#example"
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "selector"
+            ],
+            "properties": {
+              "action": {
+                "const": "click"
+              },
+              "selector": {
+                "type": "string",
+                "description": "The CSS selector to use to find the element",
+                "title": "Selector",
+                "examples": [
+                  "#example"
+                ]
+              }
+            },
+            "additionalProperties": false,
+            "description": "Clicks the element specified by the given selector on the page",
+            "title": "Click Element",
+            "examples": [
+              {
+                "action": "click",
+                "selector": "#button"
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "required": [
+              "action"
+            ],
+            "properties": {
+              "action": {
+                "const": "waitForPdfDownload"
+              },
+              "timeout": {
+                "type": "number",
+                "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                "title": "Timeout",
+                "examples": [
+                  15000
+                ],
+                "default": 15000
+              }
+            },
+            "additionalProperties": false,
+            "description": "Waits and checks for a PDF download to complete. Timeout defaults to 15s.",
+            "title": "Wait for PDF Download",
+            "examples": [
+              {
+                "action": "waitForPdfDownload",
+                "timeout": 10000
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "fields"
+            ],
+            "properties": {
+              "action": {
+                "const": "extractInvoice"
+              },
+              "fields": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "date"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "object",
+                    "required": [
+                      "selector"
+                    ],
+                    "properties": {
+                      "selector": {
+                        "type": "string",
+                        "description": "The CSS selector to use to find the element",
+                        "title": "Selector",
+                        "examples": [
+                          "#example"
+                        ]
+                      },
+                      "attribute": {
+                        "type": "string",
+                        "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                        "title": "Attribute"
+                      },
+                      "transform": {
+                        "type": "string",
+                        "description": "A JavaScript function to transform the value",
+                        "title": "Transform",
+                        "examples": [
+                          "(v) => Number(v.replace('$', ''))"
+                        ]
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "date": {
+                    "type": "object",
+                    "required": [
+                      "selector"
+                    ],
+                    "properties": {
+                      "selector": {
+                        "type": "string",
+                        "description": "The CSS selector to use to find the element",
+                        "title": "Selector",
+                        "examples": [
+                          "#example"
+                        ]
+                      },
+                      "attribute": {
+                        "type": "string",
+                        "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                        "title": "Attribute"
+                      },
+                      "transform": {
+                        "type": "string",
+                        "description": "A JavaScript function to transform the value",
+                        "title": "Transform",
+                        "examples": [
+                          "(v) => Number(v.replace('$', ''))"
+                        ]
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "additionalProperties": {
+                  "type": "object",
+                  "required": [
+                    "selector"
+                  ],
+                  "properties": {
+                    "attribute": {
+                      "type": "string",
+                      "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                      "title": "Attribute"
+                    },
+                    "transform": {
+                      "type": "string",
+                      "description": "A JavaScript function to transform the value",
+                      "title": "Transform",
+                      "examples": [
+                        "(v) => Number(v.replace('$', ''))"
+                      ]
+                    },
+                    "selector": {
+                      "type": "string",
+                      "description": "The CSS selector to use to find the element",
+                      "title": "Selector",
+                      "examples": [
+                        "#example"
+                      ]
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            },
+            "additionalProperties": false,
+            "description": "Extracts an invoice from the page",
+            "title": "Extract Invoice"
+          },
+          {
+            "type": "object",
+            "required": [
+              "action"
+            ],
+            "properties": {
+              "action": {
+                "const": "waitForNavigation"
+              },
+              "timeout": {
+                "type": "number",
+                "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                "title": "Timeout",
+                "examples": [
+                  15000
+                ],
+                "default": 15000
+              }
+            },
+            "additionalProperties": false,
+            "description": "Waits for the page to finish navigating. Timeout defaults to 15s.",
+            "title": "Wait for Navigation",
+            "examples": [
+              {
+                "action": "waitForNavigation",
+                "timeout": 10000
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "duration"
+            ],
+            "properties": {
+              "action": {
+                "const": "sleep"
+              },
+              "duration": {
+                "type": "number",
+                "description": "The number of milliseconds to wait for",
+                "title": "Duration"
+              }
+            },
+            "additionalProperties": false,
+            "description": "Waits for the given amount of time in milliseconds",
+            "title": "Sleep",
+            "examples": [
+              {
+                "action": "sleep",
+                "timeout": 10000
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "url"
+            ],
+            "properties": {
+              "action": {
+                "const": "downloadPdf"
+              },
+              "url": {
+                "type": "string",
+                "description": "The URL to download the PDF from",
+                "title": "URL"
+              }
+            },
+            "additionalProperties": false,
+            "description": "Downloads a PDF from the given URL",
+            "title": "Download PDF"
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "url"
+            ],
+            "properties": {
+              "action": {
+                "const": "getInvoiceFromStripeUrl"
+              },
+              "url": {
+                "type": "string",
+                "description": "The URL of the Stripe invoice",
+                "title": "Stripe Invoice URL"
+              }
+            },
+            "additionalProperties": false,
+            "description": "Navigates to the given Stripe Invoice URL and extracts the invoice",
+            "title": "Get Invoice from Stripe URL"
+          },
+          {
+            "type": "object",
+            "required": [
+              "action"
+            ],
+            "properties": {
+              "action": {
+                "const": "printPdf"
+              }
+            },
+            "additionalProperties": false,
+            "description": "Prints the current page to a PDF file",
+            "title": "Print Page as PDF",
+            "examples": [
+              {
+                "action": "printPdf"
+              }
+            ]
+          }
+        ]
+      },
+      "description": "Steps to check if the user is already authenticated",
+      "title": "`Verify Authentication"
+    },
+    "getInvoices": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "itemSelector",
+              "itemFields",
+              "forEach"
+            ],
+            "properties": {
+              "action": {
+                "const": "extractInvoices"
+              },
+              "itemSelector": {
+                "type": "string",
+                "description": "The CSS selector to use to find the element",
+                "title": "Selector",
+                "examples": [
+                  "#example"
+                ]
+              },
+              "itemFields": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "date"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "object",
+                    "required": [
+                      "selector"
+                    ],
+                    "properties": {
+                      "attribute": {
+                        "type": "string",
+                        "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                        "title": "Attribute"
+                      },
+                      "transform": {
+                        "type": "string",
+                        "description": "A JavaScript function to transform the value",
+                        "title": "Transform",
+                        "examples": [
+                          "(v) => Number(v.replace('$', ''))"
+                        ]
+                      },
+                      "selector": {
+                        "type": "string",
+                        "description": "The CSS selector to use to find the element",
+                        "title": "Selector",
+                        "examples": [
+                          "#example"
+                        ]
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "date": {
+                    "type": "object",
+                    "required": [
+                      "selector"
+                    ],
+                    "properties": {
+                      "attribute": {
+                        "type": "string",
+                        "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                        "title": "Attribute"
+                      },
+                      "transform": {
+                        "type": "string",
+                        "description": "A JavaScript function to transform the value",
+                        "title": "Transform",
+                        "examples": [
+                          "(v) => Number(v.replace('$', ''))"
+                        ]
+                      },
+                      "selector": {
+                        "type": "string",
+                        "description": "The CSS selector to use to find the element",
+                        "title": "Selector",
+                        "examples": [
+                          "#example"
+                        ]
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "additionalProperties": {
+                  "type": "object",
+                  "required": [
+                    "selector"
+                  ],
+                  "properties": {
+                    "attribute": {
+                      "type": "string",
+                      "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                      "title": "Attribute"
+                    },
+                    "transform": {
+                      "type": "string",
+                      "description": "A JavaScript function to transform the value",
+                      "title": "Transform",
+                      "examples": [
+                        "(v) => Number(v.replace('$', ''))"
+                      ]
+                    },
+                    "selector": {
+                      "type": "string",
+                      "description": "The CSS selector to use to find the element",
+                      "title": "Selector",
+                      "examples": [
+                        "#example"
+                      ]
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "forEach": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "selector"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "waitForElement"
+                        },
+                        "selector": {
+                          "type": "string",
+                          "description": "The CSS selector to use to find the element",
+                          "title": "Selector",
+                          "examples": [
+                            "#example"
+                          ]
+                        },
+                        "timeout": {
+                          "type": "number",
+                          "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                          "title": "Timeout",
+                          "examples": [
+                            15000
+                          ],
+                          "default": 15000
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Waits for the given selector to appear on the page, optionally with a timeout",
+                      "title": "Wait for Element",
+                      "examples": [
+                        {
+                          "action": "waitForElement",
+                          "selector": "#example",
+                          "timeout": 3000
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "selector",
+                        "value"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "type"
+                        },
+                        "selector": {
+                          "type": "string",
+                          "description": "The CSS selector to use to find the element",
+                          "title": "Selector",
+                          "examples": [
+                            "#example"
+                          ]
+                        },
+                        "value": {
+                          "type": "string",
+                          "description": "a string",
+                          "title": "string"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Types the given text into the element specified by the given selector on the page",
+                      "title": "Type Text",
+                      "examples": [
+                        {
+                          "action": "type",
+                          "selector": "#input",
+                          "text": "Hello World"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "url"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "navigate"
+                        },
+                        "url": {
+                          "type": "string",
+                          "description": "The URL to navigate to",
+                          "title": "URL"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Navigates to the given URL and waits for the page to load",
+                      "title": "Navigate to URL",
+                      "examples": [
+                        {
+                          "action": "navigate",
+                          "url": "https://example.com"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "script"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "runJs"
+                        },
+                        "script": {
+                          "type": "string",
+                          "description": "a string",
+                          "title": "string"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Runs the given JavaScript in the page context",
+                      "title": "Run JavaScript",
+                      "examples": [
+                        {
+                          "action": "runJs",
+                          "script": "console.log(\"Hello World\");"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "selector"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "checkElementExists"
+                        },
+                        "selector": {
+                          "type": "string",
+                          "description": "The CSS selector to use to find the element",
+                          "title": "Selector",
+                          "examples": [
+                            "#example"
+                          ]
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Checks if the given selector exists on the page",
+                      "title": "Check Element Exists",
+                      "examples": [
+                        {
+                          "action": "checkElementExists",
+                          "selector": "#example"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "selector"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "click"
+                        },
+                        "selector": {
+                          "type": "string",
+                          "description": "The CSS selector to use to find the element",
+                          "title": "Selector",
+                          "examples": [
+                            "#example"
+                          ]
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Clicks the element specified by the given selector on the page",
+                      "title": "Click Element",
+                      "examples": [
+                        {
+                          "action": "click",
+                          "selector": "#button"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "waitForPdfDownload"
+                        },
+                        "timeout": {
+                          "type": "number",
+                          "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                          "title": "Timeout",
+                          "examples": [
+                            15000
+                          ],
+                          "default": 15000
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Waits and checks for a PDF download to complete. Timeout defaults to 15s.",
+                      "title": "Wait for PDF Download",
+                      "examples": [
+                        {
+                          "action": "waitForPdfDownload",
+                          "timeout": 10000
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "fields"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "extractInvoice"
+                        },
+                        "fields": {
+                          "type": "object",
+                          "required": [
+                            "id",
+                            "date"
+                          ],
+                          "properties": {
+                            "id": {
+                              "type": "object",
+                              "required": [
+                                "selector"
+                              ],
+                              "properties": {
+                                "selector": {
+                                  "type": "string",
+                                  "description": "The CSS selector to use to find the element",
+                                  "title": "Selector",
+                                  "examples": [
+                                    "#example"
+                                  ]
+                                },
+                                "attribute": {
+                                  "type": "string",
+                                  "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                                  "title": "Attribute"
+                                },
+                                "transform": {
+                                  "type": "string",
+                                  "description": "A JavaScript function to transform the value",
+                                  "title": "Transform",
+                                  "examples": [
+                                    "(v) => Number(v.replace('$', ''))"
+                                  ]
+                                }
+                              },
+                              "additionalProperties": false
+                            },
+                            "date": {
+                              "type": "object",
+                              "required": [
+                                "selector"
+                              ],
+                              "properties": {
+                                "selector": {
+                                  "type": "string",
+                                  "description": "The CSS selector to use to find the element",
+                                  "title": "Selector",
+                                  "examples": [
+                                    "#example"
+                                  ]
+                                },
+                                "attribute": {
+                                  "type": "string",
+                                  "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                                  "title": "Attribute"
+                                },
+                                "transform": {
+                                  "type": "string",
+                                  "description": "A JavaScript function to transform the value",
+                                  "title": "Transform",
+                                  "examples": [
+                                    "(v) => Number(v.replace('$', ''))"
+                                  ]
+                                }
+                              },
+                              "additionalProperties": false
+                            }
+                          },
+                          "additionalProperties": {
+                            "type": "object",
+                            "required": [
+                              "selector"
+                            ],
+                            "properties": {
+                              "attribute": {
+                                "type": "string",
+                                "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                                "title": "Attribute"
+                              },
+                              "transform": {
+                                "type": "string",
+                                "description": "A JavaScript function to transform the value",
+                                "title": "Transform",
+                                "examples": [
+                                  "(v) => Number(v.replace('$', ''))"
+                                ]
+                              },
+                              "selector": {
+                                "type": "string",
+                                "description": "The CSS selector to use to find the element",
+                                "title": "Selector",
+                                "examples": [
+                                  "#example"
+                                ]
+                              }
+                            },
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Extracts an invoice from the page",
+                      "title": "Extract Invoice"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "waitForNavigation"
+                        },
+                        "timeout": {
+                          "type": "number",
+                          "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                          "title": "Timeout",
+                          "examples": [
+                            15000
+                          ],
+                          "default": 15000
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Waits for the page to finish navigating. Timeout defaults to 15s.",
+                      "title": "Wait for Navigation",
+                      "examples": [
+                        {
+                          "action": "waitForNavigation",
+                          "timeout": 10000
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "duration"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "sleep"
+                        },
+                        "duration": {
+                          "type": "number",
+                          "description": "The number of milliseconds to wait for",
+                          "title": "Duration"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Waits for the given amount of time in milliseconds",
+                      "title": "Sleep",
+                      "examples": [
+                        {
+                          "action": "sleep",
+                          "timeout": 10000
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "url"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "downloadPdf"
+                        },
+                        "url": {
+                          "type": "string",
+                          "description": "The URL to download the PDF from",
+                          "title": "URL"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Downloads a PDF from the given URL",
+                      "title": "Download PDF"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "url"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "getInvoiceFromStripeUrl"
+                        },
+                        "url": {
+                          "type": "string",
+                          "description": "The URL of the Stripe invoice",
+                          "title": "Stripe Invoice URL"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Navigates to the given Stripe Invoice URL and extracts the invoice",
+                      "title": "Get Invoice from Stripe URL"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "printPdf"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Prints the current page to a PDF file",
+                      "title": "Print Page as PDF",
+                      "examples": [
+                        {
+                          "action": "printPdf"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "additionalProperties": false,
+            "description": "Extracts a list of invoices from the page, and runs the given steps for each invoice",
+            "title": "Extract Invoices"
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "selector"
+            ],
+            "properties": {
+              "action": {
+                "const": "waitForElement"
+              },
+              "selector": {
+                "type": "string",
+                "description": "The CSS selector to use to find the element",
+                "title": "Selector",
+                "examples": [
+                  "#example"
+                ]
+              },
+              "timeout": {
+                "type": "number",
+                "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                "title": "Timeout",
+                "examples": [
+                  15000
+                ],
+                "default": 15000
+              }
+            },
+            "additionalProperties": false,
+            "description": "Waits for the given selector to appear on the page, optionally with a timeout",
+            "title": "Wait for Element",
+            "examples": [
+              {
+                "action": "waitForElement",
+                "selector": "#example",
+                "timeout": 3000
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "selector",
+              "value"
+            ],
+            "properties": {
+              "action": {
+                "const": "type"
+              },
+              "selector": {
+                "type": "string",
+                "description": "The CSS selector to use to find the element",
+                "title": "Selector",
+                "examples": [
+                  "#example"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "description": "a string",
+                "title": "string"
+              }
+            },
+            "additionalProperties": false,
+            "description": "Types the given text into the element specified by the given selector on the page",
+            "title": "Type Text",
+            "examples": [
+              {
+                "action": "type",
+                "selector": "#input",
+                "text": "Hello World"
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "script",
+              "forEach"
+            ],
+            "properties": {
+              "action": {
+                "const": "getInvoiceList"
+              },
+              "script": {
+                "type": "string",
+                "description": "a string",
+                "title": "string"
+              },
+              "forEach": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "selector"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "waitForElement"
+                        },
+                        "selector": {
+                          "type": "string",
+                          "description": "The CSS selector to use to find the element",
+                          "title": "Selector",
+                          "examples": [
+                            "#example"
+                          ]
+                        },
+                        "timeout": {
+                          "type": "number",
+                          "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                          "title": "Timeout",
+                          "examples": [
+                            15000
+                          ],
+                          "default": 15000
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Waits for the given selector to appear on the page, optionally with a timeout",
+                      "title": "Wait for Element",
+                      "examples": [
+                        {
+                          "action": "waitForElement",
+                          "selector": "#example",
+                          "timeout": 3000
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "selector",
+                        "value"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "type"
+                        },
+                        "selector": {
+                          "type": "string",
+                          "description": "The CSS selector to use to find the element",
+                          "title": "Selector",
+                          "examples": [
+                            "#example"
+                          ]
+                        },
+                        "value": {
+                          "type": "string",
+                          "description": "a string",
+                          "title": "string"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Types the given text into the element specified by the given selector on the page",
+                      "title": "Type Text",
+                      "examples": [
+                        {
+                          "action": "type",
+                          "selector": "#input",
+                          "text": "Hello World"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "url"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "navigate"
+                        },
+                        "url": {
+                          "type": "string",
+                          "description": "The URL to navigate to",
+                          "title": "URL"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Navigates to the given URL and waits for the page to load",
+                      "title": "Navigate to URL",
+                      "examples": [
+                        {
+                          "action": "navigate",
+                          "url": "https://example.com"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "script"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "runJs"
+                        },
+                        "script": {
+                          "type": "string",
+                          "description": "a string",
+                          "title": "string"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Runs the given JavaScript in the page context",
+                      "title": "Run JavaScript",
+                      "examples": [
+                        {
+                          "action": "runJs",
+                          "script": "console.log(\"Hello World\");"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "selector"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "checkElementExists"
+                        },
+                        "selector": {
+                          "type": "string",
+                          "description": "The CSS selector to use to find the element",
+                          "title": "Selector",
+                          "examples": [
+                            "#example"
+                          ]
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Checks if the given selector exists on the page",
+                      "title": "Check Element Exists",
+                      "examples": [
+                        {
+                          "action": "checkElementExists",
+                          "selector": "#example"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "selector"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "click"
+                        },
+                        "selector": {
+                          "type": "string",
+                          "description": "The CSS selector to use to find the element",
+                          "title": "Selector",
+                          "examples": [
+                            "#example"
+                          ]
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Clicks the element specified by the given selector on the page",
+                      "title": "Click Element",
+                      "examples": [
+                        {
+                          "action": "click",
+                          "selector": "#button"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "waitForPdfDownload"
+                        },
+                        "timeout": {
+                          "type": "number",
+                          "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                          "title": "Timeout",
+                          "examples": [
+                            15000
+                          ],
+                          "default": 15000
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Waits and checks for a PDF download to complete. Timeout defaults to 15s.",
+                      "title": "Wait for PDF Download",
+                      "examples": [
+                        {
+                          "action": "waitForPdfDownload",
+                          "timeout": 10000
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "fields"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "extractInvoice"
+                        },
+                        "fields": {
+                          "type": "object",
+                          "required": [
+                            "id",
+                            "date"
+                          ],
+                          "properties": {
+                            "id": {
+                              "type": "object",
+                              "required": [
+                                "selector"
+                              ],
+                              "properties": {
+                                "selector": {
+                                  "type": "string",
+                                  "description": "The CSS selector to use to find the element",
+                                  "title": "Selector",
+                                  "examples": [
+                                    "#example"
+                                  ]
+                                },
+                                "attribute": {
+                                  "type": "string",
+                                  "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                                  "title": "Attribute"
+                                },
+                                "transform": {
+                                  "type": "string",
+                                  "description": "A JavaScript function to transform the value",
+                                  "title": "Transform",
+                                  "examples": [
+                                    "(v) => Number(v.replace('$', ''))"
+                                  ]
+                                }
+                              },
+                              "additionalProperties": false
+                            },
+                            "date": {
+                              "type": "object",
+                              "required": [
+                                "selector"
+                              ],
+                              "properties": {
+                                "selector": {
+                                  "type": "string",
+                                  "description": "The CSS selector to use to find the element",
+                                  "title": "Selector",
+                                  "examples": [
+                                    "#example"
+                                  ]
+                                },
+                                "attribute": {
+                                  "type": "string",
+                                  "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                                  "title": "Attribute"
+                                },
+                                "transform": {
+                                  "type": "string",
+                                  "description": "A JavaScript function to transform the value",
+                                  "title": "Transform",
+                                  "examples": [
+                                    "(v) => Number(v.replace('$', ''))"
+                                  ]
+                                }
+                              },
+                              "additionalProperties": false
+                            }
+                          },
+                          "additionalProperties": {
+                            "type": "object",
+                            "required": [
+                              "selector"
+                            ],
+                            "properties": {
+                              "attribute": {
+                                "type": "string",
+                                "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                                "title": "Attribute"
+                              },
+                              "transform": {
+                                "type": "string",
+                                "description": "A JavaScript function to transform the value",
+                                "title": "Transform",
+                                "examples": [
+                                  "(v) => Number(v.replace('$', ''))"
+                                ]
+                              },
+                              "selector": {
+                                "type": "string",
+                                "description": "The CSS selector to use to find the element",
+                                "title": "Selector",
+                                "examples": [
+                                  "#example"
+                                ]
+                              }
+                            },
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Extracts an invoice from the page",
+                      "title": "Extract Invoice"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "waitForNavigation"
+                        },
+                        "timeout": {
+                          "type": "number",
+                          "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                          "title": "Timeout",
+                          "examples": [
+                            15000
+                          ],
+                          "default": 15000
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Waits for the page to finish navigating. Timeout defaults to 15s.",
+                      "title": "Wait for Navigation",
+                      "examples": [
+                        {
+                          "action": "waitForNavigation",
+                          "timeout": 10000
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "duration"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "sleep"
+                        },
+                        "duration": {
+                          "type": "number",
+                          "description": "The number of milliseconds to wait for",
+                          "title": "Duration"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Waits for the given amount of time in milliseconds",
+                      "title": "Sleep",
+                      "examples": [
+                        {
+                          "action": "sleep",
+                          "timeout": 10000
+                        }
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "url"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "downloadPdf"
+                        },
+                        "url": {
+                          "type": "string",
+                          "description": "The URL to download the PDF from",
+                          "title": "URL"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Downloads a PDF from the given URL",
+                      "title": "Download PDF"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action",
+                        "url"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "getInvoiceFromStripeUrl"
+                        },
+                        "url": {
+                          "type": "string",
+                          "description": "The URL of the Stripe invoice",
+                          "title": "Stripe Invoice URL"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Navigates to the given Stripe Invoice URL and extracts the invoice",
+                      "title": "Get Invoice from Stripe URL"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "action"
+                      ],
+                      "properties": {
+                        "action": {
+                          "const": "printPdf"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Prints the current page to a PDF file",
+                      "title": "Print Page as PDF",
+                      "examples": [
+                        {
+                          "action": "printPdf"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "description": "Steps to run for each invoice",
+                "title": "For Each Invoice"
+              }
+            },
+            "additionalProperties": false,
+            "description": "Gets a list of invoices from the given script",
+            "title": "Get Invoice List",
+            "examples": [
+              {
+                "action": "getInvoiceList",
+                "script": "\n        const invoices = []\n        for (let i = 0; i < 10; i++) {\n          invoices.push({\n            id: i.toString(),\n            date: new Date().toISOString()\n          })\n        }\n        return invoices\n      "
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "url"
+            ],
+            "properties": {
+              "action": {
+                "const": "navigate"
+              },
+              "url": {
+                "type": "string",
+                "description": "The URL to navigate to",
+                "title": "URL"
+              }
+            },
+            "additionalProperties": false,
+            "description": "Navigates to the given URL and waits for the page to load",
+            "title": "Navigate to URL",
+            "examples": [
+              {
+                "action": "navigate",
+                "url": "https://example.com"
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "script"
+            ],
+            "properties": {
+              "action": {
+                "const": "runJs"
+              },
+              "script": {
+                "type": "string",
+                "description": "a string",
+                "title": "string"
+              }
+            },
+            "additionalProperties": false,
+            "description": "Runs the given JavaScript in the page context",
+            "title": "Run JavaScript",
+            "examples": [
+              {
+                "action": "runJs",
+                "script": "console.log(\"Hello World\");"
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "selector"
+            ],
+            "properties": {
+              "action": {
+                "const": "checkElementExists"
+              },
+              "selector": {
+                "type": "string",
+                "description": "The CSS selector to use to find the element",
+                "title": "Selector",
+                "examples": [
+                  "#example"
+                ]
+              }
+            },
+            "additionalProperties": false,
+            "description": "Checks if the given selector exists on the page",
+            "title": "Check Element Exists",
+            "examples": [
+              {
+                "action": "checkElementExists",
+                "selector": "#example"
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "selector"
+            ],
+            "properties": {
+              "action": {
+                "const": "click"
+              },
+              "selector": {
+                "type": "string",
+                "description": "The CSS selector to use to find the element",
+                "title": "Selector",
+                "examples": [
+                  "#example"
+                ]
+              }
+            },
+            "additionalProperties": false,
+            "description": "Clicks the element specified by the given selector on the page",
+            "title": "Click Element",
+            "examples": [
+              {
+                "action": "click",
+                "selector": "#button"
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "required": [
+              "action"
+            ],
+            "properties": {
+              "action": {
+                "const": "waitForPdfDownload"
+              },
+              "timeout": {
+                "type": "number",
+                "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                "title": "Timeout",
+                "examples": [
+                  15000
+                ],
+                "default": 15000
+              }
+            },
+            "additionalProperties": false,
+            "description": "Waits and checks for a PDF download to complete. Timeout defaults to 15s.",
+            "title": "Wait for PDF Download",
+            "examples": [
+              {
+                "action": "waitForPdfDownload",
+                "timeout": 10000
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "fields"
+            ],
+            "properties": {
+              "action": {
+                "const": "extractInvoice"
+              },
+              "fields": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "date"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "object",
+                    "required": [
+                      "selector"
+                    ],
+                    "properties": {
+                      "selector": {
+                        "type": "string",
+                        "description": "The CSS selector to use to find the element",
+                        "title": "Selector",
+                        "examples": [
+                          "#example"
+                        ]
+                      },
+                      "attribute": {
+                        "type": "string",
+                        "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                        "title": "Attribute"
+                      },
+                      "transform": {
+                        "type": "string",
+                        "description": "A JavaScript function to transform the value",
+                        "title": "Transform",
+                        "examples": [
+                          "(v) => Number(v.replace('$', ''))"
+                        ]
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "date": {
+                    "type": "object",
+                    "required": [
+                      "selector"
+                    ],
+                    "properties": {
+                      "selector": {
+                        "type": "string",
+                        "description": "The CSS selector to use to find the element",
+                        "title": "Selector",
+                        "examples": [
+                          "#example"
+                        ]
+                      },
+                      "attribute": {
+                        "type": "string",
+                        "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                        "title": "Attribute"
+                      },
+                      "transform": {
+                        "type": "string",
+                        "description": "A JavaScript function to transform the value",
+                        "title": "Transform",
+                        "examples": [
+                          "(v) => Number(v.replace('$', ''))"
+                        ]
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "additionalProperties": {
+                  "type": "object",
+                  "required": [
+                    "selector"
+                  ],
+                  "properties": {
+                    "attribute": {
+                      "type": "string",
+                      "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                      "title": "Attribute"
+                    },
+                    "transform": {
+                      "type": "string",
+                      "description": "A JavaScript function to transform the value",
+                      "title": "Transform",
+                      "examples": [
+                        "(v) => Number(v.replace('$', ''))"
+                      ]
+                    },
+                    "selector": {
+                      "type": "string",
+                      "description": "The CSS selector to use to find the element",
+                      "title": "Selector",
+                      "examples": [
+                        "#example"
+                      ]
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            },
+            "additionalProperties": false,
+            "description": "Extracts an invoice from the page",
+            "title": "Extract Invoice"
+          },
+          {
+            "type": "object",
+            "required": [
+              "action"
+            ],
+            "properties": {
+              "action": {
+                "const": "waitForNavigation"
+              },
+              "timeout": {
+                "type": "number",
+                "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                "title": "Timeout",
+                "examples": [
+                  15000
+                ],
+                "default": 15000
+              }
+            },
+            "additionalProperties": false,
+            "description": "Waits for the page to finish navigating. Timeout defaults to 15s.",
+            "title": "Wait for Navigation",
+            "examples": [
+              {
+                "action": "waitForNavigation",
+                "timeout": 10000
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "duration"
+            ],
+            "properties": {
+              "action": {
+                "const": "sleep"
+              },
+              "duration": {
+                "type": "number",
+                "description": "The number of milliseconds to wait for",
+                "title": "Duration"
+              }
+            },
+            "additionalProperties": false,
+            "description": "Waits for the given amount of time in milliseconds",
+            "title": "Sleep",
+            "examples": [
+              {
+                "action": "sleep",
+                "timeout": 10000
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "url"
+            ],
+            "properties": {
+              "action": {
+                "const": "downloadPdf"
+              },
+              "url": {
+                "type": "string",
+                "description": "The URL to download the PDF from",
+                "title": "URL"
+              }
+            },
+            "additionalProperties": false,
+            "description": "Downloads a PDF from the given URL",
+            "title": "Download PDF"
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "url"
+            ],
+            "properties": {
+              "action": {
+                "const": "getInvoiceFromStripeUrl"
+              },
+              "url": {
+                "type": "string",
+                "description": "The URL of the Stripe invoice",
+                "title": "Stripe Invoice URL"
+              }
+            },
+            "additionalProperties": false,
+            "description": "Navigates to the given Stripe Invoice URL and extracts the invoice",
+            "title": "Get Invoice from Stripe URL"
+          },
+          {
+            "type": "object",
+            "required": [
+              "action"
+            ],
+            "properties": {
+              "action": {
+                "const": "printPdf"
+              }
+            },
+            "additionalProperties": false,
+            "description": "Prints the current page to a PDF file",
+            "title": "Print Page as PDF",
+            "examples": [
+              {
+                "action": "printPdf"
+              }
+            ]
+          }
+        ]
+      },
+      "description": "Steps to get all invoices as PDF",
+      "title": "Collect Invoices"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Schema definition for a JSON-based plugin",
+  "title": "JSON Plugin Schema",
+  "examples": [
+    {
+      "name": "ExamplePlugin",
+      "description": "This is an example plugin",
+      "configSchema": {
+        "exampleProperty": {
+          "type": "string",
+          "title": "Example Property",
+          "description": "An example property for demonstration",
+          "required": true
+        }
+      }
+    }
+  ]
+}
