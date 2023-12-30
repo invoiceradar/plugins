@@ -1,0 +1,19 @@
+{
+  "$schema": "https://gist.githubusercontent.com/timolins/b13bdee5fd3a72456d8198e0f707a4cd/raw/800575fad8f1acea9a4730dbc268348f24bd4b79/schema-3.json",
+  "id": "vercel.com",
+  "homepage": "https://vercel.com",
+  "name": "Vercel",
+  "description": "Vercel is a cloud platform for static sites and Serverless Functions.",
+  "configSchema": {
+    "teamId": {
+      "type": "string",
+      "title": "Team ID",
+      "example": "team_12345",
+      "description": "Your Vercel Team ID",
+      "required": true
+    }
+  },
+  "checkAuth": [],
+  "startAuth": [],
+  "getInvoices": []
+}

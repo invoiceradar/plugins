@@ -1,0 +1,87 @@
+{
+  "$schema": "https://gist.githubusercontent.com/timolins/b13bdee5fd3a72456d8198e0f707a4cd/raw/800575fad8f1acea9a4730dbc268348f24bd4b79/schema-3.json",
+  "id": "porkbun",
+  "name": "Porkbun",
+  "description": "Porkbun is a domain registrar",
+  "homepage": "https://porkbun.com",
+  "configSchema": {
+    "username": {
+      "type": "string",
+      "title": "Username",
+      "required": false
+    },
+    "password": {
+      "type": "password",
+      "title": "Password",
+      "required": false
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://porkbun.com/account/loginOnly"
+    },
+    {
+      "action": "waitForElement",
+      "selector": ".headerMenuLinkLogin"
+    },
+    {
+      "action": "checkElementExists",
+      "selector": "#headerMenuLoggedIn"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://porkbun.com/account/loginOnly"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "#loginUsername"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "#headerMenuLoggedIn",
+      "timeout": 120000
+    }
+  ],
+  "getInvoices": [
+    {
+      "action": "navigate",
+      "url": "https://porkbun.com/account/orders"
+    },
+    {
+      "action": "waitForElement",
+      "selector": ".table"
+    },
+    {
+      "action": "extractInvoices",
+      "itemSelector": ".table tbody tr:has(a)",
+      "itemFields": {
+        "id": {
+          "selector": "td:nth-child(1) a"
+        },
+        "date": {
+          "selector": "td:nth-child(2)"
+        },
+        "path": {
+          "selector": "td:nth-child(1) a",
+          "attribute": "href"
+        },
+        "amount": {
+          "selector": "td:nth-child(3)",
+          "transform": "(text) => Number(text.replace('$', ''))"
+        }
+      },
+      "forEach": [
+        {
+          "action": "navigate",
+          "url": "https://porkbun.com{{invoice.path}}"
+        },
+        {
+          "action": "printPdf"
+        }
+      ]
+    }
+  ]
+}

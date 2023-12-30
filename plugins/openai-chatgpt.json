@@ -1,0 +1,84 @@
+{
+  "$schema": "https://gist.githubusercontent.com/timolins/b13bdee5fd3a72456d8198e0f707a4cd/raw/800575fad8f1acea9a4730dbc268348f24bd4b79/schema-3.json",
+  "id": "openai-chatgpt",
+  "name": "ChatGPT",
+  "description": "Get invoices from your ChatGPT Plus subscription.",
+  "homepage": "https://chat.openai.com/",
+  "configSchema": {
+    "username": {
+      "type": "string",
+      "title": "Username",
+      "required": false
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://chat.openai.com/"
+    },
+    {
+      "action": "checkElementExists",
+      "selector": "#prompt-textarea"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://chat.openai.com/auth/login"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[data-testid=login-button]"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "#prompt-textarea",
+      "timeout": 120000
+    }
+  ],
+  "getInvoices": [
+    {
+      "action": "navigate",
+      "url": "https://chat.openai.com/#pricing"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[role=dialog]"
+    },
+    {
+      "action": "click",
+      "selector": "[href='/#']"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "#customer_portal_page_body"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "div:has(> div ):has(> button) button"
+    },
+    { "action": "click", "selector": "div:has(> div ):has(> button) button" },
+    {
+      "action": "extractInvoices",
+      "itemSelector": "div:has(> a[href^='https://invoice.stripe.com'])",
+      "itemFields": {
+        "id": {
+          "selector": "a"
+        },
+        "date": {
+          "selector": "a"
+        },
+        "url": {
+          "selector": "a",
+          "attribute": "href"
+        }
+      },
+      "forEach": [
+        {
+          "action": "getInvoiceFromStripeUrl",
+          "url": "{{invoice.url}}"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "$schema": "https://gist.githubusercontent.com/timolins/b13bdee5fd3a72456d8198e0f707a4cd/raw/800575fad8f1acea9a4730dbc268348f24bd4b79/schema-3.json",
+  "id": "openai-api",
+  "name": "OpenAI API",
+  "description": "Get invoices from your OpenAI Platform/API",
+  "homepage": "https://platform.openai.com",
+  "configSchema": {
+    "username": {
+      "type": "string",
+      "title": "Username",
+      "required": false
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://platform.openai.com/account/billing/history"
+    },
+    {
+      "action": "waitForElement",
+      "selector": ".app-navigation"
+    },
+    {
+      "action": "checkElementExists",
+      "selector": ".app-navigation"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://platform.openai.com/account/billing/history"
+    },
+    {
+      "action": "waitForElement",
+      "selector": ".page-body"
+    },
+    {
+      "action": "click",
+      "selector": ".page-body button"
+    },
+    {
+      "action": "waitForElement",
+      "selector": ".billing-subtext",
+      "timeout": 120000
+    }
+  ],
+  "getInvoices": [
+    {
+      "action": "navigate",
+      "url": "https://platform.openai.com/account/billing/history"
+    },
+    {
+      "action": "waitForElement",
+      "selector": ".billing-history-table"
+    },
+
+    {
+      "action": "extractInvoices",
+      "itemSelector": ".billing-history-table > tbody > tr",
+      "itemFields": {
+        "id": {
+          "selector": "td:nth-child(1)"
+        },
+        "date": {
+          "selector": "td:nth-child(4)"
+        },
+        "url": {
+          "selector": "a",
+          "attribute": "href"
+        }
+      },
+      "forEach": [
+        {
+          "action": "getInvoiceFromStripeUrl",
+          "url": "{{invoice.url}}"
+        }
+      ]
+    }
+  ]
+}

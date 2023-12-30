@@ -1,0 +1,126 @@
+{
+  "$schema": "https://gist.githubusercontent.com/timolins/b13bdee5fd3a72456d8198e0f707a4cd/raw/800575fad8f1acea9a4730dbc268348f24bd4b79/schema-3.json",
+  "id": "backblaze-b2",
+  "name": "Backblaze B2",
+  "description": "Backblaze B2 is a cloud storage service.",
+  "homepage": "https://www.backblaze.com",
+  "configSchema": {
+    "username": {
+      "type": "string",
+      "title": "Username",
+      "required": false
+    },
+    "password": {
+      "type": "password",
+      "title": "Password",
+      "required": false
+    },
+    "companyName": {
+      "type": "string",
+      "title": "Company Name",
+      "description": "The name of the company that will be printed on the invoice.",
+      "required": false
+    },
+    "otherInfo": {
+      "type": "string",
+      "title": "Other Info",
+      "description": "Other info that will be printed on the invoice.",
+      "required": false
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://secure.backblaze.com/b2_buckets.htm"
+    },
+    {
+      "action": "checkElementExists",
+      "selector": ".welcome_user"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://secure.backblaze.com/user_signin.htm"
+    },
+    {
+      "action": "waitForElement",
+      "selector": ".welcome_user",
+      "timeout": 120000
+    }
+  ],
+  "getInvoices": [
+    {
+      "action": "navigate",
+      "url": "https://secure.backblaze.com/billing_card.htm"
+    },
+    {
+      "action": "waitForElement",
+      "selector": ".transaction"
+    },
+    {
+      "action": "extractInvoices",
+      "itemSelector": ".transaction:not(.excluded-from-printing)",
+      "itemFields": {
+        "id": {
+          "selector": "[id^=billing-invoice-num]"
+        },
+        "date": {
+          "selector": "[id^=billing-datestamp]",
+          "transform": "(dateString) => new Date(parseInt(dateString.substring(0, 4)), parseInt(dateString.substring(4, 6)) - 1, parseInt(dateString.substring(6, 8)), parseInt(dateString.substring(8, 10)), parseInt(dateString.substring(10, 12)), parseInt(dateString.substring(12, 14)))"
+        },
+        "amount": {
+          "selector": "[id^=billing-total]"
+        },
+        "paymentId": {
+          "selector": "[data-reference-object-id]",
+          "attribute": "data-reference-object-id"
+        }
+      },
+      "repeatWhile": {
+        "conditionScript": "document.querySelector('#receiptDateId > option:last-of-type[selected]') !== null && year == {{timespan.end.year}}",
+        "prepareSteps": [
+          {
+            "action": "click",
+            "selector": "#receiptDateId > option:last-of-type"
+          },
+          {
+            "action": "waitForElement",
+            "selector": ".transaction"
+          }
+        ]
+      },
+      "forEach": [
+        {
+          "action": "navigate",
+          "url": "https://secure.backblaze.com/billing_card.htm"
+        },
+        {
+          "action": "runJs",
+          "script": "document.getElementById('billing-print-form')?.setAttribute('target', '_self')"
+        },
+        {
+          "action": "runJs",
+          "script": "printPayment({{invoice.paymentId}})"
+        },
+        {
+          "action": "waitForElement",
+          "selector": "#billing-print-body"
+        },
+        {
+          "action": "type",
+          "selector": "[name='Company']",
+          "value": "{{config.companyName}}"
+        },
+        {
+          "action": "type",
+          "selector": "[name='Other']",
+          "value": "{{config.otherInfo}}"
+        },
+        {
+          "action": "printPdf"
+        }
+      ]
+    }
+  ]
+}

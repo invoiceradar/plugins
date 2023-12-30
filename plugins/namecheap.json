@@ -1,0 +1,110 @@
+{
+  "$schema": "https://gist.githubusercontent.com/timolins/b13bdee5fd3a72456d8198e0f707a4cd/raw/800575fad8f1acea9a4730dbc268348f24bd4b79/schema-3.json",
+  "id": "namecheap",
+  "name": "Namecheap",
+  "description": "Namecheap is a domain name registrar and web hosting provider.",
+  "homepage": "https://www.namecheap.com/",
+  "configSchema": {
+    "username": {
+      "type": "string",
+      "title": "Username",
+      "required": false
+    },
+    "password": {
+      "type": "password",
+      "title": "Password",
+      "required": false
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.namecheap.com/myaccount/login/"
+    },
+    {
+      "action": "waitForElement",
+      "selector": ".loginBox"
+    },
+    {
+      "action": "checkElementExists",
+      "selector": "body.loggedin"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.namecheap.com/myaccount/login/"
+    },
+    {
+      "action": "type",
+      "selector": "[name='LoginUserName']",
+      "value": "{{config.username}}"
+    },
+    {
+      "action": "type",
+      "selector": "[name='LoginPassword']",
+      "value": "{{config.password}}"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "body.loggedin",
+      "timeout": 120000
+    }
+  ],
+  "getInvoices": [
+    {
+      "action": "navigate",
+      "url": "https://ap.www.namecheap.com/profile/billing/orders"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "a.show-calendar"
+    },
+    {
+      "action": "click",
+      "selector": "a.show-calendar"
+    },
+    {
+      "action": "type",
+      "selector": ".daterangepicker_start_input input",
+      "value": "01/01/2000"
+    },
+    {
+      "action": "sleep",
+      "duration": 4000
+    },
+    {
+      "action": "click",
+      "selector": ".range_inputs .applyBtn"
+    },
+    {
+      "action": "waitForNavigation"
+    },
+    {
+      "action": "extractInvoices",
+      "itemSelector": ".AjaxPageCall tbody tr:has(a[href^='/profile/billing/orders/downloadpdf'])",
+      "itemFields": {
+        "id": {
+          "selector": "td:nth-child(1) p"
+        },
+        "date": {
+          "selector": "td:nth-child(3) p"
+        },
+        "amount": {
+          "selector": "td:nth-child(5)",
+          "transform": "(text) => Number(text.replace('$', ''))"
+        },
+        "pdfLink": {
+          "selector": "a[href^='/profile/billing/orders/downloadpdf']",
+          "attribute": "href"
+        }
+      },
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "{{invoice.pdfLink}}"
+        }
+      ]
+    }
+  ]
+}
