@@ -81,8 +81,8 @@
       },
       "forEach": [
         {
-          "action": "runJs",
-          "script": "Array.from(document.querySelectorAll('tbody tr td:nth-child(3) a > span:last-of-type')).filter(el=>el.innerText === `{{invoice.id}}`)[0].click()"
+          "action": "click",
+          "selector": "td:nth-child(3) a"
         },
         {
           "action": "waitForPdfDownload"
