@@ -57,9 +57,9 @@
       "selector": "table"
     },
     {
-      "action": "extractInvoices",
-      "itemSelector": "tbody tr",
-      "itemFields": {
+      "action": "extractAll",
+      "selector": "tbody tr",
+      "fields": {
         "id": {
           "selector": "td:nth-child(2) a"
         },
@@ -77,7 +77,8 @@
       "forEach": [
         {
           "action": "downloadPdf",
-          "url": "{{invoice.url}}"
+          "url": "{{invoice.url}}",
+          "invoice": "item"
         }
       ]
     }
