@@ -99,7 +99,6 @@
             "type": "object",
             "required": [
               "action",
-              "variable",
               "selector",
               "forEach",
               "fields"
@@ -196,34 +195,43 @@
                 "required": [],
                 "properties": {},
                 "additionalProperties": {
-                  "type": "object",
-                  "required": [
-                    "selector"
-                  ],
-                  "properties": {
-                    "attribute": {
-                      "type": "string",
-                      "description": "The attribute to get from the element. If not specified, the inner text will be used",
-                      "title": "Attribute"
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "required": [
+                        "selector"
+                      ],
+                      "properties": {
+                        "selector": {
+                          "type": "string",
+                          "description": "The CSS selector to use to find the element",
+                          "title": "Selector",
+                          "examples": [
+                            "#example"
+                          ]
+                        },
+                        "attribute": {
+                          "type": "string",
+                          "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                          "title": "Attribute"
+                        },
+                        "transform": {
+                          "type": "string",
+                          "description": "A JavaScript function to transform the value",
+                          "title": "Transform",
+                          "examples": [
+                            "(v) => Number(v.replace('$', ''))"
+                          ]
+                        }
+                      },
+                      "additionalProperties": false
                     },
-                    "transform": {
+                    {
                       "type": "string",
-                      "description": "A JavaScript function to transform the value",
-                      "title": "Transform",
-                      "examples": [
-                        "(v) => Number(v.replace('$', ''))"
-                      ]
-                    },
-                    "selector": {
-                      "type": "string",
-                      "description": "The CSS selector to use to find the element",
-                      "title": "Selector",
-                      "examples": [
-                        "#example"
-                      ]
+                      "description": "a string",
+                      "title": "string"
                     }
-                  },
-                  "additionalProperties": false
+                  ]
                 }
               }
             },
@@ -233,7 +241,6 @@
             "type": "object",
             "required": [
               "action",
-              "variable",
               "script",
               "forEach"
             ],
@@ -473,6 +480,98 @@
             "type": "object",
             "required": [
               "action",
+              "variable",
+              "script"
+            ],
+            "properties": {
+              "action": {
+                "const": "extract"
+              },
+              "variable": {
+                "type": "string",
+                "description": "The name of the variable to store the extracted value in. Defaults to `item`",
+                "title": "Variable"
+              },
+              "script": {
+                "type": "string",
+                "description": "A JavaScript script to run in the page context",
+                "title": "Script",
+                "examples": [
+                  {
+                    "script": "console.log(\"Hello World\");"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "variable",
+              "fields"
+            ],
+            "properties": {
+              "action": {
+                "const": "extract"
+              },
+              "variable": {
+                "type": "string",
+                "description": "The name of the variable to store the extracted value in. Defaults to `item`",
+                "title": "Variable"
+              },
+              "fields": {
+                "type": "object",
+                "required": [],
+                "properties": {},
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "required": [
+                        "selector"
+                      ],
+                      "properties": {
+                        "selector": {
+                          "type": "string",
+                          "description": "The CSS selector to use to find the element",
+                          "title": "Selector",
+                          "examples": [
+                            "#example"
+                          ]
+                        },
+                        "attribute": {
+                          "type": "string",
+                          "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                          "title": "Attribute"
+                        },
+                        "transform": {
+                          "type": "string",
+                          "description": "A JavaScript function to transform the value",
+                          "title": "Transform",
+                          "examples": [
+                            "(v) => Number(v.replace('$', ''))"
+                          ]
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "string",
+                      "description": "a string",
+                      "title": "string"
+                    }
+                  ]
+                }
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
               "url",
               "invoice"
             ],
@@ -524,91 +623,6 @@
             "additionalProperties": false,
             "description": "Downloads a PDF from the given URL",
             "title": "Download PDF"
-          },
-          {
-            "type": "object",
-            "required": [
-              "action",
-              "variable",
-              "script"
-            ],
-            "properties": {
-              "action": {
-                "const": "extract"
-              },
-              "variable": {
-                "type": "string",
-                "description": "The name of the variable to store the extracted value in. Defaults to `item`",
-                "title": "Variable",
-                "default": "item"
-              },
-              "script": {
-                "type": "string",
-                "description": "A JavaScript script to run in the page context",
-                "title": "Script",
-                "examples": [
-                  {
-                    "script": "console.log(\"Hello World\");"
-                  }
-                ]
-              }
-            },
-            "additionalProperties": false
-          },
-          {
-            "type": "object",
-            "required": [
-              "action",
-              "variable",
-              "fields"
-            ],
-            "properties": {
-              "action": {
-                "const": "extract"
-              },
-              "variable": {
-                "type": "string",
-                "description": "The name of the variable to store the extracted value in. Defaults to `item`",
-                "title": "Variable",
-                "default": "item"
-              },
-              "fields": {
-                "type": "object",
-                "required": [],
-                "properties": {},
-                "additionalProperties": {
-                  "type": "object",
-                  "required": [
-                    "selector"
-                  ],
-                  "properties": {
-                    "attribute": {
-                      "type": "string",
-                      "description": "The attribute to get from the element. If not specified, the inner text will be used",
-                      "title": "Attribute"
-                    },
-                    "transform": {
-                      "type": "string",
-                      "description": "A JavaScript function to transform the value",
-                      "title": "Transform",
-                      "examples": [
-                        "(v) => Number(v.replace('$', ''))"
-                      ]
-                    },
-                    "selector": {
-                      "type": "string",
-                      "description": "The CSS selector to use to find the element",
-                      "title": "Selector",
-                      "examples": [
-                        "#example"
-                      ]
-                    }
-                  },
-                  "additionalProperties": false
-                }
-              }
-            },
-            "additionalProperties": false
           },
           {
             "type": "object",
@@ -863,7 +877,6 @@
             "type": "object",
             "required": [
               "action",
-              "variable",
               "selector",
               "forEach",
               "fields"
@@ -960,34 +973,43 @@
                 "required": [],
                 "properties": {},
                 "additionalProperties": {
-                  "type": "object",
-                  "required": [
-                    "selector"
-                  ],
-                  "properties": {
-                    "attribute": {
-                      "type": "string",
-                      "description": "The attribute to get from the element. If not specified, the inner text will be used",
-                      "title": "Attribute"
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "required": [
+                        "selector"
+                      ],
+                      "properties": {
+                        "selector": {
+                          "type": "string",
+                          "description": "The CSS selector to use to find the element",
+                          "title": "Selector",
+                          "examples": [
+                            "#example"
+                          ]
+                        },
+                        "attribute": {
+                          "type": "string",
+                          "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                          "title": "Attribute"
+                        },
+                        "transform": {
+                          "type": "string",
+                          "description": "A JavaScript function to transform the value",
+                          "title": "Transform",
+                          "examples": [
+                            "(v) => Number(v.replace('$', ''))"
+                          ]
+                        }
+                      },
+                      "additionalProperties": false
                     },
-                    "transform": {
+                    {
                       "type": "string",
-                      "description": "A JavaScript function to transform the value",
-                      "title": "Transform",
-                      "examples": [
-                        "(v) => Number(v.replace('$', ''))"
-                      ]
-                    },
-                    "selector": {
-                      "type": "string",
-                      "description": "The CSS selector to use to find the element",
-                      "title": "Selector",
-                      "examples": [
-                        "#example"
-                      ]
+                      "description": "a string",
+                      "title": "string"
                     }
-                  },
-                  "additionalProperties": false
+                  ]
                 }
               }
             },
@@ -997,7 +1019,6 @@
             "type": "object",
             "required": [
               "action",
-              "variable",
               "script",
               "forEach"
             ],
@@ -1237,6 +1258,98 @@
             "type": "object",
             "required": [
               "action",
+              "variable",
+              "script"
+            ],
+            "properties": {
+              "action": {
+                "const": "extract"
+              },
+              "variable": {
+                "type": "string",
+                "description": "The name of the variable to store the extracted value in. Defaults to `item`",
+                "title": "Variable"
+              },
+              "script": {
+                "type": "string",
+                "description": "A JavaScript script to run in the page context",
+                "title": "Script",
+                "examples": [
+                  {
+                    "script": "console.log(\"Hello World\");"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "variable",
+              "fields"
+            ],
+            "properties": {
+              "action": {
+                "const": "extract"
+              },
+              "variable": {
+                "type": "string",
+                "description": "The name of the variable to store the extracted value in. Defaults to `item`",
+                "title": "Variable"
+              },
+              "fields": {
+                "type": "object",
+                "required": [],
+                "properties": {},
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "required": [
+                        "selector"
+                      ],
+                      "properties": {
+                        "selector": {
+                          "type": "string",
+                          "description": "The CSS selector to use to find the element",
+                          "title": "Selector",
+                          "examples": [
+                            "#example"
+                          ]
+                        },
+                        "attribute": {
+                          "type": "string",
+                          "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                          "title": "Attribute"
+                        },
+                        "transform": {
+                          "type": "string",
+                          "description": "A JavaScript function to transform the value",
+                          "title": "Transform",
+                          "examples": [
+                            "(v) => Number(v.replace('$', ''))"
+                          ]
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "string",
+                      "description": "a string",
+                      "title": "string"
+                    }
+                  ]
+                }
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
               "url",
               "invoice"
             ],
@@ -1288,91 +1401,6 @@
             "additionalProperties": false,
             "description": "Downloads a PDF from the given URL",
             "title": "Download PDF"
-          },
-          {
-            "type": "object",
-            "required": [
-              "action",
-              "variable",
-              "script"
-            ],
-            "properties": {
-              "action": {
-                "const": "extract"
-              },
-              "variable": {
-                "type": "string",
-                "description": "The name of the variable to store the extracted value in. Defaults to `item`",
-                "title": "Variable",
-                "default": "item"
-              },
-              "script": {
-                "type": "string",
-                "description": "A JavaScript script to run in the page context",
-                "title": "Script",
-                "examples": [
-                  {
-                    "script": "console.log(\"Hello World\");"
-                  }
-                ]
-              }
-            },
-            "additionalProperties": false
-          },
-          {
-            "type": "object",
-            "required": [
-              "action",
-              "variable",
-              "fields"
-            ],
-            "properties": {
-              "action": {
-                "const": "extract"
-              },
-              "variable": {
-                "type": "string",
-                "description": "The name of the variable to store the extracted value in. Defaults to `item`",
-                "title": "Variable",
-                "default": "item"
-              },
-              "fields": {
-                "type": "object",
-                "required": [],
-                "properties": {},
-                "additionalProperties": {
-                  "type": "object",
-                  "required": [
-                    "selector"
-                  ],
-                  "properties": {
-                    "attribute": {
-                      "type": "string",
-                      "description": "The attribute to get from the element. If not specified, the inner text will be used",
-                      "title": "Attribute"
-                    },
-                    "transform": {
-                      "type": "string",
-                      "description": "A JavaScript function to transform the value",
-                      "title": "Transform",
-                      "examples": [
-                        "(v) => Number(v.replace('$', ''))"
-                      ]
-                    },
-                    "selector": {
-                      "type": "string",
-                      "description": "The CSS selector to use to find the element",
-                      "title": "Selector",
-                      "examples": [
-                        "#example"
-                      ]
-                    }
-                  },
-                  "additionalProperties": false
-                }
-              }
-            },
-            "additionalProperties": false
           },
           {
             "type": "object",
@@ -1627,7 +1655,6 @@
             "type": "object",
             "required": [
               "action",
-              "variable",
               "selector",
               "forEach",
               "fields"
@@ -1724,34 +1751,43 @@
                 "required": [],
                 "properties": {},
                 "additionalProperties": {
-                  "type": "object",
-                  "required": [
-                    "selector"
-                  ],
-                  "properties": {
-                    "attribute": {
-                      "type": "string",
-                      "description": "The attribute to get from the element. If not specified, the inner text will be used",
-                      "title": "Attribute"
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "required": [
+                        "selector"
+                      ],
+                      "properties": {
+                        "selector": {
+                          "type": "string",
+                          "description": "The CSS selector to use to find the element",
+                          "title": "Selector",
+                          "examples": [
+                            "#example"
+                          ]
+                        },
+                        "attribute": {
+                          "type": "string",
+                          "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                          "title": "Attribute"
+                        },
+                        "transform": {
+                          "type": "string",
+                          "description": "A JavaScript function to transform the value",
+                          "title": "Transform",
+                          "examples": [
+                            "(v) => Number(v.replace('$', ''))"
+                          ]
+                        }
+                      },
+                      "additionalProperties": false
                     },
-                    "transform": {
+                    {
                       "type": "string",
-                      "description": "A JavaScript function to transform the value",
-                      "title": "Transform",
-                      "examples": [
-                        "(v) => Number(v.replace('$', ''))"
-                      ]
-                    },
-                    "selector": {
-                      "type": "string",
-                      "description": "The CSS selector to use to find the element",
-                      "title": "Selector",
-                      "examples": [
-                        "#example"
-                      ]
+                      "description": "a string",
+                      "title": "string"
                     }
-                  },
-                  "additionalProperties": false
+                  ]
                 }
               }
             },
@@ -1761,7 +1797,6 @@
             "type": "object",
             "required": [
               "action",
-              "variable",
               "script",
               "forEach"
             ],
@@ -2001,6 +2036,98 @@
             "type": "object",
             "required": [
               "action",
+              "variable",
+              "script"
+            ],
+            "properties": {
+              "action": {
+                "const": "extract"
+              },
+              "variable": {
+                "type": "string",
+                "description": "The name of the variable to store the extracted value in. Defaults to `item`",
+                "title": "Variable"
+              },
+              "script": {
+                "type": "string",
+                "description": "A JavaScript script to run in the page context",
+                "title": "Script",
+                "examples": [
+                  {
+                    "script": "console.log(\"Hello World\");"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "variable",
+              "fields"
+            ],
+            "properties": {
+              "action": {
+                "const": "extract"
+              },
+              "variable": {
+                "type": "string",
+                "description": "The name of the variable to store the extracted value in. Defaults to `item`",
+                "title": "Variable"
+              },
+              "fields": {
+                "type": "object",
+                "required": [],
+                "properties": {},
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "required": [
+                        "selector"
+                      ],
+                      "properties": {
+                        "selector": {
+                          "type": "string",
+                          "description": "The CSS selector to use to find the element",
+                          "title": "Selector",
+                          "examples": [
+                            "#example"
+                          ]
+                        },
+                        "attribute": {
+                          "type": "string",
+                          "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                          "title": "Attribute"
+                        },
+                        "transform": {
+                          "type": "string",
+                          "description": "A JavaScript function to transform the value",
+                          "title": "Transform",
+                          "examples": [
+                            "(v) => Number(v.replace('$', ''))"
+                          ]
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "string",
+                      "description": "a string",
+                      "title": "string"
+                    }
+                  ]
+                }
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
               "url",
               "invoice"
             ],
@@ -2052,91 +2179,6 @@
             "additionalProperties": false,
             "description": "Downloads a PDF from the given URL",
             "title": "Download PDF"
-          },
-          {
-            "type": "object",
-            "required": [
-              "action",
-              "variable",
-              "script"
-            ],
-            "properties": {
-              "action": {
-                "const": "extract"
-              },
-              "variable": {
-                "type": "string",
-                "description": "The name of the variable to store the extracted value in. Defaults to `item`",
-                "title": "Variable",
-                "default": "item"
-              },
-              "script": {
-                "type": "string",
-                "description": "A JavaScript script to run in the page context",
-                "title": "Script",
-                "examples": [
-                  {
-                    "script": "console.log(\"Hello World\");"
-                  }
-                ]
-              }
-            },
-            "additionalProperties": false
-          },
-          {
-            "type": "object",
-            "required": [
-              "action",
-              "variable",
-              "fields"
-            ],
-            "properties": {
-              "action": {
-                "const": "extract"
-              },
-              "variable": {
-                "type": "string",
-                "description": "The name of the variable to store the extracted value in. Defaults to `item`",
-                "title": "Variable",
-                "default": "item"
-              },
-              "fields": {
-                "type": "object",
-                "required": [],
-                "properties": {},
-                "additionalProperties": {
-                  "type": "object",
-                  "required": [
-                    "selector"
-                  ],
-                  "properties": {
-                    "attribute": {
-                      "type": "string",
-                      "description": "The attribute to get from the element. If not specified, the inner text will be used",
-                      "title": "Attribute"
-                    },
-                    "transform": {
-                      "type": "string",
-                      "description": "A JavaScript function to transform the value",
-                      "title": "Transform",
-                      "examples": [
-                        "(v) => Number(v.replace('$', ''))"
-                      ]
-                    },
-                    "selector": {
-                      "type": "string",
-                      "description": "The CSS selector to use to find the element",
-                      "title": "Selector",
-                      "examples": [
-                        "#example"
-                      ]
-                    }
-                  },
-                  "additionalProperties": false
-                }
-              }
-            },
-            "additionalProperties": false
           },
           {
             "type": "object",
@@ -2408,7 +2450,6 @@
           "type": "object",
           "required": [
             "action",
-            "variable",
             "selector",
             "forEach",
             "fields"
@@ -2505,34 +2546,43 @@
               "required": [],
               "properties": {},
               "additionalProperties": {
-                "type": "object",
-                "required": [
-                  "selector"
-                ],
-                "properties": {
-                  "attribute": {
-                    "type": "string",
-                    "description": "The attribute to get from the element. If not specified, the inner text will be used",
-                    "title": "Attribute"
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "required": [
+                      "selector"
+                    ],
+                    "properties": {
+                      "selector": {
+                        "type": "string",
+                        "description": "The CSS selector to use to find the element",
+                        "title": "Selector",
+                        "examples": [
+                          "#example"
+                        ]
+                      },
+                      "attribute": {
+                        "type": "string",
+                        "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                        "title": "Attribute"
+                      },
+                      "transform": {
+                        "type": "string",
+                        "description": "A JavaScript function to transform the value",
+                        "title": "Transform",
+                        "examples": [
+                          "(v) => Number(v.replace('$', ''))"
+                        ]
+                      }
+                    },
+                    "additionalProperties": false
                   },
-                  "transform": {
+                  {
                     "type": "string",
-                    "description": "A JavaScript function to transform the value",
-                    "title": "Transform",
-                    "examples": [
-                      "(v) => Number(v.replace('$', ''))"
-                    ]
-                  },
-                  "selector": {
-                    "type": "string",
-                    "description": "The CSS selector to use to find the element",
-                    "title": "Selector",
-                    "examples": [
-                      "#example"
-                    ]
+                    "description": "a string",
+                    "title": "string"
                   }
-                },
-                "additionalProperties": false
+                ]
               }
             }
           },
@@ -2542,7 +2592,6 @@
           "type": "object",
           "required": [
             "action",
-            "variable",
             "script",
             "forEach"
           ],
@@ -2782,6 +2831,98 @@
           "type": "object",
           "required": [
             "action",
+            "variable",
+            "script"
+          ],
+          "properties": {
+            "action": {
+              "const": "extract"
+            },
+            "variable": {
+              "type": "string",
+              "description": "The name of the variable to store the extracted value in. Defaults to `item`",
+              "title": "Variable"
+            },
+            "script": {
+              "type": "string",
+              "description": "A JavaScript script to run in the page context",
+              "title": "Script",
+              "examples": [
+                {
+                  "script": "console.log(\"Hello World\");"
+                }
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "action",
+            "variable",
+            "fields"
+          ],
+          "properties": {
+            "action": {
+              "const": "extract"
+            },
+            "variable": {
+              "type": "string",
+              "description": "The name of the variable to store the extracted value in. Defaults to `item`",
+              "title": "Variable"
+            },
+            "fields": {
+              "type": "object",
+              "required": [],
+              "properties": {},
+              "additionalProperties": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "required": [
+                      "selector"
+                    ],
+                    "properties": {
+                      "selector": {
+                        "type": "string",
+                        "description": "The CSS selector to use to find the element",
+                        "title": "Selector",
+                        "examples": [
+                          "#example"
+                        ]
+                      },
+                      "attribute": {
+                        "type": "string",
+                        "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                        "title": "Attribute"
+                      },
+                      "transform": {
+                        "type": "string",
+                        "description": "A JavaScript function to transform the value",
+                        "title": "Transform",
+                        "examples": [
+                          "(v) => Number(v.replace('$', ''))"
+                        ]
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "string",
+                    "description": "a string",
+                    "title": "string"
+                  }
+                ]
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "action",
             "url",
             "invoice"
           ],
@@ -2833,91 +2974,6 @@
           "additionalProperties": false,
           "description": "Downloads a PDF from the given URL",
           "title": "Download PDF"
-        },
-        {
-          "type": "object",
-          "required": [
-            "action",
-            "variable",
-            "script"
-          ],
-          "properties": {
-            "action": {
-              "const": "extract"
-            },
-            "variable": {
-              "type": "string",
-              "description": "The name of the variable to store the extracted value in. Defaults to `item`",
-              "title": "Variable",
-              "default": "item"
-            },
-            "script": {
-              "type": "string",
-              "description": "A JavaScript script to run in the page context",
-              "title": "Script",
-              "examples": [
-                {
-                  "script": "console.log(\"Hello World\");"
-                }
-              ]
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "required": [
-            "action",
-            "variable",
-            "fields"
-          ],
-          "properties": {
-            "action": {
-              "const": "extract"
-            },
-            "variable": {
-              "type": "string",
-              "description": "The name of the variable to store the extracted value in. Defaults to `item`",
-              "title": "Variable",
-              "default": "item"
-            },
-            "fields": {
-              "type": "object",
-              "required": [],
-              "properties": {},
-              "additionalProperties": {
-                "type": "object",
-                "required": [
-                  "selector"
-                ],
-                "properties": {
-                  "attribute": {
-                    "type": "string",
-                    "description": "The attribute to get from the element. If not specified, the inner text will be used",
-                    "title": "Attribute"
-                  },
-                  "transform": {
-                    "type": "string",
-                    "description": "A JavaScript function to transform the value",
-                    "title": "Transform",
-                    "examples": [
-                      "(v) => Number(v.replace('$', ''))"
-                    ]
-                  },
-                  "selector": {
-                    "type": "string",
-                    "description": "The CSS selector to use to find the element",
-                    "title": "Selector",
-                    "examples": [
-                      "#example"
-                    ]
-                  }
-                },
-                "additionalProperties": false
-              }
-            }
-          },
-          "additionalProperties": false
         },
         {
           "type": "object",
