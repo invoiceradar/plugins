@@ -75,7 +75,7 @@
         "date": {
           "selector": "td:nth-child(1)"
         },
-        "amount": {
+        "total": {
           "selector": "td:nth-child(4)"
         }
       },
