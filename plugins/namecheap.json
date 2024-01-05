@@ -98,9 +98,9 @@
       "action": "waitForNavigation"
     },
     {
-      "action": "extractInvoices",
-      "itemSelector": ".AjaxPageCall tbody tr:has(a[href^='/profile/billing/orders/downloadpdf'])",
-      "itemFields": {
+      "action": "extractAll",
+      "selector": ".AjaxPageCall tbody tr:has(a[href^='/profile/billing/orders/downloadpdf'])",
+      "fields": {
         "id": {
           "selector": "td:nth-child(1) p"
         },
@@ -118,7 +118,8 @@
       "forEach": [
         {
           "action": "downloadPdf",
-          "url": "{{invoice.pdfLink}}"
+          "url": "{{invoice.pdfLink}}",
+          "invoice": "{{invoice}}"
         }
       ]
     }
