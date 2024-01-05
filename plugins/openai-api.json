@@ -55,9 +55,9 @@
     },
 
     {
-      "action": "extractInvoices",
-      "itemSelector": ".billing-history-table > tbody > tr",
-      "itemFields": {
+      "action": "extractAll",
+      "selector": ".billing-history-table > tbody > tr",
+      "fields": {
         "id": {
           "selector": "td:nth-child(1)"
         },
@@ -72,7 +72,7 @@
       "forEach": [
         {
           "action": "getInvoiceFromStripeUrl",
-          "url": "{{invoice.url}}"
+          "url": "{{item.url}}"
         }
       ]
     }

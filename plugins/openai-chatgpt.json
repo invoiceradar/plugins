@@ -59,9 +59,9 @@
     },
     { "action": "click", "selector": "div:has(> div ):has(> button) button" },
     {
-      "action": "extractInvoices",
-      "itemSelector": "div:has(> a[href^='https://invoice.stripe.com'])",
-      "itemFields": {
+      "action": "extractAll",
+      "selector": "div:has(> a[href^='https://invoice.stripe.com'])",
+      "fields": {
         "id": {
           "selector": "a"
         },
@@ -76,7 +76,7 @@
       "forEach": [
         {
           "action": "getInvoiceFromStripeUrl",
-          "url": "{{invoice.url}}"
+          "url": "{{item.url}}"
         }
       ]
     }

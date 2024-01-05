@@ -98,18 +98,17 @@
       "action": "waitForNavigation"
     },
     {
-      "action": "extractInvoices",
-      "itemSelector": ".AjaxPageCall tbody tr:has(a[href^='/profile/billing/orders/downloadpdf'])",
-      "itemFields": {
+      "action": "extractAll",
+      "selector": ".AjaxPageCall tbody tr:has(a[href^='/profile/billing/orders/downloadpdf'])",
+      "fields": {
         "id": {
           "selector": "td:nth-child(1) p"
         },
         "date": {
           "selector": "td:nth-child(3) p"
         },
-        "amount": {
-          "selector": "td:nth-child(5)",
-          "transform": "(text) => Number(text.replace('$', ''))"
+        "total": {
+          "selector": "td:nth-child(5)"
         },
         "pdfLink": {
           "selector": "a[href^='/profile/billing/orders/downloadpdf']",
@@ -119,7 +118,8 @@
       "forEach": [
         {
           "action": "downloadPdf",
-          "url": "{{invoice.pdfLink}}"
+          "url": "{{invoice.pdfLink}}",
+          "invoice": "{{invoice}}"
         }
       ]
     }
