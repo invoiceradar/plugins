@@ -66,9 +66,10 @@
       "selector": "tbody tr"
     },
     {
-      "action": "extractInvoices",
-      "itemSelector": "tbody tr",
-      "itemFields": {
+      "action": "extractAll",
+      "selector": "tbody tr",
+      "variable": "invoice",
+      "fields": {
         "id": {
           "selector": "td:nth-child(3) a > span:last-of-type"
         },
@@ -85,7 +86,8 @@
           "selector": "td:nth-child(3) a"
         },
         {
-          "action": "waitForPdfDownload"
+          "action": "waitForPdfDownload",
+          "invoice": "invoice"
         }
       ]
     }
