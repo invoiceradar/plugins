@@ -40,8 +40,8 @@
       "selector": ".order-card,.order",
       "variable": "order",
       "fields": {
-        "url": {
-          "selector": "a[href*='invoice.html']",
+        "overviewUrl": {
+          "selector": "a[href*='order-details']",
           "attribute": "href"
         },
         "id": {
@@ -51,22 +51,23 @@
           "selector": ".a-col-left .a-column:nth-child(1) .a-size-base"
         },
         "price": {
-          "selector": ".a-col-left .a-column:last-of-type .a-size-base"
+          "selector": ".yohtmlc-order-total"
         }
       },
       "pagination": {
         "type": "next",
-        "selector": ".a-pagination li:last-of-type:not(.a-disabled)",
+        "selector": ".a-pagination li:last-of-type:not(.a-disabled) a",
         "waitForSelector": ".order-card,.order"
       },
       "forEach": [
         {
           "action": "navigate",
-          "url": "{{ order.url }}"
+          "url": "{{order.overviewUrl}}"
         },
+
         {
           "action": "extractAll",
-          "selector": "li:has(a[href$='.pdf'])",
+          "selector": ".hide-if-js li:has(a[href$='invoice.pdf'])",
           "variable": "invoice",
           "fields": {
             "url": {
@@ -77,7 +78,7 @@
           "forEach": [
             {
               "action": "downloadPdf",
-              "url": "{{ invoice.url }}",
+              "url": "{{invoice.url}}",
               "invoice": {
                 "id": "{{order.id}}",
                 "date": "{{order.date}}",
