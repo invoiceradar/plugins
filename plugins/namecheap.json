@@ -84,18 +84,19 @@
     },
     {
       "action": "click",
+      "optional": true,
       "selector": ".pagination-small > .dropdown > a"
     },
     {
       "action": "waitForElement",
-      "selector": ".dropdown.expanded"
+      "optional": true,
+      "selector": ".dropdown.expanded",
+      "timeout": 200
     },
     {
       "action": "click",
+      "optional": true,
       "selector": ".dropdown-content ul.default-list li:last-child a"
-    },
-    {
-      "action": "waitForNavigation"
     },
     {
       "action": "extractAll",
@@ -118,8 +119,8 @@
       "forEach": [
         {
           "action": "downloadPdf",
-          "url": "{{invoice.pdfLink}}",
-          "invoice": "{{invoice}}"
+          "url": "{{item.pdfLink}}",
+          "invoice": "item"
         }
       ]
     }
