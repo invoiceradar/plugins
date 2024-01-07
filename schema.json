@@ -241,6 +241,83 @@
             "type": "object",
             "required": [
               "action",
+              "selector",
+              "value"
+            ],
+            "properties": {
+              "action": {
+                "const": "type"
+              },
+              "optional": {
+                "type": "boolean",
+                "description": "Whether or not the flow should continue if this step fails",
+                "title": "Optional"
+              },
+              "selector": {
+                "type": "string",
+                "description": "The CSS selector to use to find the element",
+                "title": "Selector",
+                "examples": [
+                  "#example"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "description": "a string",
+                "title": "string"
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "selector"
+            ],
+            "properties": {
+              "action": {
+                "const": "waitForElement"
+              },
+              "optional": {
+                "type": "boolean",
+                "description": "Whether or not the flow should continue if this step fails",
+                "title": "Optional"
+              },
+              "selector": {
+                "type": "string",
+                "description": "The CSS selector to use to find the element",
+                "title": "Selector",
+                "examples": [
+                  "#example"
+                ]
+              },
+              "timeout": {
+                "type": "number",
+                "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                "title": "Timeout",
+                "examples": [
+                  15000
+                ],
+                "default": 15000
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
               "script",
               "forEach"
             ],
@@ -340,51 +417,44 @@
             "type": "object",
             "required": [
               "action",
-              "selector"
+              "script"
             ],
             "properties": {
               "action": {
-                "const": "waitForElement"
+                "const": "runJs"
               },
-              "selector": {
+              "optional": {
+                "type": "boolean",
+                "description": "Whether or not the flow should continue if this step fails",
+                "title": "Optional"
+              },
+              "script": {
                 "type": "string",
-                "description": "The CSS selector to use to find the element",
-                "title": "Selector",
-                "examples": [
-                  "#example"
-                ]
+                "description": "a string",
+                "title": "string"
               },
-              "timeout": {
-                "type": "number",
-                "description": "The number of milliseconds to wait for. Defaults to 15s.",
-                "title": "Timeout",
-                "examples": [
-                  15000
-                ],
-                "default": 15000
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               }
             },
-            "additionalProperties": false,
-            "description": "Waits for the given selector to appear on the page, optionally with a timeout",
-            "title": "Wait for Element",
-            "examples": [
-              {
-                "action": "waitForElement",
-                "selector": "#example",
-                "timeout": 3000
-              }
-            ]
+            "additionalProperties": false
           },
           {
             "type": "object",
             "required": [
               "action",
-              "selector",
-              "value"
+              "selector"
             ],
             "properties": {
               "action": {
-                "const": "type"
+                "const": "click"
+              },
+              "optional": {
+                "type": "boolean",
+                "description": "Whether or not the flow should continue if this step fails",
+                "title": "Optional"
               },
               "selector": {
                 "type": "string",
@@ -394,22 +464,13 @@
                   "#example"
                 ]
               },
-              "value": {
+              "description": {
                 "type": "string",
-                "description": "a string",
-                "title": "string"
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               }
             },
-            "additionalProperties": false,
-            "description": "Types the given text into the element specified by the given selector on the page",
-            "title": "Type Text",
-            "examples": [
-              {
-                "action": "type",
-                "selector": "#input",
-                "text": "Hello World"
-              }
-            ]
+            "additionalProperties": false
           },
           {
             "type": "object",
@@ -429,6 +490,11 @@
                   15000
                 ],
                 "default": 15000
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               },
               "invoice": {
                 "anyOf": [
@@ -466,15 +532,7 @@
                 ]
               }
             },
-            "additionalProperties": false,
-            "description": "Waits and checks for a PDF download to complete. Timeout defaults to 15s.",
-            "title": "Wait for PDF Download",
-            "examples": [
-              {
-                "action": "waitForPdfDownload",
-                "timeout": 10000
-              }
-            ]
+            "additionalProperties": false
           },
           {
             "type": "object",
@@ -501,6 +559,11 @@
                     "script": "console.log(\"Hello World\");"
                   }
                 ]
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               }
             },
             "additionalProperties": false
@@ -520,6 +583,11 @@
                 "type": "string",
                 "description": "The name of the variable to store the extracted value in. Defaults to `item`",
                 "title": "Variable"
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               },
               "fields": {
                 "type": "object",
@@ -584,6 +652,11 @@
                 "description": "The URL to download the PDF from",
                 "title": "URL"
               },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
+              },
               "invoice": {
                 "anyOf": [
                   {
@@ -620,9 +693,7 @@
                 ]
               }
             },
-            "additionalProperties": false,
-            "description": "Downloads a PDF from the given URL",
-            "title": "Download PDF"
+            "additionalProperties": false
           },
           {
             "type": "object",
@@ -638,43 +709,14 @@
                 "type": "string",
                 "description": "The URL to navigate to",
                 "title": "URL"
-              }
-            },
-            "additionalProperties": false,
-            "description": "Navigates to the given URL and waits for the page to load",
-            "title": "Navigate to URL",
-            "examples": [
-              {
-                "action": "navigate",
-                "url": "https://example.com"
-              }
-            ]
-          },
-          {
-            "type": "object",
-            "required": [
-              "action",
-              "script"
-            ],
-            "properties": {
-              "action": {
-                "const": "runJs"
               },
-              "script": {
+              "description": {
                 "type": "string",
-                "description": "a string",
-                "title": "string"
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               }
             },
-            "additionalProperties": false,
-            "description": "Runs the given JavaScript in the page context",
-            "title": "Run JavaScript",
-            "examples": [
-              {
-                "action": "runJs",
-                "script": "console.log(\"Hello World\");"
-              }
-            ]
+            "additionalProperties": false
           },
           {
             "type": "object",
@@ -693,46 +735,14 @@
                 "examples": [
                   "#example"
                 ]
-              }
-            },
-            "additionalProperties": false,
-            "description": "Checks if the given selector exists on the page",
-            "title": "Check Element Exists",
-            "examples": [
-              {
-                "action": "checkElementExists",
-                "selector": "#example"
-              }
-            ]
-          },
-          {
-            "type": "object",
-            "required": [
-              "action",
-              "selector"
-            ],
-            "properties": {
-              "action": {
-                "const": "click"
               },
-              "selector": {
+              "description": {
                 "type": "string",
-                "description": "The CSS selector to use to find the element",
-                "title": "Selector",
-                "examples": [
-                  "#example"
-                ]
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               }
             },
-            "additionalProperties": false,
-            "description": "Clicks the element specified by the given selector on the page",
-            "title": "Click Element",
-            "examples": [
-              {
-                "action": "click",
-                "selector": "#button"
-              }
-            ]
+            "additionalProperties": false
           },
           {
             "type": "object",
@@ -743,6 +753,11 @@
             "properties": {
               "action": {
                 "const": "printPdf"
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               },
               "invoice": {
                 "anyOf": [
@@ -780,14 +795,7 @@
                 ]
               }
             },
-            "additionalProperties": false,
-            "description": "Prints the current page to a PDF file",
-            "title": "Print Page as PDF",
-            "examples": [
-              {
-                "action": "printPdf"
-              }
-            ]
+            "additionalProperties": false
           },
           {
             "type": "object",
@@ -806,17 +814,14 @@
                   15000
                 ],
                 "default": 15000
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               }
             },
-            "additionalProperties": false,
-            "description": "Waits for the page to finish navigating. Timeout defaults to 15s.",
-            "title": "Wait for Navigation",
-            "examples": [
-              {
-                "action": "waitForNavigation",
-                "timeout": 10000
-              }
-            ]
+            "additionalProperties": false
           },
           {
             "type": "object",
@@ -832,17 +837,14 @@
                 "type": "number",
                 "description": "The number of milliseconds to wait for",
                 "title": "Duration"
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               }
             },
-            "additionalProperties": false,
-            "description": "Waits for the given amount of time in milliseconds",
-            "title": "Sleep",
-            "examples": [
-              {
-                "action": "sleep",
-                "timeout": 10000
-              }
-            ]
+            "additionalProperties": false
           },
           {
             "type": "object",
@@ -858,11 +860,14 @@
                 "type": "string",
                 "description": "The URL of the Stripe invoice",
                 "title": "Stripe Invoice URL"
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               }
             },
-            "additionalProperties": false,
-            "description": "Navigates to the given Stripe Invoice URL and extracts the invoice",
-            "title": "Get Invoice from Stripe URL"
+            "additionalProperties": false
           }
         ]
       },
@@ -1019,6 +1024,83 @@
             "type": "object",
             "required": [
               "action",
+              "selector",
+              "value"
+            ],
+            "properties": {
+              "action": {
+                "const": "type"
+              },
+              "optional": {
+                "type": "boolean",
+                "description": "Whether or not the flow should continue if this step fails",
+                "title": "Optional"
+              },
+              "selector": {
+                "type": "string",
+                "description": "The CSS selector to use to find the element",
+                "title": "Selector",
+                "examples": [
+                  "#example"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "description": "a string",
+                "title": "string"
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "selector"
+            ],
+            "properties": {
+              "action": {
+                "const": "waitForElement"
+              },
+              "optional": {
+                "type": "boolean",
+                "description": "Whether or not the flow should continue if this step fails",
+                "title": "Optional"
+              },
+              "selector": {
+                "type": "string",
+                "description": "The CSS selector to use to find the element",
+                "title": "Selector",
+                "examples": [
+                  "#example"
+                ]
+              },
+              "timeout": {
+                "type": "number",
+                "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                "title": "Timeout",
+                "examples": [
+                  15000
+                ],
+                "default": 15000
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
               "script",
               "forEach"
             ],
@@ -1118,51 +1200,44 @@
             "type": "object",
             "required": [
               "action",
-              "selector"
+              "script"
             ],
             "properties": {
               "action": {
-                "const": "waitForElement"
+                "const": "runJs"
               },
-              "selector": {
+              "optional": {
+                "type": "boolean",
+                "description": "Whether or not the flow should continue if this step fails",
+                "title": "Optional"
+              },
+              "script": {
                 "type": "string",
-                "description": "The CSS selector to use to find the element",
-                "title": "Selector",
-                "examples": [
-                  "#example"
-                ]
+                "description": "a string",
+                "title": "string"
               },
-              "timeout": {
-                "type": "number",
-                "description": "The number of milliseconds to wait for. Defaults to 15s.",
-                "title": "Timeout",
-                "examples": [
-                  15000
-                ],
-                "default": 15000
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               }
             },
-            "additionalProperties": false,
-            "description": "Waits for the given selector to appear on the page, optionally with a timeout",
-            "title": "Wait for Element",
-            "examples": [
-              {
-                "action": "waitForElement",
-                "selector": "#example",
-                "timeout": 3000
-              }
-            ]
+            "additionalProperties": false
           },
           {
             "type": "object",
             "required": [
               "action",
-              "selector",
-              "value"
+              "selector"
             ],
             "properties": {
               "action": {
-                "const": "type"
+                "const": "click"
+              },
+              "optional": {
+                "type": "boolean",
+                "description": "Whether or not the flow should continue if this step fails",
+                "title": "Optional"
               },
               "selector": {
                 "type": "string",
@@ -1172,22 +1247,13 @@
                   "#example"
                 ]
               },
-              "value": {
+              "description": {
                 "type": "string",
-                "description": "a string",
-                "title": "string"
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               }
             },
-            "additionalProperties": false,
-            "description": "Types the given text into the element specified by the given selector on the page",
-            "title": "Type Text",
-            "examples": [
-              {
-                "action": "type",
-                "selector": "#input",
-                "text": "Hello World"
-              }
-            ]
+            "additionalProperties": false
           },
           {
             "type": "object",
@@ -1207,6 +1273,11 @@
                   15000
                 ],
                 "default": 15000
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               },
               "invoice": {
                 "anyOf": [
@@ -1244,15 +1315,7 @@
                 ]
               }
             },
-            "additionalProperties": false,
-            "description": "Waits and checks for a PDF download to complete. Timeout defaults to 15s.",
-            "title": "Wait for PDF Download",
-            "examples": [
-              {
-                "action": "waitForPdfDownload",
-                "timeout": 10000
-              }
-            ]
+            "additionalProperties": false
           },
           {
             "type": "object",
@@ -1279,6 +1342,11 @@
                     "script": "console.log(\"Hello World\");"
                   }
                 ]
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               }
             },
             "additionalProperties": false
@@ -1298,6 +1366,11 @@
                 "type": "string",
                 "description": "The name of the variable to store the extracted value in. Defaults to `item`",
                 "title": "Variable"
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               },
               "fields": {
                 "type": "object",
@@ -1362,6 +1435,11 @@
                 "description": "The URL to download the PDF from",
                 "title": "URL"
               },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
+              },
               "invoice": {
                 "anyOf": [
                   {
@@ -1398,9 +1476,7 @@
                 ]
               }
             },
-            "additionalProperties": false,
-            "description": "Downloads a PDF from the given URL",
-            "title": "Download PDF"
+            "additionalProperties": false
           },
           {
             "type": "object",
@@ -1416,43 +1492,14 @@
                 "type": "string",
                 "description": "The URL to navigate to",
                 "title": "URL"
-              }
-            },
-            "additionalProperties": false,
-            "description": "Navigates to the given URL and waits for the page to load",
-            "title": "Navigate to URL",
-            "examples": [
-              {
-                "action": "navigate",
-                "url": "https://example.com"
-              }
-            ]
-          },
-          {
-            "type": "object",
-            "required": [
-              "action",
-              "script"
-            ],
-            "properties": {
-              "action": {
-                "const": "runJs"
               },
-              "script": {
+              "description": {
                 "type": "string",
-                "description": "a string",
-                "title": "string"
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               }
             },
-            "additionalProperties": false,
-            "description": "Runs the given JavaScript in the page context",
-            "title": "Run JavaScript",
-            "examples": [
-              {
-                "action": "runJs",
-                "script": "console.log(\"Hello World\");"
-              }
-            ]
+            "additionalProperties": false
           },
           {
             "type": "object",
@@ -1471,46 +1518,14 @@
                 "examples": [
                   "#example"
                 ]
-              }
-            },
-            "additionalProperties": false,
-            "description": "Checks if the given selector exists on the page",
-            "title": "Check Element Exists",
-            "examples": [
-              {
-                "action": "checkElementExists",
-                "selector": "#example"
-              }
-            ]
-          },
-          {
-            "type": "object",
-            "required": [
-              "action",
-              "selector"
-            ],
-            "properties": {
-              "action": {
-                "const": "click"
               },
-              "selector": {
+              "description": {
                 "type": "string",
-                "description": "The CSS selector to use to find the element",
-                "title": "Selector",
-                "examples": [
-                  "#example"
-                ]
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               }
             },
-            "additionalProperties": false,
-            "description": "Clicks the element specified by the given selector on the page",
-            "title": "Click Element",
-            "examples": [
-              {
-                "action": "click",
-                "selector": "#button"
-              }
-            ]
+            "additionalProperties": false
           },
           {
             "type": "object",
@@ -1521,6 +1536,11 @@
             "properties": {
               "action": {
                 "const": "printPdf"
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               },
               "invoice": {
                 "anyOf": [
@@ -1558,14 +1578,7 @@
                 ]
               }
             },
-            "additionalProperties": false,
-            "description": "Prints the current page to a PDF file",
-            "title": "Print Page as PDF",
-            "examples": [
-              {
-                "action": "printPdf"
-              }
-            ]
+            "additionalProperties": false
           },
           {
             "type": "object",
@@ -1584,17 +1597,14 @@
                   15000
                 ],
                 "default": 15000
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               }
             },
-            "additionalProperties": false,
-            "description": "Waits for the page to finish navigating. Timeout defaults to 15s.",
-            "title": "Wait for Navigation",
-            "examples": [
-              {
-                "action": "waitForNavigation",
-                "timeout": 10000
-              }
-            ]
+            "additionalProperties": false
           },
           {
             "type": "object",
@@ -1610,17 +1620,14 @@
                 "type": "number",
                 "description": "The number of milliseconds to wait for",
                 "title": "Duration"
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               }
             },
-            "additionalProperties": false,
-            "description": "Waits for the given amount of time in milliseconds",
-            "title": "Sleep",
-            "examples": [
-              {
-                "action": "sleep",
-                "timeout": 10000
-              }
-            ]
+            "additionalProperties": false
           },
           {
             "type": "object",
@@ -1636,11 +1643,14 @@
                 "type": "string",
                 "description": "The URL of the Stripe invoice",
                 "title": "Stripe Invoice URL"
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               }
             },
-            "additionalProperties": false,
-            "description": "Navigates to the given Stripe Invoice URL and extracts the invoice",
-            "title": "Get Invoice from Stripe URL"
+            "additionalProperties": false
           }
         ]
       },
@@ -1797,6 +1807,83 @@
             "type": "object",
             "required": [
               "action",
+              "selector",
+              "value"
+            ],
+            "properties": {
+              "action": {
+                "const": "type"
+              },
+              "optional": {
+                "type": "boolean",
+                "description": "Whether or not the flow should continue if this step fails",
+                "title": "Optional"
+              },
+              "selector": {
+                "type": "string",
+                "description": "The CSS selector to use to find the element",
+                "title": "Selector",
+                "examples": [
+                  "#example"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "description": "a string",
+                "title": "string"
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "selector"
+            ],
+            "properties": {
+              "action": {
+                "const": "waitForElement"
+              },
+              "optional": {
+                "type": "boolean",
+                "description": "Whether or not the flow should continue if this step fails",
+                "title": "Optional"
+              },
+              "selector": {
+                "type": "string",
+                "description": "The CSS selector to use to find the element",
+                "title": "Selector",
+                "examples": [
+                  "#example"
+                ]
+              },
+              "timeout": {
+                "type": "number",
+                "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                "title": "Timeout",
+                "examples": [
+                  15000
+                ],
+                "default": 15000
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
               "script",
               "forEach"
             ],
@@ -1896,51 +1983,44 @@
             "type": "object",
             "required": [
               "action",
-              "selector"
+              "script"
             ],
             "properties": {
               "action": {
-                "const": "waitForElement"
+                "const": "runJs"
               },
-              "selector": {
+              "optional": {
+                "type": "boolean",
+                "description": "Whether or not the flow should continue if this step fails",
+                "title": "Optional"
+              },
+              "script": {
                 "type": "string",
-                "description": "The CSS selector to use to find the element",
-                "title": "Selector",
-                "examples": [
-                  "#example"
-                ]
+                "description": "a string",
+                "title": "string"
               },
-              "timeout": {
-                "type": "number",
-                "description": "The number of milliseconds to wait for. Defaults to 15s.",
-                "title": "Timeout",
-                "examples": [
-                  15000
-                ],
-                "default": 15000
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               }
             },
-            "additionalProperties": false,
-            "description": "Waits for the given selector to appear on the page, optionally with a timeout",
-            "title": "Wait for Element",
-            "examples": [
-              {
-                "action": "waitForElement",
-                "selector": "#example",
-                "timeout": 3000
-              }
-            ]
+            "additionalProperties": false
           },
           {
             "type": "object",
             "required": [
               "action",
-              "selector",
-              "value"
+              "selector"
             ],
             "properties": {
               "action": {
-                "const": "type"
+                "const": "click"
+              },
+              "optional": {
+                "type": "boolean",
+                "description": "Whether or not the flow should continue if this step fails",
+                "title": "Optional"
               },
               "selector": {
                 "type": "string",
@@ -1950,22 +2030,13 @@
                   "#example"
                 ]
               },
-              "value": {
+              "description": {
                 "type": "string",
-                "description": "a string",
-                "title": "string"
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               }
             },
-            "additionalProperties": false,
-            "description": "Types the given text into the element specified by the given selector on the page",
-            "title": "Type Text",
-            "examples": [
-              {
-                "action": "type",
-                "selector": "#input",
-                "text": "Hello World"
-              }
-            ]
+            "additionalProperties": false
           },
           {
             "type": "object",
@@ -1985,6 +2056,11 @@
                   15000
                 ],
                 "default": 15000
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               },
               "invoice": {
                 "anyOf": [
@@ -2022,15 +2098,7 @@
                 ]
               }
             },
-            "additionalProperties": false,
-            "description": "Waits and checks for a PDF download to complete. Timeout defaults to 15s.",
-            "title": "Wait for PDF Download",
-            "examples": [
-              {
-                "action": "waitForPdfDownload",
-                "timeout": 10000
-              }
-            ]
+            "additionalProperties": false
           },
           {
             "type": "object",
@@ -2057,6 +2125,11 @@
                     "script": "console.log(\"Hello World\");"
                   }
                 ]
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               }
             },
             "additionalProperties": false
@@ -2076,6 +2149,11 @@
                 "type": "string",
                 "description": "The name of the variable to store the extracted value in. Defaults to `item`",
                 "title": "Variable"
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               },
               "fields": {
                 "type": "object",
@@ -2140,6 +2218,11 @@
                 "description": "The URL to download the PDF from",
                 "title": "URL"
               },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
+              },
               "invoice": {
                 "anyOf": [
                   {
@@ -2176,9 +2259,7 @@
                 ]
               }
             },
-            "additionalProperties": false,
-            "description": "Downloads a PDF from the given URL",
-            "title": "Download PDF"
+            "additionalProperties": false
           },
           {
             "type": "object",
@@ -2194,43 +2275,14 @@
                 "type": "string",
                 "description": "The URL to navigate to",
                 "title": "URL"
-              }
-            },
-            "additionalProperties": false,
-            "description": "Navigates to the given URL and waits for the page to load",
-            "title": "Navigate to URL",
-            "examples": [
-              {
-                "action": "navigate",
-                "url": "https://example.com"
-              }
-            ]
-          },
-          {
-            "type": "object",
-            "required": [
-              "action",
-              "script"
-            ],
-            "properties": {
-              "action": {
-                "const": "runJs"
               },
-              "script": {
+              "description": {
                 "type": "string",
-                "description": "a string",
-                "title": "string"
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               }
             },
-            "additionalProperties": false,
-            "description": "Runs the given JavaScript in the page context",
-            "title": "Run JavaScript",
-            "examples": [
-              {
-                "action": "runJs",
-                "script": "console.log(\"Hello World\");"
-              }
-            ]
+            "additionalProperties": false
           },
           {
             "type": "object",
@@ -2249,46 +2301,14 @@
                 "examples": [
                   "#example"
                 ]
-              }
-            },
-            "additionalProperties": false,
-            "description": "Checks if the given selector exists on the page",
-            "title": "Check Element Exists",
-            "examples": [
-              {
-                "action": "checkElementExists",
-                "selector": "#example"
-              }
-            ]
-          },
-          {
-            "type": "object",
-            "required": [
-              "action",
-              "selector"
-            ],
-            "properties": {
-              "action": {
-                "const": "click"
               },
-              "selector": {
+              "description": {
                 "type": "string",
-                "description": "The CSS selector to use to find the element",
-                "title": "Selector",
-                "examples": [
-                  "#example"
-                ]
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               }
             },
-            "additionalProperties": false,
-            "description": "Clicks the element specified by the given selector on the page",
-            "title": "Click Element",
-            "examples": [
-              {
-                "action": "click",
-                "selector": "#button"
-              }
-            ]
+            "additionalProperties": false
           },
           {
             "type": "object",
@@ -2299,6 +2319,11 @@
             "properties": {
               "action": {
                 "const": "printPdf"
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               },
               "invoice": {
                 "anyOf": [
@@ -2336,14 +2361,7 @@
                 ]
               }
             },
-            "additionalProperties": false,
-            "description": "Prints the current page to a PDF file",
-            "title": "Print Page as PDF",
-            "examples": [
-              {
-                "action": "printPdf"
-              }
-            ]
+            "additionalProperties": false
           },
           {
             "type": "object",
@@ -2362,17 +2380,14 @@
                   15000
                 ],
                 "default": 15000
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               }
             },
-            "additionalProperties": false,
-            "description": "Waits for the page to finish navigating. Timeout defaults to 15s.",
-            "title": "Wait for Navigation",
-            "examples": [
-              {
-                "action": "waitForNavigation",
-                "timeout": 10000
-              }
-            ]
+            "additionalProperties": false
           },
           {
             "type": "object",
@@ -2388,17 +2403,14 @@
                 "type": "number",
                 "description": "The number of milliseconds to wait for",
                 "title": "Duration"
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               }
             },
-            "additionalProperties": false,
-            "description": "Waits for the given amount of time in milliseconds",
-            "title": "Sleep",
-            "examples": [
-              {
-                "action": "sleep",
-                "timeout": 10000
-              }
-            ]
+            "additionalProperties": false
           },
           {
             "type": "object",
@@ -2414,11 +2426,14 @@
                 "type": "string",
                 "description": "The URL of the Stripe invoice",
                 "title": "Stripe Invoice URL"
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               }
             },
-            "additionalProperties": false,
-            "description": "Navigates to the given Stripe Invoice URL and extracts the invoice",
-            "title": "Get Invoice from Stripe URL"
+            "additionalProperties": false
           }
         ]
       },
@@ -2592,6 +2607,83 @@
           "type": "object",
           "required": [
             "action",
+            "selector",
+            "value"
+          ],
+          "properties": {
+            "action": {
+              "const": "type"
+            },
+            "optional": {
+              "type": "boolean",
+              "description": "Whether or not the flow should continue if this step fails",
+              "title": "Optional"
+            },
+            "selector": {
+              "type": "string",
+              "description": "The CSS selector to use to find the element",
+              "title": "Selector",
+              "examples": [
+                "#example"
+              ]
+            },
+            "value": {
+              "type": "string",
+              "description": "a string",
+              "title": "string"
+            },
+            "description": {
+              "type": "string",
+              "description": "A human-readable description of what this step does",
+              "title": "Description"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "action",
+            "selector"
+          ],
+          "properties": {
+            "action": {
+              "const": "waitForElement"
+            },
+            "optional": {
+              "type": "boolean",
+              "description": "Whether or not the flow should continue if this step fails",
+              "title": "Optional"
+            },
+            "selector": {
+              "type": "string",
+              "description": "The CSS selector to use to find the element",
+              "title": "Selector",
+              "examples": [
+                "#example"
+              ]
+            },
+            "timeout": {
+              "type": "number",
+              "description": "The number of milliseconds to wait for. Defaults to 15s.",
+              "title": "Timeout",
+              "examples": [
+                15000
+              ],
+              "default": 15000
+            },
+            "description": {
+              "type": "string",
+              "description": "A human-readable description of what this step does",
+              "title": "Description"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "action",
             "script",
             "forEach"
           ],
@@ -2691,51 +2783,44 @@
           "type": "object",
           "required": [
             "action",
-            "selector"
+            "script"
           ],
           "properties": {
             "action": {
-              "const": "waitForElement"
+              "const": "runJs"
             },
-            "selector": {
+            "optional": {
+              "type": "boolean",
+              "description": "Whether or not the flow should continue if this step fails",
+              "title": "Optional"
+            },
+            "script": {
               "type": "string",
-              "description": "The CSS selector to use to find the element",
-              "title": "Selector",
-              "examples": [
-                "#example"
-              ]
+              "description": "a string",
+              "title": "string"
             },
-            "timeout": {
-              "type": "number",
-              "description": "The number of milliseconds to wait for. Defaults to 15s.",
-              "title": "Timeout",
-              "examples": [
-                15000
-              ],
-              "default": 15000
+            "description": {
+              "type": "string",
+              "description": "A human-readable description of what this step does",
+              "title": "Description"
             }
           },
-          "additionalProperties": false,
-          "description": "Waits for the given selector to appear on the page, optionally with a timeout",
-          "title": "Wait for Element",
-          "examples": [
-            {
-              "action": "waitForElement",
-              "selector": "#example",
-              "timeout": 3000
-            }
-          ]
+          "additionalProperties": false
         },
         {
           "type": "object",
           "required": [
             "action",
-            "selector",
-            "value"
+            "selector"
           ],
           "properties": {
             "action": {
-              "const": "type"
+              "const": "click"
+            },
+            "optional": {
+              "type": "boolean",
+              "description": "Whether or not the flow should continue if this step fails",
+              "title": "Optional"
             },
             "selector": {
               "type": "string",
@@ -2745,22 +2830,13 @@
                 "#example"
               ]
             },
-            "value": {
+            "description": {
               "type": "string",
-              "description": "a string",
-              "title": "string"
+              "description": "A human-readable description of what this step does",
+              "title": "Description"
             }
           },
-          "additionalProperties": false,
-          "description": "Types the given text into the element specified by the given selector on the page",
-          "title": "Type Text",
-          "examples": [
-            {
-              "action": "type",
-              "selector": "#input",
-              "text": "Hello World"
-            }
-          ]
+          "additionalProperties": false
         },
         {
           "type": "object",
@@ -2780,6 +2856,11 @@
                 15000
               ],
               "default": 15000
+            },
+            "description": {
+              "type": "string",
+              "description": "A human-readable description of what this step does",
+              "title": "Description"
             },
             "invoice": {
               "anyOf": [
@@ -2817,15 +2898,7 @@
               ]
             }
           },
-          "additionalProperties": false,
-          "description": "Waits and checks for a PDF download to complete. Timeout defaults to 15s.",
-          "title": "Wait for PDF Download",
-          "examples": [
-            {
-              "action": "waitForPdfDownload",
-              "timeout": 10000
-            }
-          ]
+          "additionalProperties": false
         },
         {
           "type": "object",
@@ -2852,6 +2925,11 @@
                   "script": "console.log(\"Hello World\");"
                 }
               ]
+            },
+            "description": {
+              "type": "string",
+              "description": "A human-readable description of what this step does",
+              "title": "Description"
             }
           },
           "additionalProperties": false
@@ -2871,6 +2949,11 @@
               "type": "string",
               "description": "The name of the variable to store the extracted value in. Defaults to `item`",
               "title": "Variable"
+            },
+            "description": {
+              "type": "string",
+              "description": "A human-readable description of what this step does",
+              "title": "Description"
             },
             "fields": {
               "type": "object",
@@ -2935,6 +3018,11 @@
               "description": "The URL to download the PDF from",
               "title": "URL"
             },
+            "description": {
+              "type": "string",
+              "description": "A human-readable description of what this step does",
+              "title": "Description"
+            },
             "invoice": {
               "anyOf": [
                 {
@@ -2971,9 +3059,7 @@
               ]
             }
           },
-          "additionalProperties": false,
-          "description": "Downloads a PDF from the given URL",
-          "title": "Download PDF"
+          "additionalProperties": false
         },
         {
           "type": "object",
@@ -2989,43 +3075,14 @@
               "type": "string",
               "description": "The URL to navigate to",
               "title": "URL"
-            }
-          },
-          "additionalProperties": false,
-          "description": "Navigates to the given URL and waits for the page to load",
-          "title": "Navigate to URL",
-          "examples": [
-            {
-              "action": "navigate",
-              "url": "https://example.com"
-            }
-          ]
-        },
-        {
-          "type": "object",
-          "required": [
-            "action",
-            "script"
-          ],
-          "properties": {
-            "action": {
-              "const": "runJs"
             },
-            "script": {
+            "description": {
               "type": "string",
-              "description": "a string",
-              "title": "string"
+              "description": "A human-readable description of what this step does",
+              "title": "Description"
             }
           },
-          "additionalProperties": false,
-          "description": "Runs the given JavaScript in the page context",
-          "title": "Run JavaScript",
-          "examples": [
-            {
-              "action": "runJs",
-              "script": "console.log(\"Hello World\");"
-            }
-          ]
+          "additionalProperties": false
         },
         {
           "type": "object",
@@ -3044,46 +3101,14 @@
               "examples": [
                 "#example"
               ]
-            }
-          },
-          "additionalProperties": false,
-          "description": "Checks if the given selector exists on the page",
-          "title": "Check Element Exists",
-          "examples": [
-            {
-              "action": "checkElementExists",
-              "selector": "#example"
-            }
-          ]
-        },
-        {
-          "type": "object",
-          "required": [
-            "action",
-            "selector"
-          ],
-          "properties": {
-            "action": {
-              "const": "click"
             },
-            "selector": {
+            "description": {
               "type": "string",
-              "description": "The CSS selector to use to find the element",
-              "title": "Selector",
-              "examples": [
-                "#example"
-              ]
+              "description": "A human-readable description of what this step does",
+              "title": "Description"
             }
           },
-          "additionalProperties": false,
-          "description": "Clicks the element specified by the given selector on the page",
-          "title": "Click Element",
-          "examples": [
-            {
-              "action": "click",
-              "selector": "#button"
-            }
-          ]
+          "additionalProperties": false
         },
         {
           "type": "object",
@@ -3094,6 +3119,11 @@
           "properties": {
             "action": {
               "const": "printPdf"
+            },
+            "description": {
+              "type": "string",
+              "description": "A human-readable description of what this step does",
+              "title": "Description"
             },
             "invoice": {
               "anyOf": [
@@ -3131,14 +3161,7 @@
               ]
             }
           },
-          "additionalProperties": false,
-          "description": "Prints the current page to a PDF file",
-          "title": "Print Page as PDF",
-          "examples": [
-            {
-              "action": "printPdf"
-            }
-          ]
+          "additionalProperties": false
         },
         {
           "type": "object",
@@ -3157,17 +3180,14 @@
                 15000
               ],
               "default": 15000
+            },
+            "description": {
+              "type": "string",
+              "description": "A human-readable description of what this step does",
+              "title": "Description"
             }
           },
-          "additionalProperties": false,
-          "description": "Waits for the page to finish navigating. Timeout defaults to 15s.",
-          "title": "Wait for Navigation",
-          "examples": [
-            {
-              "action": "waitForNavigation",
-              "timeout": 10000
-            }
-          ]
+          "additionalProperties": false
         },
         {
           "type": "object",
@@ -3183,17 +3203,14 @@
               "type": "number",
               "description": "The number of milliseconds to wait for",
               "title": "Duration"
+            },
+            "description": {
+              "type": "string",
+              "description": "A human-readable description of what this step does",
+              "title": "Description"
             }
           },
-          "additionalProperties": false,
-          "description": "Waits for the given amount of time in milliseconds",
-          "title": "Sleep",
-          "examples": [
-            {
-              "action": "sleep",
-              "timeout": 10000
-            }
-          ]
+          "additionalProperties": false
         },
         {
           "type": "object",
@@ -3209,11 +3226,14 @@
               "type": "string",
               "description": "The URL of the Stripe invoice",
               "title": "Stripe Invoice URL"
+            },
+            "description": {
+              "type": "string",
+              "description": "A human-readable description of what this step does",
+              "title": "Description"
             }
           },
-          "additionalProperties": false,
-          "description": "Navigates to the given Stripe Invoice URL and extracts the invoice",
-          "title": "Get Invoice from Stripe URL"
+          "additionalProperties": false
         }
       ]
     }
