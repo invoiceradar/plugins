@@ -1,0 +1,88 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoice-snatcher/plugins/main/schema.json",
+  "id": "easyname",
+  "name": "Easyname",
+  "description": "Easyname is an Austrian domain registrar and web hosting provider.",
+  "homepage": "https://easyname.at",
+  "configSchema": {
+    "username": {
+      "type": "string",
+      "title": "Username",
+      "required": false
+    },
+    "password": {
+      "type": "password",
+      "title": "Password",
+      "required": false
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://my.easyname.at/login"
+    },
+    {
+      "action": "checkElementExists",
+      "selector": "a[href*='logout']"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://my.easyname.at/login"
+    },
+    {
+      "action": "click",
+      "selector": "#cmpwelcomebtnno",
+      "optional": true
+    },
+    {
+      "action": "type",
+      "selector": "#emailAddress",
+      "value": "{{config.username}}",
+      "optional": true
+    },
+    {
+      "action": "type",
+      "selector": "#registrationPassword",
+      "value": "{{config.password}}",
+      "optional": true
+    },
+    {
+      "action": "waitForElement",
+      "timeout": 120000,
+      "selector": "a[href*='logout']"
+    }
+  ],
+  "getInvoices": [
+    {
+      "action": "navigate",
+      "url": "https://my.easyname.at/de/konto/invoice"
+    },
+    {
+      "action": "extractAll",
+      "selector": "table tbody tr",
+      "fields": {
+        "date": "td:nth-child(1)",
+        "id": "td:nth-child(2)",
+        "total": "td:nth-child(3)",
+        "url": {
+          "selector": "td:nth-child(2) a",
+          "attribute": "href"
+        }
+      },
+      "pagination": {
+        "type": "next",
+        "selector": "#pagination-buttons #next:not(.is-disabled)",
+        "waitForSelector": "table tbody tr"
+      },
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "{{item.url}}",
+          "invoice": "{{item}}"
+        }
+      ]
+    }
+  ]
+}
