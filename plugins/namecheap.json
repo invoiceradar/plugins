@@ -3,7 +3,7 @@
   "id": "namecheap",
   "name": "Namecheap",
   "description": "Namecheap is a domain name registrar and web hosting provider.",
-  "homepage": "https://www.namecheap.com/",
+  "homepage": "https://namecheap.com/",
   "configSchema": {
     "username": {
       "type": "string",
@@ -84,32 +84,32 @@
     },
     {
       "action": "click",
+      "optional": true,
       "selector": ".pagination-small > .dropdown > a"
     },
     {
       "action": "waitForElement",
-      "selector": ".dropdown.expanded"
+      "optional": true,
+      "selector": ".dropdown.expanded",
+      "timeout": 200
     },
     {
       "action": "click",
+      "optional": true,
       "selector": ".dropdown-content ul.default-list li:last-child a"
     },
     {
-      "action": "waitForNavigation"
-    },
-    {
-      "action": "extractInvoices",
-      "itemSelector": ".AjaxPageCall tbody tr:has(a[href^='/profile/billing/orders/downloadpdf'])",
-      "itemFields": {
+      "action": "extractAll",
+      "selector": ".AjaxPageCall tbody tr:has(a[href^='/profile/billing/orders/downloadpdf'])",
+      "fields": {
         "id": {
           "selector": "td:nth-child(1) p"
         },
         "date": {
           "selector": "td:nth-child(3) p"
         },
-        "amount": {
-          "selector": "td:nth-child(5)",
-          "transform": "(text) => Number(text.replace('$', ''))"
+        "total": {
+          "selector": "td:nth-child(5)"
         },
         "pdfLink": {
           "selector": "a[href^='/profile/billing/orders/downloadpdf']",
@@ -119,7 +119,8 @@
       "forEach": [
         {
           "action": "downloadPdf",
-          "url": "{{invoice.pdfLink}}"
+          "url": "{{item.pdfLink}}",
+          "invoice": "item"
         }
       ]
     }

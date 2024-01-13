@@ -55,9 +55,10 @@
       "selector": ".table"
     },
     {
-      "action": "extractInvoices",
-      "itemSelector": ".table tbody tr:has(a)",
-      "itemFields": {
+      "action": "extractAll",
+      "selector": ".table tbody tr:has(a)",
+      "variable": "invoice",
+      "fields": {
         "id": {
           "selector": "td:nth-child(1) a"
         },
@@ -68,9 +69,8 @@
           "selector": "td:nth-child(1) a",
           "attribute": "href"
         },
-        "amount": {
-          "selector": "td:nth-child(3)",
-          "transform": "(text) => Number(text.replace('$', ''))"
+        "total": {
+          "selector": "td:nth-child(3)"
         }
       },
       "forEach": [
@@ -79,7 +79,8 @@
           "url": "https://porkbun.com{{invoice.path}}"
         },
         {
-          "action": "printPdf"
+          "action": "printPdf",
+          "invoice": "invoice"
         }
       ]
     }
