@@ -1,0 +1,11 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoice-snatcher/plugins/main/schema.json",
+  "id": "",
+  "name": "",
+  "description": "",
+  "homepage": "https://",
+  "configSchema": {},
+  "checkAuth": [],
+  "startAuth": [],
+  "getInvoices": []
+}
