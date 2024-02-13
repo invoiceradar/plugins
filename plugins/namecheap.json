@@ -69,19 +69,11 @@
       "selector": ".daterangepicker_start_input input",
       "value": "01/01/2000"
     },
-
-    {
-      "action": "sleep",
-      "duration": 1000
-    },
     {
       "action": "click",
-      "selector": ".range_inputs .applyBtn"
+      "selector": ".applyBtn"
     },
-    {
-      "action": "sleep",
-      "duration": 1000
-    },
+
     {
       "action": "click",
       "optional": true,
@@ -97,6 +89,10 @@
       "action": "click",
       "optional": true,
       "selector": ".dropdown-content ul.default-list li:last-child a"
+    },
+    {
+      "action": "sleep",
+      "duration": 3000
     },
     {
       "action": "extractAll",
