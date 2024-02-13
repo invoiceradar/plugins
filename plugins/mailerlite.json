@@ -77,7 +77,7 @@
       "forEach": [
         {
           "action": "downloadPdf",
-          "url": "{{invoice.url}}",
+          "url": "{{item.url}}",
           "invoice": "item"
         }
       ]
