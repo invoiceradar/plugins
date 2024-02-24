@@ -100,6 +100,49 @@
             "required": [
               "action",
               "selector",
+              "value"
+            ],
+            "properties": {
+              "action": {
+                "const": "type"
+              },
+              "scopeSelector": {
+                "type": "boolean",
+                "description": "Defaults to true. If set, the selector will be scoped to the parent element",
+                "title": "Scope Selector",
+                "default": true
+              },
+              "optional": {
+                "type": "boolean",
+                "description": "Whether or not the flow should continue if this step fails",
+                "title": "Optional"
+              },
+              "selector": {
+                "type": "string",
+                "description": "The CSS selector to use to find the element",
+                "title": "Selector",
+                "examples": [
+                  "#example"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "description": "a string",
+                "title": "string"
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "selector",
               "forEach",
               "fields"
             ],
@@ -241,12 +284,17 @@
             "type": "object",
             "required": [
               "action",
-              "selector",
-              "value"
+              "selector"
             ],
             "properties": {
               "action": {
-                "const": "type"
+                "const": "click"
+              },
+              "scopeSelector": {
+                "type": "boolean",
+                "description": "Defaults to true. If set, the selector will be scoped to the parent element",
+                "title": "Scope Selector",
+                "default": true
               },
               "optional": {
                 "type": "boolean",
@@ -260,11 +308,6 @@
                 "examples": [
                   "#example"
                 ]
-              },
-              "value": {
-                "type": "string",
-                "description": "a string",
-                "title": "string"
               },
               "description": {
                 "type": "string",
@@ -432,37 +475,6 @@
                 "type": "string",
                 "description": "a string",
                 "title": "string"
-              },
-              "description": {
-                "type": "string",
-                "description": "A human-readable description of what this step does",
-                "title": "Description"
-              }
-            },
-            "additionalProperties": false
-          },
-          {
-            "type": "object",
-            "required": [
-              "action",
-              "selector"
-            ],
-            "properties": {
-              "action": {
-                "const": "click"
-              },
-              "optional": {
-                "type": "boolean",
-                "description": "Whether or not the flow should continue if this step fails",
-                "title": "Optional"
-              },
-              "selector": {
-                "type": "string",
-                "description": "The CSS selector to use to find the element",
-                "title": "Selector",
-                "examples": [
-                  "#example"
-                ]
               },
               "description": {
                 "type": "string",
@@ -883,6 +895,49 @@
             "required": [
               "action",
               "selector",
+              "value"
+            ],
+            "properties": {
+              "action": {
+                "const": "type"
+              },
+              "scopeSelector": {
+                "type": "boolean",
+                "description": "Defaults to true. If set, the selector will be scoped to the parent element",
+                "title": "Scope Selector",
+                "default": true
+              },
+              "optional": {
+                "type": "boolean",
+                "description": "Whether or not the flow should continue if this step fails",
+                "title": "Optional"
+              },
+              "selector": {
+                "type": "string",
+                "description": "The CSS selector to use to find the element",
+                "title": "Selector",
+                "examples": [
+                  "#example"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "description": "a string",
+                "title": "string"
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "selector",
               "forEach",
               "fields"
             ],
@@ -1024,12 +1079,17 @@
             "type": "object",
             "required": [
               "action",
-              "selector",
-              "value"
+              "selector"
             ],
             "properties": {
               "action": {
-                "const": "type"
+                "const": "click"
+              },
+              "scopeSelector": {
+                "type": "boolean",
+                "description": "Defaults to true. If set, the selector will be scoped to the parent element",
+                "title": "Scope Selector",
+                "default": true
               },
               "optional": {
                 "type": "boolean",
@@ -1043,11 +1103,6 @@
                 "examples": [
                   "#example"
                 ]
-              },
-              "value": {
-                "type": "string",
-                "description": "a string",
-                "title": "string"
               },
               "description": {
                 "type": "string",
@@ -1215,37 +1270,6 @@
                 "type": "string",
                 "description": "a string",
                 "title": "string"
-              },
-              "description": {
-                "type": "string",
-                "description": "A human-readable description of what this step does",
-                "title": "Description"
-              }
-            },
-            "additionalProperties": false
-          },
-          {
-            "type": "object",
-            "required": [
-              "action",
-              "selector"
-            ],
-            "properties": {
-              "action": {
-                "const": "click"
-              },
-              "optional": {
-                "type": "boolean",
-                "description": "Whether or not the flow should continue if this step fails",
-                "title": "Optional"
-              },
-              "selector": {
-                "type": "string",
-                "description": "The CSS selector to use to find the element",
-                "title": "Selector",
-                "examples": [
-                  "#example"
-                ]
               },
               "description": {
                 "type": "string",
@@ -1666,6 +1690,49 @@
             "required": [
               "action",
               "selector",
+              "value"
+            ],
+            "properties": {
+              "action": {
+                "const": "type"
+              },
+              "scopeSelector": {
+                "type": "boolean",
+                "description": "Defaults to true. If set, the selector will be scoped to the parent element",
+                "title": "Scope Selector",
+                "default": true
+              },
+              "optional": {
+                "type": "boolean",
+                "description": "Whether or not the flow should continue if this step fails",
+                "title": "Optional"
+              },
+              "selector": {
+                "type": "string",
+                "description": "The CSS selector to use to find the element",
+                "title": "Selector",
+                "examples": [
+                  "#example"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "description": "a string",
+                "title": "string"
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "selector",
               "forEach",
               "fields"
             ],
@@ -1807,12 +1874,17 @@
             "type": "object",
             "required": [
               "action",
-              "selector",
-              "value"
+              "selector"
             ],
             "properties": {
               "action": {
-                "const": "type"
+                "const": "click"
+              },
+              "scopeSelector": {
+                "type": "boolean",
+                "description": "Defaults to true. If set, the selector will be scoped to the parent element",
+                "title": "Scope Selector",
+                "default": true
               },
               "optional": {
                 "type": "boolean",
@@ -1826,11 +1898,6 @@
                 "examples": [
                   "#example"
                 ]
-              },
-              "value": {
-                "type": "string",
-                "description": "a string",
-                "title": "string"
               },
               "description": {
                 "type": "string",
@@ -1998,37 +2065,6 @@
                 "type": "string",
                 "description": "a string",
                 "title": "string"
-              },
-              "description": {
-                "type": "string",
-                "description": "A human-readable description of what this step does",
-                "title": "Description"
-              }
-            },
-            "additionalProperties": false
-          },
-          {
-            "type": "object",
-            "required": [
-              "action",
-              "selector"
-            ],
-            "properties": {
-              "action": {
-                "const": "click"
-              },
-              "optional": {
-                "type": "boolean",
-                "description": "Whether or not the flow should continue if this step fails",
-                "title": "Optional"
-              },
-              "selector": {
-                "type": "string",
-                "description": "The CSS selector to use to find the element",
-                "title": "Selector",
-                "examples": [
-                  "#example"
-                ]
               },
               "description": {
                 "type": "string",
@@ -2466,6 +2502,49 @@
           "required": [
             "action",
             "selector",
+            "value"
+          ],
+          "properties": {
+            "action": {
+              "const": "type"
+            },
+            "scopeSelector": {
+              "type": "boolean",
+              "description": "Defaults to true. If set, the selector will be scoped to the parent element",
+              "title": "Scope Selector",
+              "default": true
+            },
+            "optional": {
+              "type": "boolean",
+              "description": "Whether or not the flow should continue if this step fails",
+              "title": "Optional"
+            },
+            "selector": {
+              "type": "string",
+              "description": "The CSS selector to use to find the element",
+              "title": "Selector",
+              "examples": [
+                "#example"
+              ]
+            },
+            "value": {
+              "type": "string",
+              "description": "a string",
+              "title": "string"
+            },
+            "description": {
+              "type": "string",
+              "description": "A human-readable description of what this step does",
+              "title": "Description"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "action",
+            "selector",
             "forEach",
             "fields"
           ],
@@ -2607,12 +2686,17 @@
           "type": "object",
           "required": [
             "action",
-            "selector",
-            "value"
+            "selector"
           ],
           "properties": {
             "action": {
-              "const": "type"
+              "const": "click"
+            },
+            "scopeSelector": {
+              "type": "boolean",
+              "description": "Defaults to true. If set, the selector will be scoped to the parent element",
+              "title": "Scope Selector",
+              "default": true
             },
             "optional": {
               "type": "boolean",
@@ -2626,11 +2710,6 @@
               "examples": [
                 "#example"
               ]
-            },
-            "value": {
-              "type": "string",
-              "description": "a string",
-              "title": "string"
             },
             "description": {
               "type": "string",
@@ -2798,37 +2877,6 @@
               "type": "string",
               "description": "a string",
               "title": "string"
-            },
-            "description": {
-              "type": "string",
-              "description": "A human-readable description of what this step does",
-              "title": "Description"
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "required": [
-            "action",
-            "selector"
-          ],
-          "properties": {
-            "action": {
-              "const": "click"
-            },
-            "optional": {
-              "type": "boolean",
-              "description": "Whether or not the flow should continue if this step fails",
-              "title": "Optional"
-            },
-            "selector": {
-              "type": "string",
-              "description": "The CSS selector to use to find the element",
-              "title": "Selector",
-              "examples": [
-                "#example"
-              ]
             },
             "description": {
               "type": "string",
