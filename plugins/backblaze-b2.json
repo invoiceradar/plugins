@@ -60,54 +60,95 @@
     },
     {
       "action": "extractAll",
-      "selector": ".transaction:not(.excluded-from-printing)",
-      "variable": "invoice",
-      "fields": {
-        "id": {
-          "selector": "[id^=billing-invoice-num]"
-        },
-        "date": {
-          "selector": "[id^=billing-datestamp]",
-          "transform": "(dateString) => new Date(parseInt(dateString.substring(0, 4)), parseInt(dateString.substring(4, 6)) - 1, parseInt(dateString.substring(6, 8)), parseInt(dateString.substring(8, 10)), parseInt(dateString.substring(10, 12)), parseInt(dateString.substring(12, 14)))"
-        },
-        "total": {
-          "selector": "[id^=billing-total]"
-        },
-        "paymentId": {
-          "selector": "[data-reference-object-id]",
-          "attribute": "data-reference-object-id"
-        }
-      },
+      "script": "Array.from(document.querySelector('#receiptDateId')).map(v => v.value).filter(y => Number(y) >= Number({{startDate.year}}))",
+      "variable": "year",
       "forEach": [
         {
           "action": "navigate",
           "url": "https://secure.backblaze.com/billing_card.htm"
         },
         {
-          "action": "runJs",
-          "script": "document.getElementById('billing-print-form')?.setAttribute('target', '_self')"
+          "action": "dropdownSelect",
+          "selector": "#receiptDateId",
+          "value": "{{year}}"
         },
         {
-          "action": "runJs",
-          "script": "printPayment({{invoice.paymentId}})"
+          "action": "if",
+          "script": "{{year}} !== new Date().getFullYear()",
+          "then": [
+            {
+              "action": "waitForNavigation"
+            }
+          ]
         },
         {
-          "action": "waitForElement",
-          "selector": "#billing-print-body"
-        },
-        {
-          "action": "type",
-          "selector": "[name='Company']",
-          "value": "{{config.companyName}}"
-        },
-        {
-          "action": "type",
-          "selector": "[name='Other']",
-          "value": "{{config.otherInfo}}"
-        },
-        {
-          "action": "printPdf",
-          "invoice": "invoice"
+          "action": "extractAll",
+          "selector": ".transaction:not(.excluded-from-printing)",
+          "variable": "invoice",
+          "fields": {
+            "id": {
+              "selector": "[id^=billing-invoice-num]"
+            },
+            "date": {
+              "selector": "[id^=billing-datestamp]",
+              "transform": "(dateString) => new Date(parseInt(dateString.substring(0, 4)), parseInt(dateString.substring(4, 6)) - 1, parseInt(dateString.substring(6, 8)), parseInt(dateString.substring(8, 10)), parseInt(dateString.substring(10, 12)), parseInt(dateString.substring(12, 14)))"
+            },
+            "total": {
+              "selector": "[id^=billing-total]"
+            },
+            "paymentId": {
+              "selector": "[data-reference-object-id]",
+              "attribute": "data-reference-object-id"
+            }
+          },
+          "forEach": [
+            {
+              "action": "navigate",
+              "url": "https://secure.backblaze.com/billing_card.htm"
+            },
+            {
+              "action": "dropdownSelect",
+              "selector": "#receiptDateId",
+              "value": "{{year}}"
+            },
+            {
+              "action": "if",
+              "script": "{{year}} !== new Date().getFullYear()",
+              "then": [
+                {
+                  "action": "waitForNavigation"
+                }
+              ]
+            },
+            {
+              "action": "runJs",
+              "script": "document.getElementById('billing-print-form')?.setAttribute('target', '_self')"
+            },
+            {
+              "action": "runJs",
+              "script": "printPayment({{invoice.paymentId}})"
+            },
+            {
+              "action": "waitForElement",
+              "selector": "#billing-print-body"
+            },
+            {
+              "action": "type",
+              "selector": "[name='Company']",
+              "value": "{{config.companyName}}",
+              "scopeSelector": false
+            },
+            {
+              "action": "type",
+              "selector": "[name='Other']",
+              "value": "{{config.otherInfo}}",
+              "scopeSelector": false
+            },
+            {
+              "action": "printPdf",
+              "invoice": "invoice"
+            }
+          ]
         }
       ]
     }
