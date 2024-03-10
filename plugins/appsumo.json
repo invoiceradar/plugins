@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/invoice-snatcher/plugins/main/schema.json",
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
   "id": "appsumo",
   "name": "AppSumo",
   "description": "AppSumo is a daily deals website for digitally distributed goods and online services.",

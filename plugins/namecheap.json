@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/invoice-snatcher/plugins/main/schema.json",
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
   "id": "namecheap",
   "name": "Namecheap",
   "description": "Namecheap is a domain name registrar and web hosting provider.",

@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/invoice-snatcher/plugins/main/schema.json",
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
   "id": "cloudflare",
   "name": "Cloudflare",
   "description": "Cloudflare is an a global CDN and DNS provider",
