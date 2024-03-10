@@ -73,6 +73,27 @@
             ],
             "description": "The type of the property.",
             "title": "Type"
+          },
+          "default": {
+            "anyOf": [
+              {
+                "type": "string",
+                "description": "a string",
+                "title": "string"
+              },
+              {
+                "type": "number",
+                "description": "a number",
+                "title": "number"
+              },
+              {
+                "type": "boolean",
+                "description": "a boolean",
+                "title": "boolean"
+              }
+            ],
+            "description": "The default value for this property",
+            "title": "Default"
           }
         },
         "additionalProperties": false,
@@ -618,6 +639,38 @@
             "type": "object",
             "required": [
               "action",
+              "url"
+            ],
+            "properties": {
+              "action": {
+                "const": "waitForURL"
+              },
+              "url": {
+                "type": "string",
+                "description": "The URL to wait for",
+                "title": "URL"
+              },
+              "timeout": {
+                "type": "number",
+                "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                "title": "Timeout",
+                "examples": [
+                  15000
+                ],
+                "default": 15000
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
               "variable",
               "script"
             ],
@@ -885,6 +938,29 @@
                 "examples": [
                   "#example"
                 ]
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "url"
+            ],
+            "properties": {
+              "action": {
+                "const": "checkURL"
+              },
+              "url": {
+                "type": "string",
+                "description": "The URL to check against",
+                "title": "URL"
               },
               "description": {
                 "type": "string",
@@ -1526,6 +1602,38 @@
             "type": "object",
             "required": [
               "action",
+              "url"
+            ],
+            "properties": {
+              "action": {
+                "const": "waitForURL"
+              },
+              "url": {
+                "type": "string",
+                "description": "The URL to wait for",
+                "title": "URL"
+              },
+              "timeout": {
+                "type": "number",
+                "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                "title": "Timeout",
+                "examples": [
+                  15000
+                ],
+                "default": 15000
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
               "variable",
               "script"
             ],
@@ -1793,6 +1901,29 @@
                 "examples": [
                   "#example"
                 ]
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "url"
+            ],
+            "properties": {
+              "action": {
+                "const": "checkURL"
+              },
+              "url": {
+                "type": "string",
+                "description": "The URL to check against",
+                "title": "URL"
               },
               "description": {
                 "type": "string",
@@ -2434,6 +2565,38 @@
             "type": "object",
             "required": [
               "action",
+              "url"
+            ],
+            "properties": {
+              "action": {
+                "const": "waitForURL"
+              },
+              "url": {
+                "type": "string",
+                "description": "The URL to wait for",
+                "title": "URL"
+              },
+              "timeout": {
+                "type": "number",
+                "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                "title": "Timeout",
+                "examples": [
+                  15000
+                ],
+                "default": 15000
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
               "variable",
               "script"
             ],
@@ -2701,6 +2864,29 @@
                 "examples": [
                   "#example"
                 ]
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "url"
+            ],
+            "properties": {
+              "action": {
+                "const": "checkURL"
+              },
+              "url": {
+                "type": "string",
+                "description": "The URL to check against",
+                "title": "URL"
               },
               "description": {
                 "type": "string",
@@ -3359,6 +3545,38 @@
           "type": "object",
           "required": [
             "action",
+            "url"
+          ],
+          "properties": {
+            "action": {
+              "const": "waitForURL"
+            },
+            "url": {
+              "type": "string",
+              "description": "The URL to wait for",
+              "title": "URL"
+            },
+            "timeout": {
+              "type": "number",
+              "description": "The number of milliseconds to wait for. Defaults to 15s.",
+              "title": "Timeout",
+              "examples": [
+                15000
+              ],
+              "default": 15000
+            },
+            "description": {
+              "type": "string",
+              "description": "A human-readable description of what this step does",
+              "title": "Description"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "action",
             "variable",
             "script"
           ],
@@ -3626,6 +3844,29 @@
               "examples": [
                 "#example"
               ]
+            },
+            "description": {
+              "type": "string",
+              "description": "A human-readable description of what this step does",
+              "title": "Description"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "action",
+            "url"
+          ],
+          "properties": {
+            "action": {
+              "const": "checkURL"
+            },
+            "url": {
+              "type": "string",
+              "description": "The URL to check against",
+              "title": "URL"
             },
             "description": {
               "type": "string",
