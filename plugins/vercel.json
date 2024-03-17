@@ -56,7 +56,7 @@
       "forEach": [
         {
           "action": "downloadPdf",
-          "description": "Fallback to receipt",
+          "description": "Download PDF from Stripe",
           "url": "{{invoice.invoice_pdf}}",
           "invoice": {
             "id": "{{invoice.number}}",
