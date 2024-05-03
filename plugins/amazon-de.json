@@ -11,7 +11,7 @@
       "url": "https://www.amazon.de/gp/css/order-history"
     },
     {
-      "action": "checkForURL",
+      "action": "checkURL",
       "url": "/gp/css/order-history"
     }
   ],
