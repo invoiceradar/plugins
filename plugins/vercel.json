@@ -52,16 +52,16 @@
     {
       "action": "extractAll",
       "variable": "invoice",
-      "script": "fetch(\"https://vercel.com/api/stripe/invoices/previous?limit=25&teamId={{config.teamId}}\").then(res => res.json()).then(d => d.invoices.map(i => ({...i, createdAt: new Date(i.created * 1000), amount: i.amount_due/100 })))",
+      "script": "fetch(\"https://vercel.com/api/stripe/invoices/previous?limit=25&teamId={{config.teamId}}\").then(res => res.json()).then(d => d.invoices.map(i => ({ id: i.number, createdAt: new Date(i.created * 1000), amount: i.amount_due/100, invoicePdf: i.invoice_pdf, currency: i.currency })))",
       "forEach": [
         {
           "action": "downloadPdf",
-          "description": "Fallback to receipt",
-          "url": "{{invoice.invoice_pdf}}",
+          "description": "Download PDF from Stripe",
+          "url": "{{invoice.invoicePdf}}",
           "invoice": {
-            "id": "{{invoice.number}}",
+            "id": "{{invoice.id}}",
             "date": "{{invoice.createdAt}}",
-            "total": "{{invoice.amount}}"
+            "total": "{{invoice.amount}} {{invoice.currency}}"
           }
         }
       ]
