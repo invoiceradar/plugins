@@ -68,14 +68,14 @@
           "url": "https://secure.backblaze.com/billing_card.htm"
         },
         {
-          "action": "dropdownSelect",
-          "selector": "#receiptDateId",
-          "value": "{{year}}"
-        },
-        {
           "action": "if",
           "script": "{{year}} !== new Date().getFullYear()",
           "then": [
+            {
+              "action": "dropdownSelect",
+              "selector": "#receiptDateId",
+              "value": "{{year}}"
+            },
             {
               "action": "waitForNavigation"
             }
@@ -106,15 +106,16 @@
               "action": "navigate",
               "url": "https://secure.backblaze.com/billing_card.htm"
             },
-            {
-              "action": "dropdownSelect",
-              "selector": "#receiptDateId",
-              "value": "{{year}}"
-            },
+
             {
               "action": "if",
               "script": "{{year}} !== new Date().getFullYear()",
               "then": [
+                {
+                  "action": "dropdownSelect",
+                  "selector": "#receiptDateId",
+                  "value": "{{year}}"
+                },
                 {
                   "action": "waitForNavigation"
                 }
