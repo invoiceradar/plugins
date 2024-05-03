@@ -83,7 +83,8 @@
       "forEach": [
         {
           "action": "click",
-          "selector": "td:nth-child(3) a"
+          "selector": "td:nth-child(3) a",
+          "globalSelector": true
         },
         {
           "action": "waitForPdfDownload",
