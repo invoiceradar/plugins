@@ -11,18 +11,18 @@
       "url": "https://www.amazon.de/gp/css/order-history"
     },
     {
-      "action": "checkElementExists",
-      "selector": "[data-nav-ref*='account_btn']"
+      "action": "checkURL",
+      "url": "/gp/css/order-history"
     }
   ],
   "startAuth": [
     {
       "action": "navigate",
-      "url": "https://www.amazon.de/ap/signin?openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.return_to=https%3A%2F%2Fwww.amazon.de%2Fref%3Drhf_sign_in&openid.assoc_handle=deflex&openid.pape.max_auth_age=0"
+      "url": "https://www.amazon.de/ap/signin?openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.return_to=https%3A%2F%2Fwww.amazon.de&openid.assoc_handle=deflex&openid.pape.max_auth_age=0"
     },
     {
-      "action": "waitForElement",
-      "selector": "[data-nav-ref*='account_btn']",
+      "action": "waitForURL",
+      "url": "/",
       "timeout": 120000
     }
   ],
@@ -87,6 +87,9 @@
                     "id": "{{order.id}}-{{index}}",
                     "date": "{{order.date}}",
                     "total": "{{order.price}}"
+                  },
+                  "metadata": {
+                    "order": "{{order.id}}"
                   }
                 }
               ]
