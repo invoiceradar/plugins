@@ -70,7 +70,7 @@
           "selector": "td:nth-child(6) a",
           "attribute": "href"
         },
-        "amount": {
+        "total": {
           "selector": "td:nth-child(3)"
         }
       },
