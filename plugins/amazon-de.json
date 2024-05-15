@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/invoice-snatcher/plugins/main/schema.json",
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
   "id": "amazon-de",
   "name": "Amazon DE",
   "description": "Get invoices from Amazon.de.",
@@ -29,61 +29,67 @@
   "getInvoices": [
     {
       "action": "navigate",
-      "url": "https://www.amazon.de/gp/css/order-history"
-    },
-    {
-      "action": "waitForElement",
-      "selector": ".order-card,.order"
+      "url": "https://www.amazon.de/gp/css/order-history?timeFilter=year-{{currentDate.year}}&orderFilter=year-{{currentDate.year}}"
     },
     {
       "action": "extractAll",
-      "selector": ".order-card,.order",
-      "variable": "order",
-      "fields": {
-        "overviewUrl": {
-          "selector": "a[href*='order-details']",
-          "attribute": "href"
-        },
-        "id": {
-          "selector": ".yohtmlc-order-id span:last-of-type"
-        },
-        "date": {
-          "selector": ".a-col-left .a-column:nth-child(1) .a-size-base"
-        },
-        "price": {
-          "selector": ".yohtmlc-order-total"
-        }
-      },
-      "pagination": {
-        "type": "next",
-        "selector": ".a-pagination li:last-of-type:not(.a-disabled) a",
-        "waitForSelector": ".order-card,.order"
-      },
+      "script": "Array.from(document.querySelectorAll('#orderFilter>option[value*=year]')).map(e => e.value.replace('year-','')).filter(y => Number(y) >= Number({{startDate.year}}))",
+      "variable": "year",
       "forEach": [
         {
           "action": "navigate",
-          "url": "{{order.overviewUrl}}"
+          "url": "https://www.amazon.de/gp/css/order-history?timeFilter=year-{{year}}&orderFilter=year-{{year}}"
         },
-
         {
           "action": "extractAll",
-          "selector": ".hide-if-js li:has(a[href$='invoice.pdf'])",
-          "variable": "invoice",
+          "selector": ".order-card,.order",
+          "variable": "order",
           "fields": {
-            "url": {
-              "selector": "a",
+            "overviewUrl": {
+              "selector": "a[href*='order-details']",
               "attribute": "href"
+            },
+            "id": {
+              "selector": ".yohtmlc-order-id span:last-of-type"
+            },
+            "date": {
+              "selector": ".a-col-left .a-column:nth-child(1) .a-size-base"
+            },
+            "price": {
+              "selector": ".yohtmlc-order-total"
             }
+          },
+          "pagination": {
+            "type": "next",
+            "selector": ".a-pagination li:last-of-type:not(.a-disabled) a",
+            "waitForSelector": ".order-card,.order"
           },
           "forEach": [
             {
-              "action": "downloadPdf",
-              "url": "{{invoice.url}}",
-              "invoice": {
-                "id": "{{order.id}}",
-                "date": "{{order.date}}",
-                "total": "{{order.price}}"
-              }
+              "action": "navigate",
+              "url": "{{order.overviewUrl}}"
+            },
+            {
+              "action": "extractAll",
+              "selector": ".hide-if-js li:has(a[href$='invoice.pdf'])",
+              "variable": "invoice",
+              "fields": {
+                "url": {
+                  "selector": "a",
+                  "attribute": "href"
+                }
+              },
+              "forEach": [
+                {
+                  "action": "downloadPdf",
+                  "url": "{{invoice.url}}",
+                  "invoice": {
+                    "id": "{{order.id}}-{{index}}",
+                    "date": "{{order.date}}",
+                    "total": "{{order.price}}"
+                  }
+                }
+              ]
             }
           ]
         }

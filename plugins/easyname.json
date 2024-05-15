@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/invoice-snatcher/plugins/main/schema.json",
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
   "id": "easyname",
   "name": "Easyname",
   "description": "Easyname is an Austrian domain registrar and web hosting provider.",

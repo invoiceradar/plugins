@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/invoice-snatcher/plugins/main/schema.json",
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
   "id": "vercel.com",
   "homepage": "https://vercel.com",
   "name": "Vercel",
@@ -13,7 +13,58 @@
       "required": true
     }
   },
-  "checkAuth": [],
-  "startAuth": [],
-  "getInvoices": []
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://vercel.com/home"
+    },
+
+    {
+      "action": "waitForElement",
+      "selector": "[data-testid]"
+    },
+
+    {
+      "action": "checkElementExists",
+      "selector": "[data-testid='avatar-popover/trigger']"
+    }
+  ],
+
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://vercel.com/login"
+    },
+
+    {
+      "action": "waitForElement",
+      "selector": "[data-testid='avatar-popover/trigger']",
+      "timeout": 180000
+    }
+  ],
+
+  "getInvoices": [
+    {
+      "action": "navigate",
+      "description": "",
+      "url": "https://vercel.com/home"
+    },
+    {
+      "action": "extractAll",
+      "variable": "invoice",
+      "script": "fetch(\"https://vercel.com/api/stripe/invoices/previous?limit=25&teamId={{config.teamId}}\").then(res => res.json()).then(d => d.invoices.map(i => ({ id: i.number, createdAt: new Date(i.created * 1000), amount: i.amount_due/100, invoicePdf: i.invoice_pdf, currency: i.currency })))",
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "description": "Download PDF from Stripe",
+          "url": "{{invoice.invoicePdf}}",
+          "invoice": {
+            "id": "{{invoice.id}}",
+            "date": "{{invoice.createdAt}}",
+            "total": "{{invoice.amount}} {{invoice.currency}}"
+          }
+        }
+      ]
+    }
+  ]
 }

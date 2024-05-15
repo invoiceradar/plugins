@@ -4,7 +4,6 @@
   "required": [
     "id",
     "name",
-    "configSchema",
     "startAuth",
     "checkAuth",
     "getInvoices"
@@ -74,6 +73,27 @@
             ],
             "description": "The type of the property.",
             "title": "Type"
+          },
+          "default": {
+            "anyOf": [
+              {
+                "type": "string",
+                "description": "a string",
+                "title": "string"
+              },
+              {
+                "type": "number",
+                "description": "a number",
+                "title": "number"
+              },
+              {
+                "type": "boolean",
+                "description": "a boolean",
+                "title": "boolean"
+              }
+            ],
+            "description": "The default value for this property",
+            "title": "Default"
           }
         },
         "additionalProperties": false,
@@ -95,6 +115,49 @@
       "type": "array",
       "items": {
         "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "selector",
+              "value"
+            ],
+            "properties": {
+              "action": {
+                "const": "type"
+              },
+              "scopeSelector": {
+                "type": "boolean",
+                "description": "Defaults to true. If set, the selector will be scoped to the parent element",
+                "title": "Scope Selector",
+                "default": true
+              },
+              "optional": {
+                "type": "boolean",
+                "description": "Whether or not the flow should continue if this step fails",
+                "title": "Optional"
+              },
+              "selector": {
+                "type": "string",
+                "description": "The CSS selector to use to find the element",
+                "title": "Selector",
+                "examples": [
+                  "#example"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "description": "a string",
+                "title": "string"
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
+              }
+            },
+            "additionalProperties": false
+          },
           {
             "type": "object",
             "required": [
@@ -241,12 +304,17 @@
             "type": "object",
             "required": [
               "action",
-              "selector",
-              "value"
+              "selector"
             ],
             "properties": {
               "action": {
-                "const": "type"
+                "const": "click"
+              },
+              "scopeSelector": {
+                "type": "boolean",
+                "description": "Defaults to true. If set, the selector will be scoped to the parent element",
+                "title": "Scope Selector",
+                "default": true
               },
               "optional": {
                 "type": "boolean",
@@ -260,11 +328,6 @@
                 "examples": [
                   "#example"
                 ]
-              },
-              "value": {
-                "type": "string",
-                "description": "a string",
-                "title": "string"
               },
               "description": {
                 "type": "string",
@@ -305,6 +368,44 @@
                   15000
                 ],
                 "default": 15000
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "selector",
+              "value"
+            ],
+            "properties": {
+              "action": {
+                "const": "dropdownSelect"
+              },
+              "scopeSelector": {
+                "type": "boolean",
+                "description": "Defaults to true. If set, the selector will be scoped to the parent element",
+                "title": "Scope Selector",
+                "default": true
+              },
+              "selector": {
+                "type": "string",
+                "description": "The CSS selector to use to find the element",
+                "title": "Selector",
+                "examples": [
+                  "#example"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "description": "a string",
+                "title": "string"
               },
               "description": {
                 "type": "string",
@@ -444,25 +545,25 @@
           {
             "type": "object",
             "required": [
-              "action",
-              "selector"
+              "action"
             ],
             "properties": {
               "action": {
-                "const": "click"
+                "const": "waitForNavigation"
               },
               "optional": {
                 "type": "boolean",
                 "description": "Whether or not the flow should continue if this step fails",
                 "title": "Optional"
               },
-              "selector": {
-                "type": "string",
-                "description": "The CSS selector to use to find the element",
-                "title": "Selector",
+              "timeout": {
+                "type": "number",
+                "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                "title": "Timeout",
                 "examples": [
-                  "#example"
-                ]
+                  15000
+                ],
+                "default": 15000
               },
               "description": {
                 "type": "string",
@@ -530,6 +631,38 @@
                     "title": "Invoice Variable"
                   }
                 ]
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "url"
+            ],
+            "properties": {
+              "action": {
+                "const": "waitForURL"
+              },
+              "url": {
+                "type": "string",
+                "description": "The URL to wait for",
+                "title": "URL"
+              },
+              "timeout": {
+                "type": "number",
+                "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                "title": "Timeout",
+                "examples": [
+                  15000
+                ],
+                "default": 15000
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               }
             },
             "additionalProperties": false
@@ -699,6 +832,76 @@
             "type": "object",
             "required": [
               "action",
+              "script",
+              "then"
+            ],
+            "properties": {
+              "action": {
+                "const": "if"
+              },
+              "script": {
+                "type": "string",
+                "description": "A JavaScript script to run in the page context",
+                "title": "Script",
+                "examples": [
+                  {
+                    "script": "console.log(\"Hello World\");"
+                  }
+                ]
+              },
+              "then": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Step"
+                }
+              },
+              "else": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Step"
+                }
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "selector",
+              "then"
+            ],
+            "properties": {
+              "action": {
+                "const": "if"
+              },
+              "selector": {
+                "type": "string",
+                "description": "The CSS selector to use to find the element",
+                "title": "Selector",
+                "examples": [
+                  "#example"
+                ]
+              },
+              "then": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Step"
+                }
+              },
+              "else": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Step"
+                }
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
               "url"
             ],
             "properties": {
@@ -735,6 +938,29 @@
                 "examples": [
                   "#example"
                 ]
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "url"
+            ],
+            "properties": {
+              "action": {
+                "const": "checkURL"
+              },
+              "url": {
+                "type": "string",
+                "description": "The URL to check against",
+                "title": "URL"
               },
               "description": {
                 "type": "string",
@@ -793,32 +1019,6 @@
                     "title": "Invoice Variable"
                   }
                 ]
-              }
-            },
-            "additionalProperties": false
-          },
-          {
-            "type": "object",
-            "required": [
-              "action"
-            ],
-            "properties": {
-              "action": {
-                "const": "waitForNavigation"
-              },
-              "timeout": {
-                "type": "number",
-                "description": "The number of milliseconds to wait for. Defaults to 15s.",
-                "title": "Timeout",
-                "examples": [
-                  15000
-                ],
-                "default": 15000
-              },
-              "description": {
-                "type": "string",
-                "description": "A human-readable description of what this step does",
-                "title": "Description"
               }
             },
             "additionalProperties": false
@@ -883,6 +1083,49 @@
             "required": [
               "action",
               "selector",
+              "value"
+            ],
+            "properties": {
+              "action": {
+                "const": "type"
+              },
+              "scopeSelector": {
+                "type": "boolean",
+                "description": "Defaults to true. If set, the selector will be scoped to the parent element",
+                "title": "Scope Selector",
+                "default": true
+              },
+              "optional": {
+                "type": "boolean",
+                "description": "Whether or not the flow should continue if this step fails",
+                "title": "Optional"
+              },
+              "selector": {
+                "type": "string",
+                "description": "The CSS selector to use to find the element",
+                "title": "Selector",
+                "examples": [
+                  "#example"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "description": "a string",
+                "title": "string"
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "selector",
               "forEach",
               "fields"
             ],
@@ -1024,12 +1267,17 @@
             "type": "object",
             "required": [
               "action",
-              "selector",
-              "value"
+              "selector"
             ],
             "properties": {
               "action": {
-                "const": "type"
+                "const": "click"
+              },
+              "scopeSelector": {
+                "type": "boolean",
+                "description": "Defaults to true. If set, the selector will be scoped to the parent element",
+                "title": "Scope Selector",
+                "default": true
               },
               "optional": {
                 "type": "boolean",
@@ -1043,11 +1291,6 @@
                 "examples": [
                   "#example"
                 ]
-              },
-              "value": {
-                "type": "string",
-                "description": "a string",
-                "title": "string"
               },
               "description": {
                 "type": "string",
@@ -1088,6 +1331,44 @@
                   15000
                 ],
                 "default": 15000
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "selector",
+              "value"
+            ],
+            "properties": {
+              "action": {
+                "const": "dropdownSelect"
+              },
+              "scopeSelector": {
+                "type": "boolean",
+                "description": "Defaults to true. If set, the selector will be scoped to the parent element",
+                "title": "Scope Selector",
+                "default": true
+              },
+              "selector": {
+                "type": "string",
+                "description": "The CSS selector to use to find the element",
+                "title": "Selector",
+                "examples": [
+                  "#example"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "description": "a string",
+                "title": "string"
               },
               "description": {
                 "type": "string",
@@ -1227,25 +1508,25 @@
           {
             "type": "object",
             "required": [
-              "action",
-              "selector"
+              "action"
             ],
             "properties": {
               "action": {
-                "const": "click"
+                "const": "waitForNavigation"
               },
               "optional": {
                 "type": "boolean",
                 "description": "Whether or not the flow should continue if this step fails",
                 "title": "Optional"
               },
-              "selector": {
-                "type": "string",
-                "description": "The CSS selector to use to find the element",
-                "title": "Selector",
+              "timeout": {
+                "type": "number",
+                "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                "title": "Timeout",
                 "examples": [
-                  "#example"
-                ]
+                  15000
+                ],
+                "default": 15000
               },
               "description": {
                 "type": "string",
@@ -1313,6 +1594,38 @@
                     "title": "Invoice Variable"
                   }
                 ]
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "url"
+            ],
+            "properties": {
+              "action": {
+                "const": "waitForURL"
+              },
+              "url": {
+                "type": "string",
+                "description": "The URL to wait for",
+                "title": "URL"
+              },
+              "timeout": {
+                "type": "number",
+                "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                "title": "Timeout",
+                "examples": [
+                  15000
+                ],
+                "default": 15000
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               }
             },
             "additionalProperties": false
@@ -1482,6 +1795,76 @@
             "type": "object",
             "required": [
               "action",
+              "script",
+              "then"
+            ],
+            "properties": {
+              "action": {
+                "const": "if"
+              },
+              "script": {
+                "type": "string",
+                "description": "A JavaScript script to run in the page context",
+                "title": "Script",
+                "examples": [
+                  {
+                    "script": "console.log(\"Hello World\");"
+                  }
+                ]
+              },
+              "then": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Step"
+                }
+              },
+              "else": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Step"
+                }
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "selector",
+              "then"
+            ],
+            "properties": {
+              "action": {
+                "const": "if"
+              },
+              "selector": {
+                "type": "string",
+                "description": "The CSS selector to use to find the element",
+                "title": "Selector",
+                "examples": [
+                  "#example"
+                ]
+              },
+              "then": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Step"
+                }
+              },
+              "else": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Step"
+                }
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
               "url"
             ],
             "properties": {
@@ -1518,6 +1901,29 @@
                 "examples": [
                   "#example"
                 ]
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "url"
+            ],
+            "properties": {
+              "action": {
+                "const": "checkURL"
+              },
+              "url": {
+                "type": "string",
+                "description": "The URL to check against",
+                "title": "URL"
               },
               "description": {
                 "type": "string",
@@ -1576,32 +1982,6 @@
                     "title": "Invoice Variable"
                   }
                 ]
-              }
-            },
-            "additionalProperties": false
-          },
-          {
-            "type": "object",
-            "required": [
-              "action"
-            ],
-            "properties": {
-              "action": {
-                "const": "waitForNavigation"
-              },
-              "timeout": {
-                "type": "number",
-                "description": "The number of milliseconds to wait for. Defaults to 15s.",
-                "title": "Timeout",
-                "examples": [
-                  15000
-                ],
-                "default": 15000
-              },
-              "description": {
-                "type": "string",
-                "description": "A human-readable description of what this step does",
-                "title": "Description"
               }
             },
             "additionalProperties": false
@@ -1655,12 +2035,55 @@
         ]
       },
       "description": "Steps to check if the user is already authenticated",
-      "title": "`Verify Authentication"
+      "title": "Verify Authentication"
     },
     "getInvoices": {
       "type": "array",
       "items": {
         "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "selector",
+              "value"
+            ],
+            "properties": {
+              "action": {
+                "const": "type"
+              },
+              "scopeSelector": {
+                "type": "boolean",
+                "description": "Defaults to true. If set, the selector will be scoped to the parent element",
+                "title": "Scope Selector",
+                "default": true
+              },
+              "optional": {
+                "type": "boolean",
+                "description": "Whether or not the flow should continue if this step fails",
+                "title": "Optional"
+              },
+              "selector": {
+                "type": "string",
+                "description": "The CSS selector to use to find the element",
+                "title": "Selector",
+                "examples": [
+                  "#example"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "description": "a string",
+                "title": "string"
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
+              }
+            },
+            "additionalProperties": false
+          },
           {
             "type": "object",
             "required": [
@@ -1807,12 +2230,17 @@
             "type": "object",
             "required": [
               "action",
-              "selector",
-              "value"
+              "selector"
             ],
             "properties": {
               "action": {
-                "const": "type"
+                "const": "click"
+              },
+              "scopeSelector": {
+                "type": "boolean",
+                "description": "Defaults to true. If set, the selector will be scoped to the parent element",
+                "title": "Scope Selector",
+                "default": true
               },
               "optional": {
                 "type": "boolean",
@@ -1826,11 +2254,6 @@
                 "examples": [
                   "#example"
                 ]
-              },
-              "value": {
-                "type": "string",
-                "description": "a string",
-                "title": "string"
               },
               "description": {
                 "type": "string",
@@ -1871,6 +2294,44 @@
                   15000
                 ],
                 "default": 15000
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "selector",
+              "value"
+            ],
+            "properties": {
+              "action": {
+                "const": "dropdownSelect"
+              },
+              "scopeSelector": {
+                "type": "boolean",
+                "description": "Defaults to true. If set, the selector will be scoped to the parent element",
+                "title": "Scope Selector",
+                "default": true
+              },
+              "selector": {
+                "type": "string",
+                "description": "The CSS selector to use to find the element",
+                "title": "Selector",
+                "examples": [
+                  "#example"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "description": "a string",
+                "title": "string"
               },
               "description": {
                 "type": "string",
@@ -2010,25 +2471,25 @@
           {
             "type": "object",
             "required": [
-              "action",
-              "selector"
+              "action"
             ],
             "properties": {
               "action": {
-                "const": "click"
+                "const": "waitForNavigation"
               },
               "optional": {
                 "type": "boolean",
                 "description": "Whether or not the flow should continue if this step fails",
                 "title": "Optional"
               },
-              "selector": {
-                "type": "string",
-                "description": "The CSS selector to use to find the element",
-                "title": "Selector",
+              "timeout": {
+                "type": "number",
+                "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                "title": "Timeout",
                 "examples": [
-                  "#example"
-                ]
+                  15000
+                ],
+                "default": 15000
               },
               "description": {
                 "type": "string",
@@ -2096,6 +2557,38 @@
                     "title": "Invoice Variable"
                   }
                 ]
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "url"
+            ],
+            "properties": {
+              "action": {
+                "const": "waitForURL"
+              },
+              "url": {
+                "type": "string",
+                "description": "The URL to wait for",
+                "title": "URL"
+              },
+              "timeout": {
+                "type": "number",
+                "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                "title": "Timeout",
+                "examples": [
+                  15000
+                ],
+                "default": 15000
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
               }
             },
             "additionalProperties": false
@@ -2265,6 +2758,76 @@
             "type": "object",
             "required": [
               "action",
+              "script",
+              "then"
+            ],
+            "properties": {
+              "action": {
+                "const": "if"
+              },
+              "script": {
+                "type": "string",
+                "description": "A JavaScript script to run in the page context",
+                "title": "Script",
+                "examples": [
+                  {
+                    "script": "console.log(\"Hello World\");"
+                  }
+                ]
+              },
+              "then": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Step"
+                }
+              },
+              "else": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Step"
+                }
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "selector",
+              "then"
+            ],
+            "properties": {
+              "action": {
+                "const": "if"
+              },
+              "selector": {
+                "type": "string",
+                "description": "The CSS selector to use to find the element",
+                "title": "Selector",
+                "examples": [
+                  "#example"
+                ]
+              },
+              "then": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Step"
+                }
+              },
+              "else": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/Step"
+                }
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
               "url"
             ],
             "properties": {
@@ -2301,6 +2864,29 @@
                 "examples": [
                   "#example"
                 ]
+              },
+              "description": {
+                "type": "string",
+                "description": "A human-readable description of what this step does",
+                "title": "Description"
+              }
+            },
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "url"
+            ],
+            "properties": {
+              "action": {
+                "const": "checkURL"
+              },
+              "url": {
+                "type": "string",
+                "description": "The URL to check against",
+                "title": "URL"
               },
               "description": {
                 "type": "string",
@@ -2359,32 +2945,6 @@
                     "title": "Invoice Variable"
                   }
                 ]
-              }
-            },
-            "additionalProperties": false
-          },
-          {
-            "type": "object",
-            "required": [
-              "action"
-            ],
-            "properties": {
-              "action": {
-                "const": "waitForNavigation"
-              },
-              "timeout": {
-                "type": "number",
-                "description": "The number of milliseconds to wait for. Defaults to 15s.",
-                "title": "Timeout",
-                "examples": [
-                  15000
-                ],
-                "default": 15000
-              },
-              "description": {
-                "type": "string",
-                "description": "A human-readable description of what this step does",
-                "title": "Description"
               }
             },
             "additionalProperties": false
@@ -2461,6 +3021,49 @@
   "$defs": {
     "Step": {
       "anyOf": [
+        {
+          "type": "object",
+          "required": [
+            "action",
+            "selector",
+            "value"
+          ],
+          "properties": {
+            "action": {
+              "const": "type"
+            },
+            "scopeSelector": {
+              "type": "boolean",
+              "description": "Defaults to true. If set, the selector will be scoped to the parent element",
+              "title": "Scope Selector",
+              "default": true
+            },
+            "optional": {
+              "type": "boolean",
+              "description": "Whether or not the flow should continue if this step fails",
+              "title": "Optional"
+            },
+            "selector": {
+              "type": "string",
+              "description": "The CSS selector to use to find the element",
+              "title": "Selector",
+              "examples": [
+                "#example"
+              ]
+            },
+            "value": {
+              "type": "string",
+              "description": "a string",
+              "title": "string"
+            },
+            "description": {
+              "type": "string",
+              "description": "A human-readable description of what this step does",
+              "title": "Description"
+            }
+          },
+          "additionalProperties": false
+        },
         {
           "type": "object",
           "required": [
@@ -2607,12 +3210,17 @@
           "type": "object",
           "required": [
             "action",
-            "selector",
-            "value"
+            "selector"
           ],
           "properties": {
             "action": {
-              "const": "type"
+              "const": "click"
+            },
+            "scopeSelector": {
+              "type": "boolean",
+              "description": "Defaults to true. If set, the selector will be scoped to the parent element",
+              "title": "Scope Selector",
+              "default": true
             },
             "optional": {
               "type": "boolean",
@@ -2626,11 +3234,6 @@
               "examples": [
                 "#example"
               ]
-            },
-            "value": {
-              "type": "string",
-              "description": "a string",
-              "title": "string"
             },
             "description": {
               "type": "string",
@@ -2671,6 +3274,44 @@
                 15000
               ],
               "default": 15000
+            },
+            "description": {
+              "type": "string",
+              "description": "A human-readable description of what this step does",
+              "title": "Description"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "action",
+            "selector",
+            "value"
+          ],
+          "properties": {
+            "action": {
+              "const": "dropdownSelect"
+            },
+            "scopeSelector": {
+              "type": "boolean",
+              "description": "Defaults to true. If set, the selector will be scoped to the parent element",
+              "title": "Scope Selector",
+              "default": true
+            },
+            "selector": {
+              "type": "string",
+              "description": "The CSS selector to use to find the element",
+              "title": "Selector",
+              "examples": [
+                "#example"
+              ]
+            },
+            "value": {
+              "type": "string",
+              "description": "a string",
+              "title": "string"
             },
             "description": {
               "type": "string",
@@ -2810,25 +3451,25 @@
         {
           "type": "object",
           "required": [
-            "action",
-            "selector"
+            "action"
           ],
           "properties": {
             "action": {
-              "const": "click"
+              "const": "waitForNavigation"
             },
             "optional": {
               "type": "boolean",
               "description": "Whether or not the flow should continue if this step fails",
               "title": "Optional"
             },
-            "selector": {
-              "type": "string",
-              "description": "The CSS selector to use to find the element",
-              "title": "Selector",
+            "timeout": {
+              "type": "number",
+              "description": "The number of milliseconds to wait for. Defaults to 15s.",
+              "title": "Timeout",
               "examples": [
-                "#example"
-              ]
+                15000
+              ],
+              "default": 15000
             },
             "description": {
               "type": "string",
@@ -2896,6 +3537,38 @@
                   "title": "Invoice Variable"
                 }
               ]
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "action",
+            "url"
+          ],
+          "properties": {
+            "action": {
+              "const": "waitForURL"
+            },
+            "url": {
+              "type": "string",
+              "description": "The URL to wait for",
+              "title": "URL"
+            },
+            "timeout": {
+              "type": "number",
+              "description": "The number of milliseconds to wait for. Defaults to 15s.",
+              "title": "Timeout",
+              "examples": [
+                15000
+              ],
+              "default": 15000
+            },
+            "description": {
+              "type": "string",
+              "description": "A human-readable description of what this step does",
+              "title": "Description"
             }
           },
           "additionalProperties": false
@@ -3065,6 +3738,76 @@
           "type": "object",
           "required": [
             "action",
+            "script",
+            "then"
+          ],
+          "properties": {
+            "action": {
+              "const": "if"
+            },
+            "script": {
+              "type": "string",
+              "description": "A JavaScript script to run in the page context",
+              "title": "Script",
+              "examples": [
+                {
+                  "script": "console.log(\"Hello World\");"
+                }
+              ]
+            },
+            "then": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Step"
+              }
+            },
+            "else": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Step"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "action",
+            "selector",
+            "then"
+          ],
+          "properties": {
+            "action": {
+              "const": "if"
+            },
+            "selector": {
+              "type": "string",
+              "description": "The CSS selector to use to find the element",
+              "title": "Selector",
+              "examples": [
+                "#example"
+              ]
+            },
+            "then": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Step"
+              }
+            },
+            "else": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Step"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "action",
             "url"
           ],
           "properties": {
@@ -3101,6 +3844,29 @@
               "examples": [
                 "#example"
               ]
+            },
+            "description": {
+              "type": "string",
+              "description": "A human-readable description of what this step does",
+              "title": "Description"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "action",
+            "url"
+          ],
+          "properties": {
+            "action": {
+              "const": "checkURL"
+            },
+            "url": {
+              "type": "string",
+              "description": "The URL to check against",
+              "title": "URL"
             },
             "description": {
               "type": "string",
@@ -3159,32 +3925,6 @@
                   "title": "Invoice Variable"
                 }
               ]
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "required": [
-            "action"
-          ],
-          "properties": {
-            "action": {
-              "const": "waitForNavigation"
-            },
-            "timeout": {
-              "type": "number",
-              "description": "The number of milliseconds to wait for. Defaults to 15s.",
-              "title": "Timeout",
-              "examples": [
-                15000
-              ],
-              "default": 15000
-            },
-            "description": {
-              "type": "string",
-              "description": "A human-readable description of what this step does",
-              "title": "Description"
             }
           },
           "additionalProperties": false

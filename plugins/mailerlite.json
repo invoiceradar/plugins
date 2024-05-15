@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/invoice-snatcher/plugins/main/schema.json",
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
   "id": "mailerlite",
   "name": "Mailerlite",
   "description": "Mailerlite is an email sending service.",
@@ -70,14 +70,14 @@
           "selector": "td:nth-child(6) a",
           "attribute": "href"
         },
-        "total": {
+        "amount": {
           "selector": "td:nth-child(3)"
         }
       },
       "forEach": [
         {
           "action": "downloadPdf",
-          "url": "{{item.url}}",
+          "url": "{{invoice.url}}",
           "invoice": "item"
         }
       ]

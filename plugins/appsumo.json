@@ -1,0 +1,56 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "appsumo",
+  "name": "AppSumo",
+  "description": "AppSumo is a daily deals website for digitally distributed goods and online services.",
+  "homepage": "https://appsumo.com",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://appsumo.com/account/profile/"
+    },
+    {
+      "action": "checkElementExists",
+      "selector": "[data-testid='account-link-dropdown']"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://appsumo.com/accounts/login/"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "a[href='/account/profile/']",
+      "timeout": 120000
+    }
+  ],
+  "getInvoices": [
+    {
+      "action": "navigate",
+      "url": "https://appsumo.com/account/history/"
+    },
+    {
+      "action": "extractAll",
+      "selector": ".history li",
+      "variable": "invoice",
+      "fields": {
+        "date": ".date",
+        "total": ".price",
+        "invoiceUrl": {
+          "selector": ".id a",
+          "attribute": "href"
+        },
+        "id": ".id a"
+      },
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "/account/history/pdf/{{invoice.id}}/",
+          "invoice": "{{invoice}}"
+        }
+      ]
+    }
+  ]
+}
