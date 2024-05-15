@@ -1,0 +1,108 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoice-snatcher/plugins/main/schema.json",
+  "id": "expo",
+  "name": "Expo",
+  "description": "Expo is a platform for developing native apps with JavaScript and React.",
+  "homepage": "https://expo.dev",
+  "configSchema": {
+    "username": {
+      "type": "string",
+      "title": "Username",
+      "required": true
+    },
+    "password": {
+      "type": "password",
+      "title": "Password",
+      "required": false
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://expo.dev/login"
+    },
+    {
+      "action": "checkElementExists",
+      "selector": "#nav-bar-account-selector"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://expo.dev/login"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "#usernameOrEmail"
+    },
+    {
+      "action": "type",
+      "selector": "#usernameOrEmail",
+      "value": "{{config.username}}"
+    },
+    {
+      "action": "type",
+      "selector": "#password",
+      "value": "{{config.password}}"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "#nav-bar-account-selector",
+      "timeout": 12000
+    }
+  ],
+  "getInvoices": [
+    {
+      "action": "navigate",
+      "url": "https://expo.dev/accounts/{{config.username}}/settings/receipts"
+    },
+    {
+      "action": "extractAll",
+      "selector": "a[href^='https://pay.stripe.com/receipts']",
+      "fields": {
+        "url": {
+          "selector": "",
+          "attribute": "href"
+        }
+      },
+      "forEach": [
+        {
+          "action": "navigate",
+          "url": "{{item.url}}"
+        },
+        {
+          "action": "waitForElement",
+          "selector": ".st-Wrapper",
+          "timeout": 3000
+        },
+        {
+          "action": "extractAll",
+          "selector": "body",
+          "variable": "invoice",
+          "forEach": [
+            {
+              "action": "downloadPdf",
+              "url": "{{invoice.url}}",
+              "invoice": "invoice"
+            }
+          ],
+          "fields": {
+            "id": {
+              "selector": ".st-Wrapper > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > table:nth-child(5) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > table:nth-child(4) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(3) > span:nth-child(1)"
+            },
+            "date": {
+              "selector": ".st-Wrapper > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > table:nth-child(5) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > table:nth-child(3) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > span:nth-child(1)"
+            },
+            "total": {
+              "selector": ".st-Wrapper > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > table:nth-child(5) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > span:nth-child(1)"
+            },
+            "url": {
+              "selector": "a[href^='https://pay.stripe.com/invoice']",
+              "attribute": "href"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
