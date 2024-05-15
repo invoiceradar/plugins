@@ -1,0 +1,84 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "setapp",
+  "name": "Setapp",
+  "description": "Setapp is a large collection of powerful Mac apps available by subscription.",
+  "homepage": "https://setapp.com",
+  "configSchema": {
+    "username": {
+      "type": "string",
+      "title": "Username",
+      "required": false
+    },
+    "password": {
+      "type": "password",
+      "title": "Password",
+      "required": false
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://my.setapp.com/payment-history"
+    },
+    {
+      "action": "checkURL",
+      "url": "https://my.setapp.com/payment-history"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://my.setapp.com/login"
+    },
+    { "action": "type", "selector": "[name='email']", "value": "{{config.username}}" },
+    {
+      "action": "type",
+      "selector": "[name='password']",
+      "value": "{{config.password}}"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[data-testid='subscriptionActive']",
+      "timeout": 120000
+    }
+  ],
+  "getInvoices": [
+    {
+      "action": "navigate",
+      "url": "https://my.setapp.com/payment-history"
+    },
+    {
+      "action": "extract",
+      "variable": "auth_token",
+      "script": "document.cookie.split('; ').find(row => row.startsWith('customer_access_token=')).split('=')[1];"
+    },
+    {
+      "action": "extractAll",
+      "script": "fetch('https://user-api.setapp.com/v1/invoices', {headers: {'accept': 'application/json', 'authorization': 'Bearer {{auth_token}}', 'content-type': 'application/json'}, referrer: 'https://my.setapp.com/', referrerPolicy: 'origin-when-cross-origin', body: null, method: 'GET', mode: 'cors'}).then(res => res.json()).then(data => data.data.map(i => ({ id: i.id, date: new Date(i.payment_date*1000).toISOString(), total: (i.amount + i.tax_amount).toFixed(2) + ' ' + i.currency })));",
+      "forEach": [
+        {
+          "action": "if",
+          "script": "new Date('{{item.date}}') < new Date('2020-11-01')",
+          "then": [
+            {
+              "action": "downloadPdf",
+              "url": "https://user-api.setapp.com/v1/invoices/{{item.id}}/download?token={{auth_token}}",
+              "invoice": "item"
+            }
+          ],
+          "else": [
+            {
+              "action": "navigate",
+              "url": "https://user-api.setapp.com/v1/invoices/{{item.id}}/download?token={{auth_token}}"
+            },
+            {
+              "action": "printPdf",
+              "invoice": "item"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
