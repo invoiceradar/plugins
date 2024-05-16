@@ -1,0 +1,72 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "migadu.com",
+  "homepage": "https://migadu.com",
+  "name": "Migadu",
+  "description": "Migadu is a simple email hosting service",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://admin.migadu.com/billing/receipts"
+    },
+
+    {
+      "action": "waitForElement",
+      "selector": "main"
+    },
+    {
+      "action": "checkElementExists",
+      "selector": "[action='/public/logout']"
+    }
+  ],
+
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://admin.migadu.com/public/login"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[action='/public/logout']",
+      "timeout": 180000
+    }
+  ],
+
+  "getInvoices": [
+    {
+      "action": "navigate",
+      "description": "",
+      "url": "https://admin.migadu.com/billing/receipts"
+    },
+    {
+      "action": "extractAll",
+      "selector": "tbody tr",
+      "fields": {
+        "id": {
+          "selector": "td:nth-child(2)"
+        },
+        "date": {
+          "selector": "td:nth-child(1)"
+        },
+        "url": {
+          "selector": "td:nth-child(5) a",
+          "attribute": "href"
+        },
+        "total": {
+          "selector": "td:nth-child(4)"
+        }
+      },
+      "forEach": [
+        {
+          "action": "navigate",
+          "url": "https://admin.migadu.com{{item.url}}"
+        },
+        {
+          "action": "printPdf",
+          "invoice": "item"
+        }
+      ]
+    }
+  ]
+}
