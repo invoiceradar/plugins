@@ -1,0 +1,113 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "upwork.com",
+  "homepage": "https://upwork.com",
+  "name": "Upwork",
+  "description": "Vercel is a cloud platform for static sites and Serverless Functions.",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.upwork.com/nx/payments/reports/transaction-history?startDate=2020-02-01&endDate=2028-02-29&trxTypes=ALL&freelancers=ALL&nav_dir=pop"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[data-cy='header']"
+    },
+    {
+      "action": "checkElementExists",
+      "selector": "[data-cy='user-menu']"
+    }
+  ],
+
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.upwork.com/ab/account-security/login"
+    },
+
+    {
+      "action": "waitForElement",
+      "selector": "[data-cy='user-menu']",
+      "timeout": 180000
+    }
+  ],
+
+  "getInvoices": [
+    {
+      "action": "navigate",
+      "description": "",
+      "url": "https://www.upwork.com"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[data-cy='menu-trigger']"
+    },
+    {
+      "action": "click",
+      "selector": "[data-cy='user-menu'] > button"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[data-cy='organization-1007586775']"
+    },
+    { "action": "sleep", "duration": 1000 },
+    {
+      "action": "click",
+      "selector": "[data-cy='organization-1007586775'] > a"
+    },
+    { "action": "waitForNavigation" },
+    {
+      "action": "navigate",
+      "description": "",
+      "url": "https://www.upwork.com/nx/payments/reports/transaction-history?startDate=2020-01-01&endDate=2028-12-29&trxTypes=DEBIT&freelancers=ALL"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[name='transaction-history-trx-details']"
+    },
+    {
+      "action": "extractAll",
+      "selector": "tbody tr[data-qa='regular-transaction']",
+      "fields": {
+        "id": {
+          "selector": "td:nth-child(7)"
+        },
+        "date": {
+          "selector": "td:nth-child(2)"
+        },
+        "total": {
+          "selector": "td:nth-child(6)"
+        }
+      },
+      "forEach": [
+        {
+          "action": "click",
+          "selector": "td:nth-child(7) button",
+          "scopeSelector": true
+        },
+        {
+          "action": "waitForElement",
+          "selector": "[data-ev-label='view_invoice']"
+        },
+        {
+          "action": "click",
+          "selector": "button[data-ev-label='view_invoice']",
+          "scopeSelector": false
+        },
+        {
+          "action": "waitForPdfDownload",
+          "invoice": "item"
+        },
+        {
+          "action": "waitForElement",
+          "selector": "button[data-ev-label='view_invoice']:not([disabled])"
+        },
+        {
+          "action": "click",
+          "selector": "[data-test='close-button']"
+        }
+      ]
+    }
+  ]
+}
