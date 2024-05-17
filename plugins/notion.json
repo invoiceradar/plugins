@@ -1,0 +1,78 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "notion",
+  "name": "Notion",
+  "description": "Notion is a productivity tool.",
+  "homepage": "https://www.notion.so",
+  "configSchema": {
+    "space-id": {
+      "type": "string",
+      "title": "Space ID",
+      "required": true,
+      "description": "You can find your space ID in the URL of your Notion space. 'www.notion.so/<space-id>'"
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.notion.so/login"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "#notion-app"
+    },
+    {
+      "action": "checkElementExists",
+      "selector": ".notion-sidebar-container"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.notion.so/login"
+    },
+    { "action": "type", "selector": "[name='email']", "value": "{{config.username}}" },
+    {
+      "action": "type",
+      "selector": "[name='password']",
+      "value": "{{config.password}}"
+    },
+    {
+      "action": "waitForElement",
+      "selector": ".notion-sidebar-container",
+      "timeout": 120000
+    }
+  ],
+  "getInvoices": [
+    {
+      "action": "navigate",
+      "url": "https://www.notion.so/{{config.space-id}}"
+    },
+    {
+      "action": "sleep",
+      "duration": 3000,
+      "description": "Wait until site is fully loaded and local storage updates"
+    },
+    {
+      "action": "extract",
+      "variable": "internal_space_id",
+      "script": "JSON.parse(localStorage.getItem('LRU:KeyValueStore2:lastVisitedRouteSpaceId')).value.trim();"
+    },
+    {
+      "action": "extractAll",
+
+      "script": "fetch('https://www.notion.so/api/v3/getBillingHistory', {'headers': {'content-type': 'application/json',},'body': '{\"spaceId\":\"{{internal_space_id}}\",\"limit\":100}','method': 'POST'}).then(res => res.json()).then(d => d.events.map(i => ({ id: i.id, date: new Date(i.timestamp), total: i.amount/100 + i.currencyCode })));",
+      "forEach": [
+        {
+          "action": "navigate",
+          "url": "https://www.notion.so/invoice/{{item.id}}"
+        },
+        { "action": "waitForElement", "selector": ".notion-invoice" },
+        {
+          "action": "printPdf",
+          "invoice": "item"
+        }
+      ]
+    }
+  ]
+}
