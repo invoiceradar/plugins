@@ -120,7 +120,7 @@
         {
           "action": "downloadPdf",
           "url": "{{item.pdfLink}}",
-          "document": "item"
+          "document": "{{item}}"
         }
       ]
     }

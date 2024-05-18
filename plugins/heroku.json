@@ -84,7 +84,7 @@
         },
         {
           "action": "printPdf",
-          "document": "item"
+          "document": "{{item}}"
         }
       ]
     }

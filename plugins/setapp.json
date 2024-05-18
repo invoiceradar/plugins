@@ -68,7 +68,7 @@
             {
               "action": "downloadPdf",
               "url": "https://user-api.setapp.com/v1/invoices/{{item.id}}/download?token={{auth_token}}",
-              "document": "item"
+              "document": "{{item}}"
             }
           ],
           "else": [
@@ -78,7 +78,7 @@
             },
             {
               "action": "printPdf",
-              "document": "item"
+              "document": "{{item}}"
             }
           ]
         }

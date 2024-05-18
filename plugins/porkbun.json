@@ -80,7 +80,7 @@
         },
         {
           "action": "printPdf",
-          "document": "invoice"
+          "document": "{{invoice}}"
         }
       ]
     }

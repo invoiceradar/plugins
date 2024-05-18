@@ -62,7 +62,7 @@
       "forEach": [
         {
           "action": "downloadPdf",
-          "document": "item",
+          "document": "{{item}}",
           "url": "https://w.deepl.com/invoices/{{item.id}}"
         }
       ]

@@ -78,7 +78,7 @@
         {
           "action": "downloadPdf",
           "url": "{{item.url}}",
-          "document": "item"
+          "document": "{{item}}"
         }
       ]
     }
