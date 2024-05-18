@@ -45,7 +45,7 @@
       "timeout": 120000
     }
   ],
-  "getInvoices": [
+  "getDocuments": [
     {
       "action": "navigate",
       "url": "https://porkbun.com/account/orders"
@@ -80,7 +80,7 @@
         },
         {
           "action": "printPdf",
-          "invoice": "invoice"
+          "document": "invoice"
         }
       ]
     }

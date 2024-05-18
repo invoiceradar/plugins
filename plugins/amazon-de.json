@@ -26,7 +26,7 @@
       "timeout": 120000
     }
   ],
-  "getInvoices": [
+  "getDocuments": [
     {
       "action": "navigate",
       "url": "https://www.amazon.de/gp/css/order-history?timeFilter=year-{{currentDate.year}}&orderFilter=year-{{currentDate.year}}"
@@ -83,7 +83,7 @@
                 {
                   "action": "downloadPdf",
                   "url": "{{invoice.url}}",
-                  "invoice": {
+                  "document": {
                     "id": "{{order.id}}-{{index}}",
                     "date": "{{order.date}}",
                     "total": "{{order.price}}"

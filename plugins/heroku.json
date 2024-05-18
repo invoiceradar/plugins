@@ -1,0 +1,92 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "heroku",
+  "name": "Heroku",
+  "description": "Heroku is a platform as a service to run applications in the cloud.",
+  "homepage": "https://heroku.com/",
+  "configSchema": {
+    "team": {
+      "type": "string",
+      "title": "Team",
+      "description": "The name of the team you want to get invoices for.",
+      "example": "my-team",
+      "required": true
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://dashboard.heroku.com/"
+    },
+    {
+      "action": "checkURL",
+      "url": "https://dashboard.heroku.com/"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://id.heroku.com/login"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://dashboard.heroku.com/teams/*",
+      "timeout": 120000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://dashboard.heroku.com/teams/{{config.team}}/billing"
+    },
+    {
+      "action": "waitForElement",
+      "selector": ".invoices"
+    },
+    {
+      "action": "if",
+      "selector": "button.show-more",
+      "then": [
+        {
+          "action": "click",
+          "selector": "button.show-more"
+        }
+      ]
+    },
+    {
+      "action": "extractAll",
+      "selector": ".invoices .invoice-row",
+      "fields": {
+        "id": {
+          "selector": ".invoice-title form",
+          "attribute": "action",
+          "transform": "(url) => url.split('/').pop()"
+        },
+        "date": {
+          "selector": ".invoice-title input[type=submit]",
+          "attribute": "value",
+          "transform": "(dateString) => (d => new Date(d.setMonth(d.getMonth() + 1)).toISOString())(new Date(dateString))"
+        },
+        "total": ".invoice-total",
+        "token": {
+          "selector": ".invoice-title [name='token']",
+          "attribute": "value"
+        },
+        "url": {
+          "selector": ".invoice-title form",
+          "attribute": "action"
+        }
+      },
+      "forEach": [
+        {
+          "action": "runJs",
+          "script": "(async () => { const response = await fetch('{{item.url}}', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'token={{item.token}}' }); const responseBody = await response.text(); console.log(responseBody); document.body.innerHTML = responseBody; })();"
+        },
+        {
+          "action": "printPdf",
+          "document": "item"
+        }
+      ]
+    }
+  ]
+}

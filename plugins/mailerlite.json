@@ -47,7 +47,7 @@
       "timeout": 120000
     }
   ],
-  "getInvoices": [
+  "getDocuments": [
     {
       "action": "navigate",
       "url": "https://dashboard.mailerlite.com/billing/invoices"
@@ -70,15 +70,15 @@
           "selector": "td:nth-child(6) a",
           "attribute": "href"
         },
-        "amount": {
+        "total": {
           "selector": "td:nth-child(3)"
         }
       },
       "forEach": [
         {
           "action": "downloadPdf",
-          "url": "{{invoice.url}}",
-          "invoice": "item"
+          "url": "{{item.url}}",
+          "document": "item"
         }
       ]
     }

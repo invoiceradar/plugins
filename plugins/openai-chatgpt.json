@@ -3,7 +3,7 @@
   "id": "openai-chatgpt",
   "name": "ChatGPT",
   "description": "Get invoices from your ChatGPT Plus subscription.",
-  "homepage": "https://chat.openai.com/",
+  "homepage": "https://chatgpt.com/",
   "configSchema": {
     "username": {
       "type": "string",
@@ -14,7 +14,7 @@
   "checkAuth": [
     {
       "action": "navigate",
-      "url": "https://chat.openai.com/"
+      "url": "https://chatgpt.com/"
     },
     {
       "action": "checkElementExists",
@@ -24,7 +24,7 @@
   "startAuth": [
     {
       "action": "navigate",
-      "url": "https://chat.openai.com/auth/login"
+      "url": "https://chatgpt.com/auth/login"
     },
     {
       "action": "waitForElement",
@@ -36,10 +36,10 @@
       "timeout": 120000
     }
   ],
-  "getInvoices": [
+  "getDocuments": [
     {
       "action": "navigate",
-      "url": "https://chat.openai.com/#pricing"
+      "url": "https://chatgpt.com/#pricing"
     },
     {
       "action": "waitForElement",
@@ -47,7 +47,7 @@
     },
     {
       "action": "click",
-      "selector": "[href='/#']"
+      "selector": "[data-testid*='pricing-modal-column'] [href$='#']"
     },
     {
       "action": "waitForElement",

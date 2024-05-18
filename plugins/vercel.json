@@ -43,7 +43,7 @@
     }
   ],
 
-  "getInvoices": [
+  "getDocuments": [
     {
       "action": "navigate",
       "description": "",
@@ -58,7 +58,7 @@
           "action": "downloadPdf",
           "description": "Download PDF from Stripe",
           "url": "{{invoice.invoicePdf}}",
-          "invoice": {
+          "document": {
             "id": "{{invoice.id}}",
             "date": "{{invoice.createdAt}}",
             "total": "{{invoice.amount}} {{invoice.currency}}"
