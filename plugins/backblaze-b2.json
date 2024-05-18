@@ -49,7 +49,7 @@
       "timeout": 120000
     }
   ],
-  "getInvoices": [
+  "getDocuments": [
     {
       "action": "navigate",
       "url": "https://secure.backblaze.com/billing_card.htm"
@@ -147,7 +147,7 @@
             },
             {
               "action": "printPdf",
-              "invoice": "invoice"
+              "document": "invoice"
             }
           ]
         }

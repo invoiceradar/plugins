@@ -31,7 +31,11 @@
       "action": "navigate",
       "url": "https://my.setapp.com/login"
     },
-    { "action": "type", "selector": "[name='email']", "value": "{{config.username}}" },
+    {
+      "action": "type",
+      "selector": "[name='email']",
+      "value": "{{config.username}}"
+    },
     {
       "action": "type",
       "selector": "[name='password']",
@@ -43,7 +47,7 @@
       "timeout": 120000
     }
   ],
-  "getInvoices": [
+  "getDocuments": [
     {
       "action": "navigate",
       "url": "https://my.setapp.com/payment-history"
@@ -64,7 +68,7 @@
             {
               "action": "downloadPdf",
               "url": "https://user-api.setapp.com/v1/invoices/{{item.id}}/download?token={{auth_token}}",
-              "invoice": "item"
+              "document": "item"
             }
           ],
           "else": [
@@ -74,7 +78,7 @@
             },
             {
               "action": "printPdf",
-              "invoice": "item"
+              "document": "item"
             }
           ]
         }

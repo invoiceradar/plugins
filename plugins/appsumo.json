@@ -26,7 +26,7 @@
       "timeout": 120000
     }
   ],
-  "getInvoices": [
+  "getDocuments": [
     {
       "action": "navigate",
       "url": "https://appsumo.com/account/history/"
@@ -48,7 +48,7 @@
         {
           "action": "downloadPdf",
           "url": "/account/history/pdf/{{invoice.id}}/",
-          "invoice": "{{invoice}}"
+          "document": "{{invoice}}"
         }
       ]
     }

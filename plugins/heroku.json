@@ -34,7 +34,7 @@
       "timeout": 120000
     }
   ],
-  "getInvoices": [
+  "getDocuments": [
     {
       "action": "navigate",
       "url": "https://dashboard.heroku.com/teams/{{config.team}}/billing"
@@ -68,7 +68,10 @@
           "transform": "(dateString) => (d => new Date(d.setMonth(d.getMonth() + 1)).toISOString())(new Date(dateString))"
         },
         "total": ".invoice-total",
-        "token": { "selector": ".invoice-title [name='token']", "attribute": "value" },
+        "token": {
+          "selector": ".invoice-title [name='token']",
+          "attribute": "value"
+        },
         "url": {
           "selector": ".invoice-title form",
           "attribute": "action"
@@ -81,7 +84,7 @@
         },
         {
           "action": "printPdf",
-          "invoice": "item"
+          "document": "item"
         }
       ]
     }
