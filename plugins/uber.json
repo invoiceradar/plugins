@@ -34,7 +34,7 @@
       "timeout": 120000
     }
   ],
-  "getInvoices": [
+  "getDocuments": [
     {
       "action": "navigate",
       "url": "https://riders.uber.com/trips"
@@ -56,7 +56,7 @@
             {
               "action": "downloadPdf",
               "url": "{{invoice.invoiceUrl}}",
-              "invoice": "{{invoice}}"
+              "document": "{{invoice}}"
             }
           ],
           "else": [
@@ -64,7 +64,7 @@
               "action": "downloadPdf",
               "description": "Fallback to receipt",
               "url": "/trips/{{ride.uuid}}/receipt?contentType=PDF",
-              "invoice": "{{invoice}}"
+              "document": "{{invoice}}"
             }
           ]
         }
