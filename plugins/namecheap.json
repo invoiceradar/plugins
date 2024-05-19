@@ -71,16 +71,15 @@
     },
 
     {
-      "action": "sleep",
-      "duration": 1000
+      "action": "waitForNetworkIdle"
     },
     {
       "action": "click",
-      "selector": ".range_inputs .applyBtn"
+      "selector": ".applyBtn"
     },
     {
-      "action": "sleep",
-      "duration": 1000
+      "action": "waitForElement",
+      "selector": ".AjaxPageCall"
     },
     {
       "action": "click",
@@ -90,13 +89,15 @@
     {
       "action": "waitForElement",
       "optional": true,
-      "selector": ".dropdown.expanded",
-      "timeout": 200
+      "selector": ".dropdown.expanded"
     },
     {
       "action": "click",
       "optional": true,
       "selector": ".dropdown-content ul.default-list li:last-child a"
+    },
+    {
+      "action": "waitForNetworkIdle"
     },
     {
       "action": "extractAll",
