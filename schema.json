@@ -337,6 +337,12 @@
                   "action": {
                     "const": "navigate"
                   },
+                  "waitForNetworkIdle": {
+                    "type": "boolean",
+                    "description": "Whether or not to wait for the network to be idle after navigation",
+                    "title": "Wait for Network Idle",
+                    "default": false
+                  },
                   "url": {
                     "type": "string",
                     "description": "The URL to navigate to",
@@ -875,6 +881,41 @@
                   }
                 },
                 "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "required": [
+                  "action",
+                  "url"
+                ],
+                "properties": {
+                  "action": {
+                    "const": "getInvoicesFromStripeBillingPortal"
+                  },
+                  "url": {
+                    "type": "string",
+                    "description": "The URL of the Stripe billing portal",
+                    "title": "Stripe Billing Portal URL"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "A human-readable description of what this step does",
+                    "title": "Description"
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "required": [],
+                    "properties": {},
+                    "additionalProperties": {
+                      "type": "string",
+                      "description": "a string",
+                      "title": "string"
+                    },
+                    "description": "Additional metadata to include in the exported invoice",
+                    "title": "Metadata"
+                  }
+                },
+                "additionalProperties": false
               }
             ]
           },
@@ -911,8 +952,7 @@
                         "type": "object",
                         "required": [
                           "type",
-                          "selector",
-                          "waitForSelector"
+                          "selector"
                         ],
                         "properties": {
                           "type": {
@@ -941,19 +981,13 @@
                         "type": "object",
                         "required": [
                           "type",
-                          "script",
-                          "waitForSelector"
+                          "selector"
                         ],
                         "properties": {
                           "type": {
-                            "const": "script"
+                            "const": "loadMore"
                           },
-                          "script": {
-                            "type": "string",
-                            "description": "a string",
-                            "title": "string"
-                          },
-                          "waitForSelector": {
+                          "selector": {
                             "type": "string",
                             "description": "The CSS selector to use to find the element",
                             "title": "Selector",
@@ -1009,8 +1043,7 @@
                         "type": "object",
                         "required": [
                           "type",
-                          "selector",
-                          "waitForSelector"
+                          "selector"
                         ],
                         "properties": {
                           "type": {
@@ -1039,19 +1072,13 @@
                         "type": "object",
                         "required": [
                           "type",
-                          "script",
-                          "waitForSelector"
+                          "selector"
                         ],
                         "properties": {
                           "type": {
-                            "const": "script"
+                            "const": "loadMore"
                           },
-                          "script": {
-                            "type": "string",
-                            "description": "a string",
-                            "title": "string"
-                          },
-                          "waitForSelector": {
+                          "selector": {
                             "type": "string",
                             "description": "The CSS selector to use to find the element",
                             "title": "Selector",
@@ -1428,6 +1455,12 @@
                   "action": {
                     "const": "navigate"
                   },
+                  "waitForNetworkIdle": {
+                    "type": "boolean",
+                    "description": "Whether or not to wait for the network to be idle after navigation",
+                    "title": "Wait for Network Idle",
+                    "default": false
+                  },
                   "url": {
                     "type": "string",
                     "description": "The URL to navigate to",
@@ -1966,6 +1999,41 @@
                   }
                 },
                 "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "required": [
+                  "action",
+                  "url"
+                ],
+                "properties": {
+                  "action": {
+                    "const": "getInvoicesFromStripeBillingPortal"
+                  },
+                  "url": {
+                    "type": "string",
+                    "description": "The URL of the Stripe billing portal",
+                    "title": "Stripe Billing Portal URL"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "A human-readable description of what this step does",
+                    "title": "Description"
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "required": [],
+                    "properties": {},
+                    "additionalProperties": {
+                      "type": "string",
+                      "description": "a string",
+                      "title": "string"
+                    },
+                    "description": "Additional metadata to include in the exported invoice",
+                    "title": "Metadata"
+                  }
+                },
+                "additionalProperties": false
               }
             ]
           },
@@ -2002,8 +2070,7 @@
                         "type": "object",
                         "required": [
                           "type",
-                          "selector",
-                          "waitForSelector"
+                          "selector"
                         ],
                         "properties": {
                           "type": {
@@ -2032,19 +2099,13 @@
                         "type": "object",
                         "required": [
                           "type",
-                          "script",
-                          "waitForSelector"
+                          "selector"
                         ],
                         "properties": {
                           "type": {
-                            "const": "script"
+                            "const": "loadMore"
                           },
-                          "script": {
-                            "type": "string",
-                            "description": "a string",
-                            "title": "string"
-                          },
-                          "waitForSelector": {
+                          "selector": {
                             "type": "string",
                             "description": "The CSS selector to use to find the element",
                             "title": "Selector",
@@ -2100,8 +2161,7 @@
                         "type": "object",
                         "required": [
                           "type",
-                          "selector",
-                          "waitForSelector"
+                          "selector"
                         ],
                         "properties": {
                           "type": {
@@ -2130,19 +2190,13 @@
                         "type": "object",
                         "required": [
                           "type",
-                          "script",
-                          "waitForSelector"
+                          "selector"
                         ],
                         "properties": {
                           "type": {
-                            "const": "script"
+                            "const": "loadMore"
                           },
-                          "script": {
-                            "type": "string",
-                            "description": "a string",
-                            "title": "string"
-                          },
-                          "waitForSelector": {
+                          "selector": {
                             "type": "string",
                             "description": "The CSS selector to use to find the element",
                             "title": "Selector",
@@ -2519,6 +2573,12 @@
                   "action": {
                     "const": "navigate"
                   },
+                  "waitForNetworkIdle": {
+                    "type": "boolean",
+                    "description": "Whether or not to wait for the network to be idle after navigation",
+                    "title": "Wait for Network Idle",
+                    "default": false
+                  },
                   "url": {
                     "type": "string",
                     "description": "The URL to navigate to",
@@ -3057,6 +3117,41 @@
                   }
                 },
                 "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "required": [
+                  "action",
+                  "url"
+                ],
+                "properties": {
+                  "action": {
+                    "const": "getInvoicesFromStripeBillingPortal"
+                  },
+                  "url": {
+                    "type": "string",
+                    "description": "The URL of the Stripe billing portal",
+                    "title": "Stripe Billing Portal URL"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "A human-readable description of what this step does",
+                    "title": "Description"
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "required": [],
+                    "properties": {},
+                    "additionalProperties": {
+                      "type": "string",
+                      "description": "a string",
+                      "title": "string"
+                    },
+                    "description": "Additional metadata to include in the exported invoice",
+                    "title": "Metadata"
+                  }
+                },
+                "additionalProperties": false
               }
             ]
           },
@@ -3093,8 +3188,7 @@
                         "type": "object",
                         "required": [
                           "type",
-                          "selector",
-                          "waitForSelector"
+                          "selector"
                         ],
                         "properties": {
                           "type": {
@@ -3123,19 +3217,13 @@
                         "type": "object",
                         "required": [
                           "type",
-                          "script",
-                          "waitForSelector"
+                          "selector"
                         ],
                         "properties": {
                           "type": {
-                            "const": "script"
+                            "const": "loadMore"
                           },
-                          "script": {
-                            "type": "string",
-                            "description": "a string",
-                            "title": "string"
-                          },
-                          "waitForSelector": {
+                          "selector": {
                             "type": "string",
                             "description": "The CSS selector to use to find the element",
                             "title": "Selector",
@@ -3191,8 +3279,7 @@
                         "type": "object",
                         "required": [
                           "type",
-                          "selector",
-                          "waitForSelector"
+                          "selector"
                         ],
                         "properties": {
                           "type": {
@@ -3221,19 +3308,13 @@
                         "type": "object",
                         "required": [
                           "type",
-                          "script",
-                          "waitForSelector"
+                          "selector"
                         ],
                         "properties": {
                           "type": {
-                            "const": "script"
+                            "const": "loadMore"
                           },
-                          "script": {
-                            "type": "string",
-                            "description": "a string",
-                            "title": "string"
-                          },
-                          "waitForSelector": {
+                          "selector": {
                             "type": "string",
                             "description": "The CSS selector to use to find the element",
                             "title": "Selector",
@@ -3645,6 +3726,12 @@
               "properties": {
                 "action": {
                   "const": "navigate"
+                },
+                "waitForNetworkIdle": {
+                  "type": "boolean",
+                  "description": "Whether or not to wait for the network to be idle after navigation",
+                  "title": "Wait for Network Idle",
+                  "default": false
                 },
                 "url": {
                   "type": "string",
@@ -4184,6 +4271,41 @@
                 }
               },
               "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "required": [
+                "action",
+                "url"
+              ],
+              "properties": {
+                "action": {
+                  "const": "getInvoicesFromStripeBillingPortal"
+                },
+                "url": {
+                  "type": "string",
+                  "description": "The URL of the Stripe billing portal",
+                  "title": "Stripe Billing Portal URL"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "A human-readable description of what this step does",
+                  "title": "Description"
+                },
+                "metadata": {
+                  "type": "object",
+                  "required": [],
+                  "properties": {},
+                  "additionalProperties": {
+                    "type": "string",
+                    "description": "a string",
+                    "title": "string"
+                  },
+                  "description": "Additional metadata to include in the exported invoice",
+                  "title": "Metadata"
+                }
+              },
+              "additionalProperties": false
             }
           ]
         },
@@ -4220,8 +4342,7 @@
                       "type": "object",
                       "required": [
                         "type",
-                        "selector",
-                        "waitForSelector"
+                        "selector"
                       ],
                       "properties": {
                         "type": {
@@ -4250,19 +4371,13 @@
                       "type": "object",
                       "required": [
                         "type",
-                        "script",
-                        "waitForSelector"
+                        "selector"
                       ],
                       "properties": {
                         "type": {
-                          "const": "script"
+                          "const": "loadMore"
                         },
-                        "script": {
-                          "type": "string",
-                          "description": "a string",
-                          "title": "string"
-                        },
-                        "waitForSelector": {
+                        "selector": {
                           "type": "string",
                           "description": "The CSS selector to use to find the element",
                           "title": "Selector",
@@ -4318,8 +4433,7 @@
                       "type": "object",
                       "required": [
                         "type",
-                        "selector",
-                        "waitForSelector"
+                        "selector"
                       ],
                       "properties": {
                         "type": {
@@ -4348,19 +4462,13 @@
                       "type": "object",
                       "required": [
                         "type",
-                        "script",
-                        "waitForSelector"
+                        "selector"
                       ],
                       "properties": {
                         "type": {
-                          "const": "script"
+                          "const": "loadMore"
                         },
-                        "script": {
-                          "type": "string",
-                          "description": "a string",
-                          "title": "string"
-                        },
-                        "waitForSelector": {
+                        "selector": {
                           "type": "string",
                           "description": "The CSS selector to use to find the element",
                           "title": "Selector",

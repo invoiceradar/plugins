@@ -397,12 +397,22 @@ This section provides an overview of the available steps that can be used to cre
 
 #### Navigate (`navigate`)
 
-Navigates to the given URL and waits for the page to load. Note that this only waits for the initial page load, not for any subsequent AJAX requests. You can [waitForNetworkIdle](#wait-for-network-idle-waitfornetworkidle) if you need to wait for all resources to be loaded.
+Navigates to the given URL and waits for the page to load. By default, it only waits for the initial page load, not for any subsequent AJAX requests.
 
 ```json
 {
   "action": "navigate",
   "url": "https://example.com"
+}
+```
+
+You can set `waitForNetworkIdle` to `true` to ensure the page is fully loaded before continuing.
+
+```json
+{
+  "action": "navigate",
+  "url": "https://example.com/dashboard",
+  "waitForNetworkIdle": true
 }
 ```
 
@@ -437,7 +447,7 @@ Waits for the given selector to appear on the page, optionally with a timeout.
 
 #### Wait for Navigation (`waitForNavigation`)
 
-Waits for the page to finish navigating. Timeout is optional and defaults to 15 seconds.
+Waits for the page navigation to happen. This step will not wait for the page to be fully loaded. Use the [waitForNetworkIdle](#wait-for-network-idle-waitfornetworkidle) step for that purpose. Timeout is optional and defaults to 10 seconds
 
 ```json
 {
@@ -448,7 +458,9 @@ Waits for the page to finish navigating. Timeout is optional and defaults to 15 
 
 #### Wait for Network Idle (`waitForNetworkIdle`)
 
-Waits for the network to be idle. This is useful if you want to ensure the page has finished loading all resources. The steps completes when there are no more network requests for 1000ms. Timeout is optional and defaults to 15 seconds.
+Waits for the network to be idle. This is useful if you want to ensure the page has finished loading all resources. The steps completes when there are no more network requests for 500ms. Timeout is optional and defaults to 15 seconds.
+
+The [`navigate`](#navigate-navigate) step has a `waitForNetworkIdle` option that can be set to `true` to get the same behavior.
 
 ```json
 {
@@ -740,6 +752,17 @@ Prints the current page to a PDF file.
 }
 ```
 
+#### Get Invoices from Stripe Customer Portal (`getInvoicesFromStripeBillingPortal`)
+
+Extracts available invoices from a Stripe billing portal.
+
+```json
+{
+  "action": "getInvoicesFromStripeBillingPortal",
+  "url": "https://stripe-portal.example.com/billing"
+}
+```
+
 #### Get Invoice from Stripe URL (`getInvoiceFromStripeUrl`)
 
 Extracts the invoice PDF and details from a Stripe invoice URL.
@@ -781,7 +804,7 @@ Runs the given steps if the condition is true. If the condition is false, the `e
 #### Sleep (`sleep`)
 
 Waits for the given amount of time in milliseconds.
-This is generally not recommended. In most cases, it's better to use the [waitForElement](#wait-for-element-waitforelement) or [waitForURL](#wait-for-url-waitforurl).
+This is generally not recommended. In most cases, it's better to use the [waitForElement](#wait-for-element-waitforelement), [waitForURL](#wait-for-url-waitforurl) or [waitForNetworkIdle](#wait-for-network-idle-waitfornetworkidle) steps.
 
 ```json
 {
