@@ -58,7 +58,7 @@
     },
     {
       "action": "extractAll",
-      "script": "fetch('https://w.deepl.com/invoices?request_type=jsonrpc&il=en&method=getInvoices', { headers: { 'content-type': 'application/json' }, referrer: 'https://www.deepl.com/', referrerPolicy: 'strict-origin-when-cross-origin', body: '{\"id\":68330001,\"jsonrpc\":\"2.0\",\"method\":\"getInvoices\",\"params\":{\"limit\":100}}', method: 'POST', mode: 'cors', credentials: 'include' }).then(res => res.json()).then(d => d.result.data.map(i => ({ id: i.id, date: i.date, total: i.invoicedAmount.amount/100 + i.invoicedAmount.currencyCode })));",
+      "script": "fetch('https://w.deepl.com/invoices?request_type=jsonrpc&il=en&method=getInvoices', { headers: { 'content-type': 'application/json' }, body: '{\"id\":68330001,\"jsonrpc\":\"2.0\",\"method\":\"getInvoices\",\"params\":{\"limit\":100}}', method: 'POST', mode: 'cors', credentials: 'include' }).then(res => res.json()).then(d => d.result.data.map(i => ({ id: i.id, date: i.date, total: i.invoicedAmount.amount/100 + i.invoicedAmount.currencyCode })));",
       "forEach": [
         {
           "action": "downloadPdf",
