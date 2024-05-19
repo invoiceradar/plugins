@@ -51,7 +51,7 @@
       "timeout": 120000
     }
   ],
-  "getInvoices": [
+  "getDocuments": [
     {
       "action": "navigate",
       "url": "https://ap.www.namecheap.com/profile/billing/orders"
@@ -71,16 +71,15 @@
     },
 
     {
-      "action": "sleep",
-      "duration": 1000
+      "action": "waitForNetworkIdle"
     },
     {
       "action": "click",
-      "selector": ".range_inputs .applyBtn"
+      "selector": ".applyBtn"
     },
     {
-      "action": "sleep",
-      "duration": 1000
+      "action": "waitForElement",
+      "selector": ".AjaxPageCall"
     },
     {
       "action": "click",
@@ -90,13 +89,15 @@
     {
       "action": "waitForElement",
       "optional": true,
-      "selector": ".dropdown.expanded",
-      "timeout": 200
+      "selector": ".dropdown.expanded"
     },
     {
       "action": "click",
       "optional": true,
       "selector": ".dropdown-content ul.default-list li:last-child a"
+    },
+    {
+      "action": "waitForNetworkIdle"
     },
     {
       "action": "extractAll",
@@ -120,7 +121,7 @@
         {
           "action": "downloadPdf",
           "url": "{{item.pdfLink}}",
-          "invoice": "item"
+          "document": "{{item}}"
         }
       ]
     }
