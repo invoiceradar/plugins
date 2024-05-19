@@ -2,11 +2,20 @@
 
 ## 1. Introduction
 
-Welcome to the InvoiceRadar Plugin Development Guide! This guide will help you create custom plugins to fetch invoices and receipts from various platforms.
+Welcome to the InvoiceRadar Plugin Handbook for developers! This guide will help you create custom plugins to fetch invoices and receipts from various platforms.
 
 InvoiceRadar is a document automation tool that helps you fetch, download, and organize invoices and receipts from various platforms.
 
 [📟 Learn more about InvoiceRadar](https://invoiceradar.com/)
+
+#### Table of Contents
+
+1. [Introduction](#1-introduction)
+2. [Getting Started](#2-getting-started)
+3. [Plugin Structure](#3-plugin-structure)
+4. [Writing Your First Plugin](#4-writing-your-first-plugin)
+5. [Useful Patterns](#5-useful-patterns)
+6. [Steps Reference](#steps-reference)
 
 ## 2. Getting Started
 
@@ -26,11 +35,13 @@ InvoiceRadar is a document automation tool that helps you fetch, download, and o
 
    - [Download the Blank Plugin](https://github.com/invoiceradar/plugins/blob/main/blank-plugin.json) to your local machine.
    - Rename the file to `your-plugin-name.json`.
+   - Put it into a folder of your choice.
 
 3. **Add the Plugin to InvoiceRadar**:
    - Open InvoiceRadar.
-   - Choose "Add local plugin" from the add menu.
-   - Select the downloaded `blank-plugin.json` file.
+   - Navigate to settings and choose the `Available Plugins` tab.
+   - Choose `Choose Plugin Directory` and select the folder where you saved the plugin.
+   - Your plugin should now appear in the list of available plugins.
 
 ## 3. Plugin Structure
 
