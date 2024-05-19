@@ -1,0 +1,65 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "expo",
+  "name": "Expo",
+  "description": "Expo is an open-source platform for making universal native apps for Android, iOS, and the web with JavaScript and React.",
+  "homepage": "https://www.expo.dev",
+  "configSchema": {
+    "username": {
+      "type": "string",
+      "title": "Username",
+      "required": false
+    },
+    "password": {
+      "type": "password",
+      "title": "Password",
+      "required": false
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://expo.dev/login"
+    },
+    {
+      "action": "checkURL",
+      "url": "https://expo.dev/"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://expo.dev/login"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[data-testid='nav-bar-account-selector']"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://expo.dev/accounts/upo/settings/billing"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[data-testid='manage-billing-button']"
+    },
+    {
+      "action": "click",
+      "selector": "[data-testid='manage-billing-button']"
+    },
+    {
+      "action": "waitForNavigation"
+    },
+    {
+      "action": "extract",
+      "variable": "portalUrl",
+      "script": "window.location.href"
+    },
+    {
+      "action": "getInvoicesFromStripeBillingPortal",
+      "url": "{{portalUrl}}"
+    }
+  ]
+}
