@@ -1,0 +1,61 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "fiverr",
+  "name": "Fiverr",
+  "description": "Fiverr is a platform to find and hire freelancers.",
+  "homepage": "https://www.fiverr.com/",
+  "configSchema": {
+    "username": {
+      "type": "string",
+      "title": "Username",
+      "required": false
+    },
+    "password": {
+      "type": "password",
+      "title": "Password",
+      "required": false
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.fiverr.com/login"
+    },
+    {
+      "action": "waitForElement",
+      "selector": ".main-content"
+    },
+    {
+      "action": "checkElementExists",
+      "selector": "button.nav-popover-items-toggler figure"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.fiverr.com/login"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "button.nav-popover-items-toggler figure",
+      "timeout": 120000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://www.fiverr.com/billing/billing-history"
+    },
+    {
+      "action": "extractAll",
+      "script": "fetch('https://w.deepl.com/invoices?request_type=jsonrpc&il=en&method=getInvoices', { headers: { 'content-type': 'application/json' }, referrer: 'https://www.deepl.com/', referrerPolicy: 'strict-origin-when-cross-origin', body: '{\"id\":68330001,\"jsonrpc\":\"2.0\",\"method\":\"getInvoices\",\"params\":{\"limit\":100}}', method: 'POST', mode: 'cors', credentials: 'include' }).then(res => res.json()).then(d => d.result.data.map(i => ({ id: i.id, date: i.date, total: i.invoicedAmount.amount/100 + i.invoicedAmount.currencyCode })));",
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "document": "{{item}}",
+          "url": "https://w.deepl.com/invoices/{{item.id}}"
+        }
+      ]
+    }
+  ]
+}
