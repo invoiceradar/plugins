@@ -44,18 +44,43 @@
   "getDocuments": [
     {
       "action": "navigate",
-      "url": "https://www.fiverr.com/billing/billing-history"
+      "url": "https://www.fiverr.com/billing"
+    },
+    {
+      "action": "waitForElement",
+      "selector": ".table-tbody"
     },
     {
       "action": "extractAll",
-      "script": "fetch('https://w.deepl.com/invoices?request_type=jsonrpc&il=en&method=getInvoices', { headers: { 'content-type': 'application/json' }, referrer: 'https://www.deepl.com/', referrerPolicy: 'strict-origin-when-cross-origin', body: '{\"id\":68330001,\"jsonrpc\":\"2.0\",\"method\":\"getInvoices\",\"params\":{\"limit\":100}}', method: 'POST', mode: 'cors', credentials: 'include' }).then(res => res.json()).then(d => d.result.data.map(i => ({ id: i.id, date: i.date, total: i.invoicedAmount.amount/100 + i.invoicedAmount.currencyCode })));",
+      "selector": ".table-tbody .table-tr",
       "forEach": [
         {
           "action": "downloadPdf",
-          "document": "{{item}}",
-          "url": "https://w.deepl.com/invoices/{{item.id}}"
+          "url": "{{item.url}}",
+          "document": {
+            "id": "{{item.id}}",
+            "date": "{{item.date}}",
+            "total": "{{item.amount}} {{item.currency}}"
+          }
         }
-      ]
+      ],
+      "fields": {
+        "id": ".table-td.table-hide-sm p:last-of-type",
+        "date": {
+          "selector": ".table-td:nth-of-type(2)",
+          "transform": "(d) => d.replaceAll('/', '.')"
+        },
+        "amount": ".table-td:nth-of-type(7)",
+        "currency": ".table-td:nth-of-type(6)",
+        "url": {
+          "selector": ".table-td:nth-of-type(8) a",
+          "attribute": "href"
+        }
+      },
+      "pagination": {
+        "type": "next",
+        "selector": ".table-pagination-arrows > button:nth-child(2):not(.table-pagination-arrow-disabled)"
+      }
     }
   ]
 }
