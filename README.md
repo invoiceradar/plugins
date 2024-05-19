@@ -1,4 +1,4 @@
-# InvoiceRadar Plugin Development Guide
+# InvoiceRadar Plugin Handbook
 
 ## 1. Introduction
 
@@ -766,5 +766,3 @@ This is generally not recommended. In most cases, it's better to use the [waitFo
   "duration": 1000
 }
 ```
-
-Sure, here is the updated table of contents with emojis included in the URLs:
