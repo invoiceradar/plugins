@@ -359,6 +359,7 @@ This section provides an overview of the available steps that can be used to cre
   - [Wait for URL (`waitForURL`)](#wait-for-url-waitforurl)
   - [Wait for Element (`waitForElement`)](#wait-for-element-waitforelement)
   - [Wait for Navigation (`waitForNavigation`)](#wait-for-navigation-waitfornavigation)
+  - [Wait for Network Idle (`waitForNetworkIdle`)](#wait-for-network-idle-waitfornetworkidle)
 
 - [⚡️ Interaction Steps](#⚡️-interaction-steps)
 
@@ -396,7 +397,7 @@ This section provides an overview of the available steps that can be used to cre
 
 #### Navigate (`navigate`)
 
-Navigates to the given URL and waits for the page to load. Note that this only waits for the initial page load, not for any subsequent AJAX requests.
+Navigates to the given URL and waits for the page to load. Note that this only waits for the initial page load, not for any subsequent AJAX requests. You can [waitForNetworkIdle](#wait-for-network-idle-waitfornetworkidle) if you need to wait for all resources to be loaded.
 
 ```json
 {
@@ -436,11 +437,22 @@ Waits for the given selector to appear on the page, optionally with a timeout.
 
 #### Wait for Navigation (`waitForNavigation`)
 
-Waits for the page to finish navigating. Timeout defaults to 15 seconds.
+Waits for the page to finish navigating. Timeout is optional and defaults to 15 seconds.
 
 ```json
 {
   "action": "waitForNavigation",
+  "timeout": 10000
+}
+```
+
+#### Wait for Network Idle (`waitForNetworkIdle`)
+
+Waits for the network to be idle. This is useful if you want to ensure the page has finished loading all resources. The steps completes when there are no more network requests for 1000ms. Timeout is optional and defaults to 15 seconds.
+
+```json
+{
+  "action": "waitForNetworkIdle",
   "timeout": 10000
 }
 ```
