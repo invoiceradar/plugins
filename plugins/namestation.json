@@ -50,16 +50,45 @@
   "getDocuments": [
     {
       "action": "navigate",
-      "url": "https://www.deepl.com/your-account/invoices"
+      "url": "https://www.namestation.com/account/billing"
+    },
+    { "action": "waitForElement", "selector": "a[href*='chargebee.com']", "timeout": 120000 },
+    {
+      "action": "extract",
+      "variable": "customer_portal_url",
+      "fields": { "url": { "selector": "a[href*='chargebee.com']", "attribute": "href" } }
+    },
+    {
+      "action": "navigate",
+      "url": "{{customer_portal_url.url}}"
+    },
+    {
+      "action": "navigate",
+      "url": "https://namestation.chargebee.com/portal/v2/billing_history"
+    },
+    {
+      "action": "extract",
+      "variable": "auth_token",
+      "script": "localStorage.getItem('cbt')"
+    },
+    {
+      "action": "extract",
+      "variable": "customer_id",
+      "script": "localStorage.getItem('ch')"
     },
     {
       "action": "extractAll",
-      "script": "fetch('https://w.deepl.com/invoices?request_type=jsonrpc&il=en&method=getInvoices', { headers: { 'content-type': 'application/json' }, referrer: 'https://www.deepl.com/', referrerPolicy: 'strict-origin-when-cross-origin', body: '{\"id\":68330001,\"jsonrpc\":\"2.0\",\"method\":\"getInvoices\",\"params\":{\"limit\":100}}', method: 'POST', mode: 'cors', credentials: 'include' }).then(res => res.json()).then(d => d.result.data.map(i => ({ id: i.id, date: i.date, total: i.invoicedAmount.amount/100 + i.invoicedAmount.currencyCode })));",
+      "script": "fetch('https://namestation.chargebee.com/api/v2/invoices?customer_id[is]={{customer_id}}&limit=100&sort_by[desc]=date&locale=en',{headers:{accept:'application/json, text/plain, */*',authorization:'Bearer {{auth_token}}',cbsource:'viaCp'}}).then(res=>res.json()).then(d=>d.list.map(i=>({id:i.invoice.id,date:new Date(i.invoice.date*1000).toISOString(),total:i.invoice.total/100+i.invoice.currency_code})))",
       "forEach": [
+        {
+          "action": "extract",
+          "variable": "invoice_url",
+          "script": "fetch('https://namestation.chargebee.com/api/v2/invoices/{{item.id}}/pdf',{'method': 'POST',headers:{accept:'application/json, text/plain, */*',authorization:'Bearer {{auth_token}}',cbsource:'viaCp'}}).then(res=>res.json()).then(d=>d.download.download_url)"
+        },
         {
           "action": "downloadPdf",
           "document": "{{item}}",
-          "url": "https://w.deepl.com/invoices/{{item.id}}"
+          "url": "{{invoice_url}}"
         }
       ]
     }
