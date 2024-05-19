@@ -35,7 +35,11 @@
       "action": "navigate",
       "url": "https://www.deepl.com/login"
     },
-    { "action": "type", "selector": "[name='email']", "value": "{{config.username}}" },
+    {
+      "action": "type",
+      "selector": "[name='email']",
+      "value": "{{config.username}}"
+    },
     {
       "action": "type",
       "selector": "[name='password']",
@@ -47,7 +51,7 @@
       "timeout": 120000
     }
   ],
-  "getInvoices": [
+  "getDocuments": [
     {
       "action": "navigate",
       "url": "https://www.deepl.com/your-account/invoices"
@@ -58,7 +62,7 @@
       "forEach": [
         {
           "action": "downloadPdf",
-          "invoice": "item",
+          "document": "{{item}}",
           "url": "https://w.deepl.com/invoices/{{item.id}}"
         }
       ]

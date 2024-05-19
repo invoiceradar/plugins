@@ -51,7 +51,7 @@
       "timeout": 120000
     }
   ],
-  "getInvoices": [
+  "getDocuments": [
     {
       "action": "navigate",
       "url": "https://ap.www.namecheap.com/profile/billing/orders"
@@ -120,7 +120,7 @@
         {
           "action": "downloadPdf",
           "url": "{{item.pdfLink}}",
-          "invoice": "item"
+          "document": "{{item}}"
         }
       ]
     }

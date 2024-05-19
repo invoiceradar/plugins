@@ -33,7 +33,7 @@
     }
   ],
 
-  "getInvoices": [
+  "getDocuments": [
     {
       "action": "navigate",
       "description": "",
@@ -64,7 +64,7 @@
         },
         {
           "action": "printPdf",
-          "invoice": "item"
+          "document": "{{item}}"
         }
       ]
     }

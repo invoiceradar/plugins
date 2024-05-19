@@ -54,7 +54,7 @@
       "selector": "a[href*='logout']"
     }
   ],
-  "getInvoices": [
+  "getDocuments": [
     {
       "action": "navigate",
       "url": "https://my.easyname.at/de/konto/invoice"
@@ -80,7 +80,7 @@
         {
           "action": "downloadPdf",
           "url": "{{item.url}}",
-          "invoice": "{{item}}"
+          "document": "{{item}}"
         }
       ]
     }
