@@ -43,7 +43,7 @@
       "timeout": 120000
     }
   ],
-  "getInvoices": [
+  "getDocuments": [
     {
       "action": "navigate",
       "url": "https://www.notion.so/{{config.space-id}}"
@@ -70,7 +70,7 @@
         { "action": "waitForElement", "selector": ".notion-invoice" },
         {
           "action": "printPdf",
-          "invoice": "item"
+          "document": "{{item}}"
         }
       ]
     }
