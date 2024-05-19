@@ -50,35 +50,16 @@
       "selector": "[data-testid*='pricing-modal-column'] [href$='#']"
     },
     {
-      "action": "waitForElement",
-      "selector": "#customer_portal_page_body"
+      "action": "waitForNavigation"
     },
     {
-      "action": "waitForElement",
-      "selector": "div:has(> div ):has(> button) button"
+      "action": "extract",
+      "variable": "portalUrl",
+      "script": "window.location.href"
     },
-    { "action": "click", "selector": "div:has(> div ):has(> button) button" },
     {
-      "action": "extractAll",
-      "selector": "div:has(> a[href^='https://invoice.stripe.com'])",
-      "fields": {
-        "id": {
-          "selector": "a"
-        },
-        "date": {
-          "selector": "a"
-        },
-        "url": {
-          "selector": "a",
-          "attribute": "href"
-        }
-      },
-      "forEach": [
-        {
-          "action": "getInvoiceFromStripeUrl",
-          "url": "{{item.url}}"
-        }
-      ]
+      "action": "getInvoicesFromStripeBillingPortal",
+      "url": "{{portalUrl}}"
     }
   ]
 }
