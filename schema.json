@@ -299,6 +299,37 @@
               {
                 "type": "object",
                 "required": [
+                  "action"
+                ],
+                "properties": {
+                  "action": {
+                    "const": "waitForNetworkIdle"
+                  },
+                  "optional": {
+                    "type": "boolean",
+                    "description": "Whether or not the flow should continue if this step fails",
+                    "title": "Optional"
+                  },
+                  "timeout": {
+                    "type": "number",
+                    "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                    "title": "Timeout",
+                    "examples": [
+                      15000
+                    ],
+                    "default": 15000
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "A human-readable description of what this step does",
+                    "title": "Description"
+                  }
+                },
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "required": [
                   "action",
                   "url"
                 ],
@@ -1359,6 +1390,37 @@
               {
                 "type": "object",
                 "required": [
+                  "action"
+                ],
+                "properties": {
+                  "action": {
+                    "const": "waitForNetworkIdle"
+                  },
+                  "optional": {
+                    "type": "boolean",
+                    "description": "Whether or not the flow should continue if this step fails",
+                    "title": "Optional"
+                  },
+                  "timeout": {
+                    "type": "number",
+                    "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                    "title": "Timeout",
+                    "examples": [
+                      15000
+                    ],
+                    "default": 15000
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "A human-readable description of what this step does",
+                    "title": "Description"
+                  }
+                },
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "required": [
                   "action",
                   "url"
                 ],
@@ -2393,6 +2455,37 @@
                 "properties": {
                   "action": {
                     "const": "waitForNavigation"
+                  },
+                  "optional": {
+                    "type": "boolean",
+                    "description": "Whether or not the flow should continue if this step fails",
+                    "title": "Optional"
+                  },
+                  "timeout": {
+                    "type": "number",
+                    "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                    "title": "Timeout",
+                    "examples": [
+                      15000
+                    ],
+                    "default": 15000
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "A human-readable description of what this step does",
+                    "title": "Description"
+                  }
+                },
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "required": [
+                  "action"
+                ],
+                "properties": {
+                  "action": {
+                    "const": "waitForNetworkIdle"
                   },
                   "optional": {
                     "type": "boolean",
@@ -3489,6 +3582,37 @@
               "properties": {
                 "action": {
                   "const": "waitForNavigation"
+                },
+                "optional": {
+                  "type": "boolean",
+                  "description": "Whether or not the flow should continue if this step fails",
+                  "title": "Optional"
+                },
+                "timeout": {
+                  "type": "number",
+                  "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                  "title": "Timeout",
+                  "examples": [
+                    15000
+                  ],
+                  "default": 15000
+                },
+                "description": {
+                  "type": "string",
+                  "description": "A human-readable description of what this step does",
+                  "title": "Description"
+                }
+              },
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "required": [
+                "action"
+              ],
+              "properties": {
+                "action": {
+                  "const": "waitForNetworkIdle"
                 },
                 "optional": {
                   "type": "boolean",
