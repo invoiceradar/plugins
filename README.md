@@ -340,6 +340,47 @@ To give the user enough time to log in, it's recommend to provide a long timeout
 
 This section provides an overview of the available steps that can be used to create plugins for InvoiceRadar. Each step represents a specific action that can be performed during the automation process.
 
+### Table of Contents
+
+- [🌐 Navigation Steps](#🌐-navigation-steps)
+
+  - [Navigate (`navigate`)](#navigate-navigate)
+  - [Wait for URL (`waitForURL`)](#wait-for-url-waitforurl)
+  - [Wait for Element (`waitForElement`)](#wait-for-element-waitforelement)
+  - [Wait for Navigation (`waitForNavigation`)](#wait-for-navigation-waitfornavigation)
+
+- [⚡️ Interaction Steps](#⚡️-interaction-steps)
+
+  - [Click Element (`click`)](#click-element-click)
+  - [Type Text (`type`)](#type-text-type)
+  - [Select Dropdown (`dropdownSelect`)](#select-dropdown-dropdownselect)
+  - [Run JavaScript (`runJs`)](#run-javascript-runjs)
+
+- [✅ Verification Steps](#✅-verification-steps)
+
+  - [Check Element Exists (`checkElementExists`)](#check-element-exists-checkelementexists)
+  - [Check URL (`checkURL`)](#check-url-checkurl)
+  - [Run JavaScript (`runJs`)](#run-javascript-runjs-1)
+
+- [⚙️ Data Extraction Steps](#⚙️-data-extraction-steps)
+
+  - [Extract (`extract`)](#extract-extract)
+  - [Extract All (`extractAll`)](#extract-all-extractall)
+
+- [📄 Document Retrieval Steps](#📄-document-retrieval-steps)
+
+  - [Download PDF (`downloadPdf`)](#download-pdf-downloadpdf)
+  - [Wait for PDF Download (`waitForPdfDownload`)](#wait-for-pdf-download-waitforpdfdownload)
+  - [Print Page as PDF (`printPdf`)](#print-page-as-pdf-printpdf)
+  - [Get Invoice from Stripe URL (`getInvoiceFromStripeUrl`)](#get-invoice-from-stripe-url-getinvoicefromstripeurl)
+
+- [🔀 Conditional Logic Steps](#🔀-conditional-logic-steps)
+
+  - [If (`if`)](#if-if)
+
+- [📦 Miscellaneous Steps](#📦-miscellaneous-steps)
+  - [Sleep (`sleep`)](#sleep-sleep)
+
 ### 🌐 Navigation Steps
 
 #### Navigate (`navigate`)
@@ -725,3 +766,5 @@ This is generally not recommended. In most cases, it's better to use the [waitFo
   "duration": 1000
 }
 ```
+
+Sure, here is the updated table of contents with emojis included in the URLs:
