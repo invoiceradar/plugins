@@ -39,6 +39,11 @@
   "getDocuments": [
     {
       "action": "navigate",
+      "url": "about:blank",
+      "description": "Start with clean slate to ensure pricing modal gets triggered"
+    },
+    {
+      "action": "navigate",
       "url": "https://chatgpt.com/#pricing"
     },
     {
