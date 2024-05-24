@@ -1,0 +1,50 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "plausible",
+  "name": "Plausible",
+  "description": "Plausible provides more privacy-friendly web analytics.",
+  "homepage": "https://plausible.io/",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://plausible.io/settings"
+    },
+    {
+      "action": "checkURL",
+      "url": "/settings"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://plausible.io/login"
+    },
+    {
+      "action": "waitForURL",
+      "url": "/sites",
+      "timeout": 120000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://plausible.io/settings"
+    },
+    {
+      "action": "extractAll",
+      "script": "Array.from(Array.from(document.querySelectorAll('h2')).filter(el => el.textContent.startsWith('Invoices'))[0].closest('div').querySelectorAll('table tbody tr')).map(row => { const cells = row.querySelectorAll('td'); const date = cells[0].innerText.trim(); const total = cells[1].innerText.trim(); const url = cells[2].querySelector('a').href; const match = url.match(/receipt\\/([^\\/]+)/); const id = match ? match[1] : null; return { id, date, total, url }; })",
+      "variable": "item",
+      "forEach": [
+        {
+          "action": "navigate",
+          "url": "{{item.url}}"
+        },
+        {
+          "action": "printPdf",
+          "document": "{{item}}"
+        }
+      ]
+    }
+  ]
+}
