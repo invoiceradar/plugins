@@ -37,6 +37,10 @@
       "variable": "item",
       "forEach": [
         {
+          "action": "sleep",
+          "duration": 2000
+        },
+        {
           "action": "navigate",
           "url": "{{item.url}}"
         },
