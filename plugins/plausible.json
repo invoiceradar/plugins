@@ -38,7 +38,8 @@
       "forEach": [
         {
           "action": "sleep",
-          "duration": 2000
+          "duration": 2000,
+          "description": "Prevent rate limiting"
         },
         {
           "action": "navigate",
