@@ -31,12 +31,6 @@
       "action": "navigate",
       "url": "https://www.notion.so/login"
     },
-    { "action": "type", "selector": "[name='email']", "value": "{{config.username}}" },
-    {
-      "action": "type",
-      "selector": "[name='password']",
-      "value": "{{config.password}}"
-    },
     {
       "action": "waitForElement",
       "selector": ".notion-sidebar-container",
@@ -46,12 +40,8 @@
   "getDocuments": [
     {
       "action": "navigate",
-      "url": "https://www.notion.so/{{config.space-id}}"
-    },
-    {
-      "action": "sleep",
-      "duration": 3000,
-      "description": "Wait until site is fully loaded and local storage updates"
+      "url": "https://www.notion.so/{{config.space-id}}",
+      "waitForNetworkIdle": true
     },
     {
       "action": "extract",
