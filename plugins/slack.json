@@ -1,0 +1,53 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "slack",
+  "name": "Slack",
+  "description": "Slack is a messaging app for teams.",
+  "homepage": "https://slack.com/",
+  "configSchema": {
+    "workspace-id": {
+      "type": "string",
+      "title": "Workspace ID",
+      "required": true,
+      "description": "You can find your workspace ID in the URL. '<workspace-id>.slack.com'"
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://{{config.workspace-id}}.slack.com/admin/billing/history"
+    },
+    {
+      "action": "checkURL",
+      "url": "/admin/billing/history"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://{{config.workspace-id}}.slack.com"
+    },
+    {
+      "action": "waitForURL",
+      "url": "/ssb/redirect?entry_point=workspace_signin",
+      "timeout": 120000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://{{config.workspace-id}}.slack.com/admin/billing/history"
+    },
+    {
+      "action": "extractAll",
+      "script": "(async () => {\n  const formData = new FormData()\n  formData.append('token', boot_data.api_token)\n  formData.append('limit', 50) // 50 items is an API limit\n\n  const data = await fetch(\n    'https://{{config.workspace-id}}.slack.com/api/payments.billing.history.list',\n    { method: 'POST', body: formData },\n  ).then((res) => res.json())\n\n  return Array.from(\n    data.billing_items\n      .filter((item) => item.invoice && item.invoice.hosted_url)\n      .map((item) => item.invoice.hosted_url),\n  )\n})()",
+      "variable": "url",
+      "forEach": [
+        {
+          "action": "getInvoiceFromStripeUrl",
+          "url": "{{url}}"
+        }
+      ]
+    }
+  ]
+}
