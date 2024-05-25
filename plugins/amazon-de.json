@@ -33,7 +33,7 @@
     },
     {
       "action": "extractAll",
-      "script": "Array.from(document.querySelectorAll('#orderFilter>option[value*=year]')).map(e => e.value.replace('year-','')).filter(y => Number(y) >= Number({{startDate.year}}))",
+      "script": "Array.from(document.querySelectorAll('#orderFilter>option[value*=year]'))\n  .map((e) => e.value.replace('year-', ''))\n  .filter((y) => Number(y) >= Number('{{startDate.year}}'))",
       "variable": "year",
       "forEach": [
         {
