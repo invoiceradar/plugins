@@ -4616,5 +4616,32 @@
         }
       ]
     }
+  },
+  "Script": {
+    "anyOf": [
+      {
+        "type": "string",
+        "description": "A one-liner JavaScript script to run in the page context",
+        "title": "Script",
+        "examples": ["console.log(\"Hello World\");"]
+      },
+      {
+        "type": "array",
+        "description": "A multiline JavaScript script to run in the page context",
+        "title": "Script",
+        "items": {
+          "type": "string",
+          "description": "a line of the script"
+        },
+        "examples": [
+          [
+            "console.log(\"This is as script\");",
+            "console.log(\"spaning across\");",
+            "console.log(\"multiple lines.\");"
+          ]
+        ]
+      }
+    ],
+    "description": "A JavaScript script to run in the page context"
   }
 }
