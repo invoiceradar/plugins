@@ -133,9 +133,7 @@
                     "title": "Optional"
                   },
                   "script": {
-                    "type": "string",
-                    "description": "a string",
-                    "title": "string"
+                    "$ref": "#/$defs/Script"
                   },
                   "description": {
                     "type": "string",
@@ -657,12 +655,7 @@
                     "title": "Variable"
                   },
                   "script": {
-                    "type": "string",
-                    "description": "A JavaScript script to run in the page context",
-                    "title": "Script",
-                    "examples": [
-                      "console.log(\"Hello World\");"
-                    ]
+                    "$ref": "#/$defs/Script"
                   },
                   "description": {
                     "type": "string",
@@ -939,12 +932,7 @@
                     "default": "item"
                   },
                   "script": {
-                    "type": "string",
-                    "description": "A JavaScript script to run in the page context",
-                    "title": "Script",
-                    "examples": [
-                      "console.log(\"Hello World\");"
-                    ]
+                    "$ref": "#/$defs/Script"
                   },
                   "pagination": {
                     "anyOf": [
@@ -1164,12 +1152,7 @@
                     "const": "if"
                   },
                   "script": {
-                    "type": "string",
-                    "description": "A JavaScript script to run in the page context",
-                    "title": "Script",
-                    "examples": [
-                      "console.log(\"Hello World\");"
-                    ]
+                    "$ref": "#/$defs/Script"
                   },
                   "then": {
                     "type": "array",
@@ -1251,9 +1234,7 @@
                     "title": "Optional"
                   },
                   "script": {
-                    "type": "string",
-                    "description": "a string",
-                    "title": "string"
+                    "$ref": "#/$defs/Script"
                   },
                   "description": {
                     "type": "string",
@@ -1775,12 +1756,7 @@
                     "title": "Variable"
                   },
                   "script": {
-                    "type": "string",
-                    "description": "A JavaScript script to run in the page context",
-                    "title": "Script",
-                    "examples": [
-                      "console.log(\"Hello World\");"
-                    ]
+                    "$ref": "#/$defs/Script"
                   },
                   "description": {
                     "type": "string",
@@ -2057,12 +2033,7 @@
                     "default": "item"
                   },
                   "script": {
-                    "type": "string",
-                    "description": "A JavaScript script to run in the page context",
-                    "title": "Script",
-                    "examples": [
-                      "console.log(\"Hello World\");"
-                    ]
+                    "$ref": "#/$defs/Script"
                   },
                   "pagination": {
                     "anyOf": [
@@ -2282,12 +2253,7 @@
                     "const": "if"
                   },
                   "script": {
-                    "type": "string",
-                    "description": "A JavaScript script to run in the page context",
-                    "title": "Script",
-                    "examples": [
-                      "console.log(\"Hello World\");"
-                    ]
+                    "$ref": "#/$defs/Script"
                   },
                   "then": {
                     "type": "array",
@@ -2369,9 +2335,7 @@
                     "title": "Optional"
                   },
                   "script": {
-                    "type": "string",
-                    "description": "a string",
-                    "title": "string"
+                    "$ref": "#/$defs/Script"
                   },
                   "description": {
                     "type": "string",
@@ -2893,12 +2857,7 @@
                     "title": "Variable"
                   },
                   "script": {
-                    "type": "string",
-                    "description": "A JavaScript script to run in the page context",
-                    "title": "Script",
-                    "examples": [
-                      "console.log(\"Hello World\");"
-                    ]
+                    "$ref": "#/$defs/Script"
                   },
                   "description": {
                     "type": "string",
@@ -3175,12 +3134,7 @@
                     "default": "item"
                   },
                   "script": {
-                    "type": "string",
-                    "description": "A JavaScript script to run in the page context",
-                    "title": "Script",
-                    "examples": [
-                      "console.log(\"Hello World\");"
-                    ]
+                    "$ref": "#/$defs/Script"
                   },
                   "pagination": {
                     "anyOf": [
@@ -3400,12 +3354,7 @@
                     "const": "if"
                   },
                   "script": {
-                    "type": "string",
-                    "description": "A JavaScript script to run in the page context",
-                    "title": "Script",
-                    "examples": [
-                      "console.log(\"Hello World\");"
-                    ]
+                    "$ref": "#/$defs/Script"
                   },
                   "then": {
                     "type": "array",
@@ -3523,9 +3472,7 @@
                   "title": "Optional"
                 },
                 "script": {
-                  "type": "string",
-                  "description": "a string",
-                  "title": "string"
+                  "$ref": "#/$defs/Script"
                 },
                 "description": {
                   "type": "string",
@@ -4047,12 +3994,7 @@
                   "title": "Variable"
                 },
                 "script": {
-                  "type": "string",
-                  "description": "A JavaScript script to run in the page context",
-                  "title": "Script",
-                  "examples": [
-                    "console.log(\"Hello World\");"
-                  ]
+                  "$ref": "#/$defs/Script"
                 },
                 "description": {
                   "type": "string",
@@ -4329,12 +4271,7 @@
                   "default": "item"
                 },
                 "script": {
-                  "type": "string",
-                  "description": "A JavaScript script to run in the page context",
-                  "title": "Script",
-                  "examples": [
-                    "console.log(\"Hello World\");"
-                  ]
+                  "$ref": "#/$defs/Script"
                 },
                 "pagination": {
                   "anyOf": [
@@ -4554,12 +4491,7 @@
                   "const": "if"
                 },
                 "script": {
-                  "type": "string",
-                  "description": "A JavaScript script to run in the page context",
-                  "title": "Script",
-                  "examples": [
-                    "console.log(\"Hello World\");"
-                  ]
+                  "$ref": "#/$defs/Script"
                 },
                 "then": {
                   "type": "array",
