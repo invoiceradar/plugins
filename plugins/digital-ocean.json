@@ -1,0 +1,61 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "digital-ocean",
+  "name": "DigitalOcean",
+  "description": "DigitalOcean is a cloud infrastructure provider.",
+  "homepage": "https://www.digitalocean.com",
+  "configSchema": {
+    "team-id": {
+      "type": "string",
+      "title": "team ID",
+      "required": true,
+      "description": "You can find your team ID in the URL. 'cloud.digitalocean.com/projects?i=<team-id>'"
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://cloud.digitalocean.com/account/billing?i={{config.team-id}}"
+    },
+    {
+      "action": "checkURL",
+      "url": "/account/billing?i={{config.team-id}}"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://cloud.digitalocean.com/login"
+    },
+    {
+      "action": "waitForURL",
+      "url": "/projects",
+      "timeout": 120000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://cloud.digitalocean.com/account/billing/history?i={{config.team-id}}"
+    },
+    {
+      "action": "extractAll",
+      "script": "fetch('https://cloud.digitalocean.com/graphql', {\n  method: 'POST',\n  credentials: 'include',\n  headers: { 'Content-Type': 'application/json' },\n  body: JSON.stringify({\n    operationName: 'listBillingHistory',\n    variables: { listBillingHistoryRequest: { page: 1, per_page: 100 } },\n    query: `\n      query listBillingHistory(\n        $listBillingHistoryRequest: ListBillingHistoryRequest\n      ) {\n        listBillingHistory(ListBillingHistoryRequest: $listBillingHistoryRequest) {\n          billing_history {\n            description\n            amount\n            invoice_id\n            invoice_uuid\n            date\n            type\n            memo_id\n            receipt_id\n            __typename\n          }\n          meta {\n            total\n            __typename\n          }\n          __typename\n        }\n      }    \n    `,\n  }),\n})\n  .then((res) => res.json())\n  .then((res) =>\n    res.data.listBillingHistory.billing_history.filter(\n      (item) => !!item.invoice_id,\n    ),\n  )\n  .then((items) =>\n    items.map((item) => ({\n      id: item.invoice_id,\n      date: item.date,\n      total: 'USD ' + item.amount,\n      invoice_uuid: item.invoice_uuid,\n    })),\n  )",
+      "forEach": [
+        {
+          "action": "runJs",
+          "script": "fetch('https://cloud.digitalocean.com/graphql', {\n  method: 'POST',\n  credentials: 'include',\n  headers: { 'Content-Type': 'application/json' },\n  body: JSON.stringify({\n    operationName: 'getInvoicePDF',\n    variables: { getInvoicePdfRequest: { invoice_uuid: {{item.invoice_uuid}} } },\n    query: `\n      query getInvoicePDF($getInvoicePdfRequest: GetInvoicePDFRequest) {\n        getInvoicePDF(GetInvoicePDFRequest: $getInvoicePdfRequest) {\n          content_type\n          filename\n          data\n          __typename\n        }\n      }  \n    `,\n  }),\n})"
+        },
+        {
+          "action": "waitForPdfDownload",
+          "timeout": 15000,
+          "document": {
+            "id": "{{item.id}}",
+            "date": "{{item.date}}",
+            "total": "{{item.total}}"
+          }
+        }
+      ]
+    }
+  ]
+}
