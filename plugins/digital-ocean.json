@@ -28,8 +28,8 @@
       "url": "https://cloud.digitalocean.com/login"
     },
     {
-      "action": "waitForURL",
-      "url": "/projects",
+      "action": "waitForElement",
+      "selector": ".account-dropdown-menu",
       "timeout": 120000
     }
   ],
