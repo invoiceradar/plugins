@@ -51,8 +51,8 @@
           },
           "title": {
             "type": "string",
-            "description": "The human-readable title of the property",
-            "title": "Title"
+            "description": "a string",
+            "title": "string"
           },
           "description": {
             "type": "string",
@@ -778,6 +778,90 @@
                     "type": "string",
                     "description": "The URL to download the PDF from",
                     "title": "URL"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "A human-readable description of what this step does",
+                    "title": "Description"
+                  },
+                  "document": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "required": [
+                          "id",
+                          "date"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "The ID of the document",
+                            "title": "Document ID"
+                          },
+                          "date": {
+                            "type": "string",
+                            "description": "The date of the document",
+                            "title": "Document Date"
+                          },
+                          "type": {
+                            "enum": [
+                              "invoice",
+                              "receipt",
+                              "refund",
+                              "outgoing_invoice",
+                              "other",
+                              "auto"
+                            ],
+                            "description": "The type of the document",
+                            "title": "Document Type",
+                            "default": "auto"
+                          },
+                          "total": {
+                            "type": "string",
+                            "description": "The amount of the document, including the currency symbol or code.",
+                            "title": "Document Amount"
+                          }
+                        },
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "string",
+                        "description": "Shorthand to pass a variable that contains the document data, e.g. `{{invoice}}`. Needs to include required fields `id`, `date`, and `total`",
+                        "title": "Document Variable",
+                        "pattern": "^.*}}$"
+                      }
+                    ]
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "required": [],
+                    "properties": {},
+                    "additionalProperties": {
+                      "type": "string",
+                      "description": "a string",
+                      "title": "string"
+                    },
+                    "description": "Additional metadata to include in the exported invoice",
+                    "title": "Metadata"
+                  }
+                },
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "required": [
+                  "action",
+                  "base64",
+                  "document"
+                ],
+                "properties": {
+                  "action": {
+                    "const": "downloadBase64Pdf"
+                  },
+                  "base64": {
+                    "type": "string",
+                    "description": "The base64 encoded PDF content",
+                    "title": "Base64"
                   },
                   "description": {
                     "type": "string",
@@ -1969,6 +2053,90 @@
                 "type": "object",
                 "required": [
                   "action",
+                  "base64",
+                  "document"
+                ],
+                "properties": {
+                  "action": {
+                    "const": "downloadBase64Pdf"
+                  },
+                  "base64": {
+                    "type": "string",
+                    "description": "The base64 encoded PDF content",
+                    "title": "Base64"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "A human-readable description of what this step does",
+                    "title": "Description"
+                  },
+                  "document": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "required": [
+                          "id",
+                          "date"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "The ID of the document",
+                            "title": "Document ID"
+                          },
+                          "date": {
+                            "type": "string",
+                            "description": "The date of the document",
+                            "title": "Document Date"
+                          },
+                          "type": {
+                            "enum": [
+                              "invoice",
+                              "receipt",
+                              "refund",
+                              "outgoing_invoice",
+                              "other",
+                              "auto"
+                            ],
+                            "description": "The type of the document",
+                            "title": "Document Type",
+                            "default": "auto"
+                          },
+                          "total": {
+                            "type": "string",
+                            "description": "The amount of the document, including the currency symbol or code.",
+                            "title": "Document Amount"
+                          }
+                        },
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "string",
+                        "description": "Shorthand to pass a variable that contains the document data, e.g. `{{invoice}}`. Needs to include required fields `id`, `date`, and `total`",
+                        "title": "Document Variable",
+                        "pattern": "^.*}}$"
+                      }
+                    ]
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "required": [],
+                    "properties": {},
+                    "additionalProperties": {
+                      "type": "string",
+                      "description": "a string",
+                      "title": "string"
+                    },
+                    "description": "Additional metadata to include in the exported invoice",
+                    "title": "Metadata"
+                  }
+                },
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "required": [
+                  "action",
                   "url"
                 ],
                 "properties": {
@@ -3014,6 +3182,90 @@
                     "type": "string",
                     "description": "The URL to download the PDF from",
                     "title": "URL"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "A human-readable description of what this step does",
+                    "title": "Description"
+                  },
+                  "document": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "required": [
+                          "id",
+                          "date"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "The ID of the document",
+                            "title": "Document ID"
+                          },
+                          "date": {
+                            "type": "string",
+                            "description": "The date of the document",
+                            "title": "Document Date"
+                          },
+                          "type": {
+                            "enum": [
+                              "invoice",
+                              "receipt",
+                              "refund",
+                              "outgoing_invoice",
+                              "other",
+                              "auto"
+                            ],
+                            "description": "The type of the document",
+                            "title": "Document Type",
+                            "default": "auto"
+                          },
+                          "total": {
+                            "type": "string",
+                            "description": "The amount of the document, including the currency symbol or code.",
+                            "title": "Document Amount"
+                          }
+                        },
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "string",
+                        "description": "Shorthand to pass a variable that contains the document data, e.g. `{{invoice}}`. Needs to include required fields `id`, `date`, and `total`",
+                        "title": "Document Variable",
+                        "pattern": "^.*}}$"
+                      }
+                    ]
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "required": [],
+                    "properties": {},
+                    "additionalProperties": {
+                      "type": "string",
+                      "description": "a string",
+                      "title": "string"
+                    },
+                    "description": "Additional metadata to include in the exported invoice",
+                    "title": "Metadata"
+                  }
+                },
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "required": [
+                  "action",
+                  "base64",
+                  "document"
+                ],
+                "properties": {
+                  "action": {
+                    "const": "downloadBase64Pdf"
+                  },
+                  "base64": {
+                    "type": "string",
+                    "description": "The base64 encoded PDF content",
+                    "title": "Base64"
                   },
                   "description": {
                     "type": "string",
@@ -4168,6 +4420,90 @@
                   "type": "string",
                   "description": "The URL to download the PDF from",
                   "title": "URL"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "A human-readable description of what this step does",
+                  "title": "Description"
+                },
+                "document": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "required": [
+                        "id",
+                        "date"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "The ID of the document",
+                          "title": "Document ID"
+                        },
+                        "date": {
+                          "type": "string",
+                          "description": "The date of the document",
+                          "title": "Document Date"
+                        },
+                        "type": {
+                          "enum": [
+                            "invoice",
+                            "receipt",
+                            "refund",
+                            "outgoing_invoice",
+                            "other",
+                            "auto"
+                          ],
+                          "description": "The type of the document",
+                          "title": "Document Type",
+                          "default": "auto"
+                        },
+                        "total": {
+                          "type": "string",
+                          "description": "The amount of the document, including the currency symbol or code.",
+                          "title": "Document Amount"
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "string",
+                      "description": "Shorthand to pass a variable that contains the document data, e.g. `{{invoice}}`. Needs to include required fields `id`, `date`, and `total`",
+                      "title": "Document Variable",
+                      "pattern": "^.*}}$"
+                    }
+                  ]
+                },
+                "metadata": {
+                  "type": "object",
+                  "required": [],
+                  "properties": {},
+                  "additionalProperties": {
+                    "type": "string",
+                    "description": "a string",
+                    "title": "string"
+                  },
+                  "description": "Additional metadata to include in the exported invoice",
+                  "title": "Metadata"
+                }
+              },
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "required": [
+                "action",
+                "base64",
+                "document"
+              ],
+              "properties": {
+                "action": {
+                  "const": "downloadBase64Pdf"
+                },
+                "base64": {
+                  "type": "string",
+                  "description": "The base64 encoded PDF content",
+                  "title": "Base64"
                 },
                 "description": {
                   "type": "string",
