@@ -4,6 +4,7 @@
   "plugins/backblaze-b2.json",
   "plugins/cloudflare.json",
   "plugins/deepl.json",
+  "plugins/digital-ocean.json",
   "plugins/easyname.json",
   "plugins/expo.json",
   "plugins/fiverr.json",
