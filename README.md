@@ -384,6 +384,7 @@ This section provides an overview of the available steps that can be used to cre
   - [Download PDF (`downloadPdf`)](#download-pdf-downloadpdf)
   - [Wait for PDF Download (`waitForPdfDownload`)](#wait-for-pdf-download-waitforpdfdownload)
   - [Print Page as PDF (`printPdf`)](#print-page-as-pdf-printpdf)
+  - [Download Base64 PDF (`downloadBase64Pdf`)](#download-base64-pdf-downloadbase64pdf)
   - [Get Invoice from Stripe URL (`getInvoiceFromStripeUrl`)](#get-invoice-from-stripe-url-getinvoicefromstripeurl)
 
 - [🔀 Conditional Logic Steps](#🔀-conditional-logic-steps)
@@ -744,6 +745,22 @@ Prints the current page to a PDF file.
 ```json
 {
   "action": "printPdf",
+  "document": {
+    "id": "{{item.invoiceId}}",
+    "date": "{{item.date}}",
+    "total": "{{item.total}}"
+  }
+}
+```
+
+#### Download Base64 PDF (`downloadBase64Pdf`)
+
+Downloads a PDF from a base64 encoded string.
+
+```json
+{
+  "action": "downloadBase64Pdf",
+  "base64": "{{item.base64String}}",
   "document": {
     "id": "{{item.invoiceId}}",
     "date": "{{item.date}}",
