@@ -7,7 +7,7 @@
   "configSchema": {
     "team-id": {
       "type": "string",
-      "title": "team ID",
+      "title": "Team ID",
       "required": true,
       "description": "You can find your team ID in the URL. 'cloud.digitalocean.com/projects?i=<team-id>'"
     }
@@ -49,12 +49,13 @@
       "variable": "item",
       "forEach": [
         {
-          "action": "runJs",
-          "script": "fetch('https://cloud.digitalocean.com/graphql', {\n  method: 'POST',\n  credentials: 'include',\n  headers: { 'Content-Type': 'application/json' },\n  body: JSON.stringify({\n    operationName: 'getInvoicePDF',\n    variables: {\n      getInvoicePdfRequest: {\n        invoice_uuid: '{{item.invoice_uuid}}',\n      },\n    },\n    query: `\n      query getInvoicePDF($getInvoicePdfRequest: GetInvoicePDFRequest) {\n        getInvoicePDF(GetInvoicePDFRequest: $getInvoicePdfRequest) {\n          content_type\n          filename\n          data\n          __typename\n        }\n      }  \n    `,\n  }),\n})\n  .then((res) => res.json())\n  .then((result) => {\n    async function downloadBase64Pdf(base64Pdf) {\n      // Decode the Base64 string\n      const binaryString = atob(base64Pdf)\n      const len = binaryString.length\n      const bytes = new Uint8Array(len)\n      for (let i = 0; i < len; i++) {\n        bytes[i] = binaryString.charCodeAt(i)\n      }\n\n      // Create a Blob from the binary data\n      const blob = new Blob([bytes], { type: 'application/pdf' })\n\n      // Create a link element\n      const link = document.createElement('a')\n      link.href = window.URL.createObjectURL(blob)\n      link.download = 'downloaded.pdf'\n\n      link.click()\n    }\n\n    downloadBase64Pdf(result.data.getInvoicePDF.data)\n  })"
+          "action": "extract",
+          "variable": "base64Pdf",
+          "script": "fetch('https://cloud.digitalocean.com/graphql', {\n  method: 'POST',\n  credentials: 'include',\n  headers: { 'Content-Type': 'application/json' },\n  body: JSON.stringify({\n    operationName: 'getInvoicePDF',\n    variables: {\n      getInvoicePdfRequest: {\n        invoice_uuid: '{{item.invoice_uuid}}',\n      },\n    },\n    query: `\n      query getInvoicePDF($getInvoicePdfRequest: GetInvoicePDFRequest) {\n        getInvoicePDF(GetInvoicePDFRequest: $getInvoicePdfRequest) {\n          content_type\n          filename\n          data\n          __typename\n        }\n      }  \n    `,\n  }),\n})\n  .then((res) => res.json())\n  .then((result) => result.data.getInvoicePDF.data)"
         },
         {
-          "action": "waitForPdfDownload",
-          "timeout": 15000,
+          "action": "downloadBase64Pdf",
+          "base64": "{{base64Pdf}}",
           "document": {
             "id": "{{item.id}}",
             "date": "{{item.date}}",
