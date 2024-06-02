@@ -429,7 +429,7 @@ Waits for the current URL to match the given URL, optionally with a timeout. Sup
 ```json
 {
   "action": "waitForURL",
-  "url": "https://example.com/profile/*",
+  "url": "https://example.com/profile/**",
   "timeout": 3000
 }
 ```
