@@ -10,14 +10,14 @@
       "title": "Ad Account ID",
       "description": "The asset ID of the ad account. You can find in as part of the URL: `?asset_id=[YOUR ID]`.",
       "required": true,
-      "default": "123456789876543"
+      "example": "123456789"
     },
     "businessId": {
       "type": "string",
       "title": "Business ID",
       "required": true,
       "description": "The business ID of the ad account. You can find in as part of the URL: `?business_id=[YOUR ID]`.",
-      "default": "123456789876543"
+      "example": "123456789876543"
     }
   },
   "checkAuth": [
@@ -83,6 +83,11 @@
             "date": "{{invoice.date}}",
             "total": "{{invoice.total}}",
             "type": "invoice"
+          },
+          "metadata": {
+            "transactionId": "{{invoice.transactionId}}",
+            "adAccount": "{{config.assetId}}",
+            "businessId": "{{config.businessId}}"
           }
         }
       ]
