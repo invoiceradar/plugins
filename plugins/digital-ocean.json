@@ -29,7 +29,7 @@
     },
     {
       "action": "waitForElement",
-      "selector": ".account-dropdown-menu",
+      "selector": "nav .account",
       "timeout": 120000
     }
   ],
