@@ -2,14 +2,14 @@
   "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
   "id": "github.com",
   "homepage": "https://github.com",
-  "name": "Github",
-  "description": "Github is a code hosting platform for version control and collaboration.",
+  "name": "GitHub",
+  "description": "GitHub is a code hosting platform for version control and collaboration.",
   "configSchema": {
     "organization": {
       "type": "string",
-      "title": "Organization Name",
-      "example": "",
-      "description": "Leave empty when you want to download invoices from your personal account.",
+      "title": "Organization",
+      "example": "my-github-org",
+      "description": "The ID of your organization. Leave blank to download invoices for your personal account.",
       "required": false
     }
   },
