@@ -930,76 +930,6 @@
                   }
                 },
                 "additionalProperties": false
-              },
-              {
-                "type": "object",
-                "required": [
-                  "action",
-                  "url"
-                ],
-                "properties": {
-                  "action": {
-                    "const": "getInvoiceFromStripeUrl"
-                  },
-                  "url": {
-                    "type": "string",
-                    "description": "The URL of the Stripe invoice",
-                    "title": "Stripe Invoice URL"
-                  },
-                  "description": {
-                    "type": "string",
-                    "description": "A human-readable description of what this step does",
-                    "title": "Description"
-                  },
-                  "metadata": {
-                    "type": "object",
-                    "required": [],
-                    "properties": {},
-                    "additionalProperties": {
-                      "type": "string",
-                      "description": "a string",
-                      "title": "string"
-                    },
-                    "description": "Additional metadata to include in the exported invoice",
-                    "title": "Metadata"
-                  }
-                },
-                "additionalProperties": false
-              },
-              {
-                "type": "object",
-                "required": [
-                  "action",
-                  "url"
-                ],
-                "properties": {
-                  "action": {
-                    "const": "getInvoicesFromStripeBillingPortal"
-                  },
-                  "url": {
-                    "type": "string",
-                    "description": "The URL of the Stripe billing portal",
-                    "title": "Stripe Billing Portal URL"
-                  },
-                  "description": {
-                    "type": "string",
-                    "description": "A human-readable description of what this step does",
-                    "title": "Description"
-                  },
-                  "metadata": {
-                    "type": "object",
-                    "required": [],
-                    "properties": {},
-                    "additionalProperties": {
-                      "type": "string",
-                      "description": "a string",
-                      "title": "string"
-                    },
-                    "description": "Additional metadata to include in the exported invoice",
-                    "title": "Metadata"
-                  }
-                },
-                "additionalProperties": false
               }
             ]
           },
@@ -1307,6 +1237,51 @@
             ],
             "description": "Runs the given steps if the condition is true",
             "title": "If"
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "snippet",
+              "args"
+            ],
+            "properties": {
+              "action": {
+                "const": "runSnippet"
+              },
+              "snippet": {
+                "enum": [
+                  "getInvoiceFromStripeUrl",
+                  "getInvoicesFromStripeBillingPortal"
+                ]
+              },
+              "args": {
+                "type": "object",
+                "required": [
+                  "url"
+                ],
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "description": "The URL to use in the snippet",
+                    "title": "URL"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false,
+            "description": "Runs a predefined snippet with the given configuration",
+            "title": "Run Snippet",
+            "examples": [
+              {
+                "action": "runSnippet",
+                "snippet": "getInvoiceFromStripeUrl",
+                "args": {
+                  "url": "https://example.com/invoice"
+                }
+              }
+            ]
           }
         ]
       },
@@ -2132,76 +2107,6 @@
                   }
                 },
                 "additionalProperties": false
-              },
-              {
-                "type": "object",
-                "required": [
-                  "action",
-                  "url"
-                ],
-                "properties": {
-                  "action": {
-                    "const": "getInvoiceFromStripeUrl"
-                  },
-                  "url": {
-                    "type": "string",
-                    "description": "The URL of the Stripe invoice",
-                    "title": "Stripe Invoice URL"
-                  },
-                  "description": {
-                    "type": "string",
-                    "description": "A human-readable description of what this step does",
-                    "title": "Description"
-                  },
-                  "metadata": {
-                    "type": "object",
-                    "required": [],
-                    "properties": {},
-                    "additionalProperties": {
-                      "type": "string",
-                      "description": "a string",
-                      "title": "string"
-                    },
-                    "description": "Additional metadata to include in the exported invoice",
-                    "title": "Metadata"
-                  }
-                },
-                "additionalProperties": false
-              },
-              {
-                "type": "object",
-                "required": [
-                  "action",
-                  "url"
-                ],
-                "properties": {
-                  "action": {
-                    "const": "getInvoicesFromStripeBillingPortal"
-                  },
-                  "url": {
-                    "type": "string",
-                    "description": "The URL of the Stripe billing portal",
-                    "title": "Stripe Billing Portal URL"
-                  },
-                  "description": {
-                    "type": "string",
-                    "description": "A human-readable description of what this step does",
-                    "title": "Description"
-                  },
-                  "metadata": {
-                    "type": "object",
-                    "required": [],
-                    "properties": {},
-                    "additionalProperties": {
-                      "type": "string",
-                      "description": "a string",
-                      "title": "string"
-                    },
-                    "description": "Additional metadata to include in the exported invoice",
-                    "title": "Metadata"
-                  }
-                },
-                "additionalProperties": false
               }
             ]
           },
@@ -2509,6 +2414,51 @@
             ],
             "description": "Runs the given steps if the condition is true",
             "title": "If"
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "snippet",
+              "args"
+            ],
+            "properties": {
+              "action": {
+                "const": "runSnippet"
+              },
+              "snippet": {
+                "enum": [
+                  "getInvoiceFromStripeUrl",
+                  "getInvoicesFromStripeBillingPortal"
+                ]
+              },
+              "args": {
+                "type": "object",
+                "required": [
+                  "url"
+                ],
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "description": "The URL to use in the snippet",
+                    "title": "URL"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false,
+            "description": "Runs a predefined snippet with the given configuration",
+            "title": "Run Snippet",
+            "examples": [
+              {
+                "action": "runSnippet",
+                "snippet": "getInvoiceFromStripeUrl",
+                "args": {
+                  "url": "https://example.com/invoice"
+                }
+              }
+            ]
           }
         ]
       },
@@ -3334,76 +3284,6 @@
                   }
                 },
                 "additionalProperties": false
-              },
-              {
-                "type": "object",
-                "required": [
-                  "action",
-                  "url"
-                ],
-                "properties": {
-                  "action": {
-                    "const": "getInvoiceFromStripeUrl"
-                  },
-                  "url": {
-                    "type": "string",
-                    "description": "The URL of the Stripe invoice",
-                    "title": "Stripe Invoice URL"
-                  },
-                  "description": {
-                    "type": "string",
-                    "description": "A human-readable description of what this step does",
-                    "title": "Description"
-                  },
-                  "metadata": {
-                    "type": "object",
-                    "required": [],
-                    "properties": {},
-                    "additionalProperties": {
-                      "type": "string",
-                      "description": "a string",
-                      "title": "string"
-                    },
-                    "description": "Additional metadata to include in the exported invoice",
-                    "title": "Metadata"
-                  }
-                },
-                "additionalProperties": false
-              },
-              {
-                "type": "object",
-                "required": [
-                  "action",
-                  "url"
-                ],
-                "properties": {
-                  "action": {
-                    "const": "getInvoicesFromStripeBillingPortal"
-                  },
-                  "url": {
-                    "type": "string",
-                    "description": "The URL of the Stripe billing portal",
-                    "title": "Stripe Billing Portal URL"
-                  },
-                  "description": {
-                    "type": "string",
-                    "description": "A human-readable description of what this step does",
-                    "title": "Description"
-                  },
-                  "metadata": {
-                    "type": "object",
-                    "required": [],
-                    "properties": {},
-                    "additionalProperties": {
-                      "type": "string",
-                      "description": "a string",
-                      "title": "string"
-                    },
-                    "description": "Additional metadata to include in the exported invoice",
-                    "title": "Metadata"
-                  }
-                },
-                "additionalProperties": false
               }
             ]
           },
@@ -3711,6 +3591,51 @@
             ],
             "description": "Runs the given steps if the condition is true",
             "title": "If"
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "snippet",
+              "args"
+            ],
+            "properties": {
+              "action": {
+                "const": "runSnippet"
+              },
+              "snippet": {
+                "enum": [
+                  "getInvoiceFromStripeUrl",
+                  "getInvoicesFromStripeBillingPortal"
+                ]
+              },
+              "args": {
+                "type": "object",
+                "required": [
+                  "url"
+                ],
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "description": "The URL to use in the snippet",
+                    "title": "URL"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false,
+            "description": "Runs a predefined snippet with the given configuration",
+            "title": "Run Snippet",
+            "examples": [
+              {
+                "action": "runSnippet",
+                "snippet": "getInvoiceFromStripeUrl",
+                "args": {
+                  "url": "https://example.com/invoice"
+                }
+              }
+            ]
           }
         ]
       },
@@ -4572,76 +4497,6 @@
                 }
               },
               "additionalProperties": false
-            },
-            {
-              "type": "object",
-              "required": [
-                "action",
-                "url"
-              ],
-              "properties": {
-                "action": {
-                  "const": "getInvoiceFromStripeUrl"
-                },
-                "url": {
-                  "type": "string",
-                  "description": "The URL of the Stripe invoice",
-                  "title": "Stripe Invoice URL"
-                },
-                "description": {
-                  "type": "string",
-                  "description": "A human-readable description of what this step does",
-                  "title": "Description"
-                },
-                "metadata": {
-                  "type": "object",
-                  "required": [],
-                  "properties": {},
-                  "additionalProperties": {
-                    "type": "string",
-                    "description": "a string",
-                    "title": "string"
-                  },
-                  "description": "Additional metadata to include in the exported invoice",
-                  "title": "Metadata"
-                }
-              },
-              "additionalProperties": false
-            },
-            {
-              "type": "object",
-              "required": [
-                "action",
-                "url"
-              ],
-              "properties": {
-                "action": {
-                  "const": "getInvoicesFromStripeBillingPortal"
-                },
-                "url": {
-                  "type": "string",
-                  "description": "The URL of the Stripe billing portal",
-                  "title": "Stripe Billing Portal URL"
-                },
-                "description": {
-                  "type": "string",
-                  "description": "A human-readable description of what this step does",
-                  "title": "Description"
-                },
-                "metadata": {
-                  "type": "object",
-                  "required": [],
-                  "properties": {},
-                  "additionalProperties": {
-                    "type": "string",
-                    "description": "a string",
-                    "title": "string"
-                  },
-                  "description": "Additional metadata to include in the exported invoice",
-                  "title": "Metadata"
-                }
-              },
-              "additionalProperties": false
             }
           ]
         },
@@ -4949,6 +4804,51 @@
           ],
           "description": "Runs the given steps if the condition is true",
           "title": "If"
+        },
+        {
+          "type": "object",
+          "required": [
+            "action",
+            "snippet",
+            "args"
+          ],
+          "properties": {
+            "action": {
+              "const": "runSnippet"
+            },
+            "snippet": {
+              "enum": [
+                "getInvoiceFromStripeUrl",
+                "getInvoicesFromStripeBillingPortal"
+              ]
+            },
+            "args": {
+              "type": "object",
+              "required": [
+                "url"
+              ],
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "description": "The URL to use in the snippet",
+                  "title": "URL"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false,
+          "description": "Runs a predefined snippet with the given configuration",
+          "title": "Run Snippet",
+          "examples": [
+            {
+              "action": "runSnippet",
+              "snippet": "getInvoiceFromStripeUrl",
+              "args": {
+                "url": "https://example.com/invoice"
+              }
+            }
+          ]
         }
       ]
     }

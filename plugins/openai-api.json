@@ -70,8 +70,11 @@
       },
       "forEach": [
         {
-          "action": "getInvoiceFromStripeUrl",
-          "url": "{{item.url}}"
+          "action": "runSnippet",
+          "snippet": "getInvoiceFromStripeUrl",
+          "args": {
+            "url": "{{item.url}}"
+          }
         }
       ]
     }
