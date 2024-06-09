@@ -14,11 +14,8 @@
   "checkAuth": [
     {
       "action": "navigate",
-      "url": "https://platform.openai.com/account/billing/history"
-    },
-    {
-      "action": "waitForElement",
-      "selector": ".billing-history-table"
+      "url": "https://platform.openai.com/account/billing/history",
+      "waitForNetworkIdle": true
     },
     {
       "action": "checkElementExists",
