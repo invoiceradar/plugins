@@ -20,7 +20,8 @@
     },
     {
       "action": "click",
-      "selector": "#loginEID"
+      "optional": true,
+      "selector": "[data-test-id='eid-web-generic']"
     },
     {
       "action": "waitForElement",
