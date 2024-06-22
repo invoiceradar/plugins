@@ -81,16 +81,37 @@
               },
               "forEach": [
                 {
-                  "action": "downloadPdf",
-                  "url": "{{invoice.url}}",
-                  "document": {
-                    "id": "{{order.id}}-{{index}}",
-                    "date": "{{order.date}}",
-                    "total": "{{order.price}}"
-                  },
-                  "metadata": {
-                    "order": "{{order.id}}"
-                  }
+                  "action": "if",
+                  "script": "document.querySelectorAll('.hide-if-js li:has(a[href$=\"invoice.pdf\"])').length >\n  1",
+                  "then": [
+                    {
+                      "action": "downloadPdf",
+                      "description": "Don't include the price when multiple invoices are present, since there is no reliable way to map them to the order.",
+                      "url": "{{invoice.url}}",
+                      "document": {
+                        "id": "{{order.id}}-{{index}}",
+                        "date": "{{order.date}}"
+                      },
+                      "metadata": {
+                        "order": "{{order.id}}"
+                      }
+                    }
+                  ],
+                  "else": [
+                    {
+                      "action": "downloadPdf",
+                      "description": "Use the price from the order when only one invoice is present.",
+                      "url": "{{invoice.url}}",
+                      "document": {
+                        "id": "{{order.id}}",
+                        "date": "{{order.date}}",
+                        "total": "{{order.price}}"
+                      },
+                      "metadata": {
+                        "order": "{{order.id}}"
+                      }
+                    }
+                  ]
                 }
               ]
             }

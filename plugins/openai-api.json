@@ -14,11 +14,8 @@
   "checkAuth": [
     {
       "action": "navigate",
-      "url": "https://platform.openai.com/account/billing/history"
-    },
-    {
-      "action": "waitForElement",
-      "selector": ".billing-history-table"
+      "url": "https://platform.openai.com/account/billing/history",
+      "waitForNetworkIdle": true
     },
     {
       "action": "checkElementExists",
@@ -70,8 +67,11 @@
       },
       "forEach": [
         {
-          "action": "getInvoiceFromStripeUrl",
-          "url": "{{item.url}}"
+          "action": "runSnippet",
+          "snippet": "getInvoiceFromStripeUrl",
+          "args": {
+            "url": "{{item.url}}"
+          }
         }
       ]
     }
