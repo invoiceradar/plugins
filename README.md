@@ -385,14 +385,18 @@ This section provides an overview of the available steps that can be used to cre
   - [Wait for PDF Download (`waitForPdfDownload`)](#wait-for-pdf-download-waitforpdfdownload)
   - [Print Page as PDF (`printPdf`)](#print-page-as-pdf-printpdf)
   - [Download Base64 PDF (`downloadBase64Pdf`)](#download-base64-pdf-downloadbase64pdf)
-  - [Get Invoice from Stripe URL (`getInvoiceFromStripeUrl`)](#get-invoice-from-stripe-url-getinvoicefromstripeurl)
 
 - [🔀 Conditional Logic Steps](#🔀-conditional-logic-steps)
 
   - [If (`if`)](#if-if)
 
 - [📦 Miscellaneous Steps](#📦-miscellaneous-steps)
+
   - [Sleep (`sleep`)](#sleep-sleep)
+
+- [✂️ Snippets](#✂️-snippets)
+  - [Get Invoice from Stripe URL (`getInvoiceFromStripeUrl`)](#get-invoice-from-stripe-url-getinvoicefromstripeurl)
+  - [Get Invoices from Stripe Customer Portal (`getInvoicesFromStripeBillingPortal`)](#get-invoices-from-stripe-customer-portal-getinvoicesfromstripebillingportal)
 
 ### 🌐 Navigation Steps
 
@@ -769,28 +773,6 @@ Downloads a PDF from a base64 encoded string.
 }
 ```
 
-#### Get Invoices from Stripe Customer Portal (`getInvoicesFromStripeBillingPortal`)
-
-Extracts available invoices from a Stripe billing portal.
-
-```json
-{
-  "action": "getInvoicesFromStripeBillingPortal",
-  "url": "https://stripe-portal.example.com/billing"
-}
-```
-
-#### Get Invoice from Stripe URL (`getInvoiceFromStripeUrl`)
-
-Extracts the invoice PDF and details from a Stripe invoice URL.
-
-```json
-{
-  "action": "getInvoiceFromStripeUrl",
-  "url": "https://invoice.stripe.com/i/inv_123"
-}
-```
-
 ### 🔀 Conditional Logic Steps
 
 #### If (`if`)
@@ -827,5 +809,39 @@ This is generally not recommended. In most cases, it's better to use the [waitFo
 {
   "action": "sleep",
   "duration": 1000
+}
+```
+
+### ✂️ Snippets
+
+Snippets are pre-built sets of steps that simplify common tasks. The steps for a specific snippet are visible inside the developer tools
+
+Currently, it's not possible to create custom snippets. If you have a common task that you think would be useful as a snippet, please create an issue on GitHub.
+
+#### Get Invoice from Stripe URL (`getInvoiceFromStripeUrl`)
+
+Extracts an invoice from a Stripe invoice URL.
+
+```json
+{
+  "action": "runSnippet",
+  "snippet": "getInvoiceFromStripeUrl",
+  "args": {
+    "url": "https://invoice.stripe.com/i/inv_123"
+  }
+}
+```
+
+#### Get Invoices from Stripe Customer Portal (`getInvoicesFromStripeBillingPortal`)
+
+Extracts available invoices from a Stripe billing portal.
+
+```json
+{
+  "action": "runSnippet",
+  "snippet": "getInvoicesFromStripeBillingPortal",
+  "args": {
+    "url": "https://stripe-portal.example.com/billing"
+  }
 }
 ```
