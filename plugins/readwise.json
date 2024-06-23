@@ -1,0 +1,56 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "readwise",
+  "name": "Readwise",
+  "description": "Readwise is a reading app that helps you remember and learn from your reading.",
+  "homepage": "https://readwise.io",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://readwise.io/receipts"
+    },
+    {
+      "action": "checkURL",
+      "url": "https://readwise.io/receipts"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://readwise.io/accounts/login/"
+    },
+
+    {
+      "action": "waitForURL",
+      "url": "https://readwise.io/dashboard/",
+      "timeout": 120000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://readwise.io/receipts"
+    },
+    {
+      "action": "extractAll",
+      "variable": "receipt",
+      "selector": ".card-content li",
+      "fields": {
+        "url": {
+          "selector": "a[href*='invoice.stripe.com']",
+          "attribute": "href"
+        }
+      },
+      "forEach": [
+        {
+          "action": "runSnippet",
+          "snippet": "getInvoiceFromStripeUrl",
+          "args": {
+            "url": "{{receipt.url}}"
+          }
+        }
+      ]
+    }
+  ]
+}
