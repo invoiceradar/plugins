@@ -50,7 +50,7 @@
     },
     {
       "action": "waitForElement",
-      "timeout": 120000,
+      "timeout": 1200000,
       "selector": "a[href*='logout']"
     }
   ],
