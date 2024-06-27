@@ -48,7 +48,7 @@
     {
       "action": "waitForElement",
       "selector": "body.loggedin",
-      "timeout": 120000
+      "timeout": 1200000
     }
   ],
   "getDocuments": [
