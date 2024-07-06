@@ -1,0 +1,94 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "spotify",
+  "name": "Spotify ",
+  "description": "Spotify is music streaming service",
+  "homepage": "https://spotify.com",
+  "configSchema": {
+    "username": {
+      "type": "string",
+      "title": "Username",
+      "required": false
+    },
+    "password": {
+      "type": "password",
+      "title": "Password",
+      "required": false
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://accounts.spotify.com/en/login"
+    },
+    {
+      "action": "checkURL",
+      "url": "https://accounts.spotify.com/en/status**"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://accounts.spotify.com/en/login"
+    },
+    {
+      "action": "type",
+      "selector": "[data-testid='login-username']",
+      "value": "{{config.username}}"
+    },
+    {
+      "action": "type",
+      "selector": "[data-testid='login-password']",
+      "value": "{{config.password}}"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://accounts.spotify.com/en/status"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://www.spotify.com/in-en/account/order-history/",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "extractAll",
+      "selector": "[data-testid='invoice-table'] tbody tr",
+      "variable": "order",
+      "fields": {
+        "date": {
+          "selector": "td:nth-child(1)"
+        },
+        "total": {
+          "selector": "td:nth-child(3)"
+        },
+        "url": {
+          "selector": "td:nth-child(5) a",
+          "attribute": "href"
+        }
+      },
+      "forEach": [
+        {
+          "action": "navigate",
+          "url": "https://www.spotify.com/{{order.url}}"
+        },
+        {
+          "action": "extract",
+          "variable": "data",
+          "fields": {
+            "id": "tr:nth-child(2) [data-encore-id='tableCell']"
+          }
+        },
+        {
+          "action": "printPdf",
+          "document": {
+            "id": "{{data.id}}",
+            "total": "{{order.total}}",
+            "date": "{{order.date}}"
+          }
+        }
+      ]
+    }
+  ]
+}
