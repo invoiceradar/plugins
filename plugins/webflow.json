@@ -1,0 +1,95 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "webflow",
+  "name": "Webflow",
+  "description": "Webflow is a website builder.",
+  "homepage": "https://www.webflow.com",
+  "configSchema": {
+    "workspaceId": {
+      "type": "string",
+      "title": "Workspace ID",
+      "required": false,
+      "description": "You can find your workspace ID in the URL. `https://webflow.com/dashboard?workspace=<workspace-id>`"
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://webflow.com/dashboard/profile/settings",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkURL",
+      "url": "https://webflow.com/dashboard/profile/settings"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://webflow.com/dashboard/login"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://webflow.com/dashboard?**",
+      "timeout": 1200000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "if",
+      "script": "'{{config.workspaceId}}' === ''",
+      "then": [
+        {
+          "action": "navigate",
+          "url": "https://webflow.com/dashboard"
+        },
+        {
+          "action": "waitForElement",
+          "selector": "[data-automation-id='Workspace-Billing']"
+        },
+        {
+          "action": "click",
+          "selector": "[data-automation-id='Workspace-Billing']"
+        }
+      ],
+      "else": [
+        {
+          "action": "navigate",
+          "url": "https://webflow.com/dashboard/workspace/{{config.workspaceId}}/billing?ref=billing_tab"
+        }
+      ]
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[data-automation-id='invoices-table']"
+    },
+    {
+      "action": "extractAll",
+      "selector": "[data-automation-id='invoices-table'] tbody tr",
+      "fields": {
+        "id": {
+          "selector": "td:nth-child(4) a",
+          "attribute": "href",
+          "transform": "(v) => v.split('/').pop().split('.')[0]"
+        },
+        "date": {
+          "selector": "td:nth-child(1)"
+        },
+        "total": {
+          "selector": "td:nth-child(3)"
+        },
+        "url": {
+          "selector": "td:nth-child(4) a",
+          "attribute": "href"
+        }
+      },
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "{{item.url}}",
+          "document": "{{item}}"
+        }
+      ]
+    }
+  ]
+}
