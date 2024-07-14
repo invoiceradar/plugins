@@ -1,12 +1,14 @@
-# InvoiceRadar Plugin Handbook
+# Invoice Radar Plugin Handbook
 
 ## 1. Introduction
 
-Welcome to the InvoiceRadar Plugin Handbook for developers! This guide will help you create custom plugins to fetch invoices and receipts from various platforms.
+Welcome to the Invoice Radar Plugin Handbook for developers!
 
-InvoiceRadar is a document automation tool that helps you fetch, download, and organize invoices and receipts from various platforms.
+This guide will help you create custom plugins to fetch invoices and receipts from various platforms.
 
-[📟 Learn more about InvoiceRadar](https://invoiceradar.com/)
+Invoice Radar is a document automation tool that helps you fetch, download, and organize invoices and receipts from various platforms.
+
+[📟 Learn more about Invoice Radar](https://invoiceradar.com/)
 
 #### Table of Contents
 
@@ -23,13 +25,13 @@ InvoiceRadar is a document automation tool that helps you fetch, download, and o
 
 - Basic knowledge of JSON, HTML, CSS and JavaScript.
 - A text editor or IDE (e.g., VSCode, Sublime Text).
-- InvoiceRadar installed on macOS or Windows.
+- Invoice Radar installed on macOS or Windows.
 
 ### Installation
 
-1. **Download and Install InvoiceRadar**:
+1. **Download and Install Invoice Radar**:
 
-   - [Request Access to InvoiceRadar](https://invoiceradar.com/)
+   - [Request Access to Invoice Radar](https://invoiceradar.com/)
 
 2. **Download the Blank Plugin**:
 
@@ -37,15 +39,15 @@ InvoiceRadar is a document automation tool that helps you fetch, download, and o
    - Rename the file to `your-plugin-name.json`.
    - Put it into a folder of your choice.
 
-3. **Add the Plugin to InvoiceRadar**:
-   - Open InvoiceRadar.
+3. **Add the Plugin to Invoice Radar**:
+   - Open Invoice Radar.
    - Navigate to settings and choose the `Available Plugins` tab.
    - Choose `Choose Plugin Directory` and select the folder where you saved the plugin.
    - Your plugin should now appear in the list of available plugins.
 
 ## 3. Plugin Structure
 
-Plugins for InvoiceRadar are written in JSON and follow a specific structure. Each plugin consists of the following sections:
+Plugins for Invoice Radar are written in JSON and follow a specific structure. Each plugin consists of the following sections:
 
 **Plugin Description**:
 
@@ -134,7 +136,7 @@ Let's create a simple plugin to fetch invoices from a hypothetical service.
 
 1. **Define Metadata**:
 
-   This information is used to identify and display the plugin in InvoiceRadar. The homepage URL is used to get the favicon of the service.
+   This information is used to identify and display the plugin in Invoice Radar. The homepage URL is used to get the favicon of the service.
 
    Note that the `id` should be unique and lowercase.
 
@@ -153,7 +155,7 @@ Let's create a simple plugin to fetch invoices from a hypothetical service.
 
    The configuration schema defines which fields are required for the plugin to function. In this example, we need a `teamID` and `password` to authenticate.
 
-   These fields will be displayed to the user when adding the plugin in InvoiceRadar.
+   These fields will be displayed to the user when adding the plugin in Invoice Radar.
 
    ```json
    "configSchema": {
@@ -255,7 +257,7 @@ Let's create a simple plugin to fetch invoices from a hypothetical service.
 
 6. **You are done!**:
 
-   Save the file and add it to InvoiceRadar. You can now run the plugin to fetch invoices from the service.
+   Save the file and add it to Invoice Radar. You can now run the plugin to fetch invoices from the service.
 
 ## 5. Useful Patterns
 
@@ -349,7 +351,7 @@ To give the user enough time to log in, it's recommend to provide a long timeout
 
 ## Steps Reference
 
-This section provides an overview of the available steps that can be used to create plugins for InvoiceRadar. Each step represents a specific action that can be performed during the automation process.
+This section provides an overview of the available steps that can be used to create plugins for Invoice Radar. Each step represents a specific action that can be performed during the automation process.
 
 ### Table of Contents
 
