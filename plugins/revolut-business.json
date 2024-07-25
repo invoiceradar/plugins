@@ -1,0 +1,111 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "revolut-business",
+  "name": "Revolut Business",
+  "description": "Get invoices from your Revolut Business subscription.",
+  "homepage": "https://www.revolut.com/",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://business.revolut.com",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkElementExists",
+      "selector": "[aria-label='Accounts widget']"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://business.revolut.com/plan/subscriptions/history",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "waitForElement",
+      "selector": "input[name='email']"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://business.revolut.com/plan/subscriptions/history",
+      "timeout": 180000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://business.revolut.com/plan/subscriptions/history",
+      "waitForNetworkIdle": true
+    },
+
+    {
+      "action": "extractAll",
+      "variable": "periods",
+      "selector": "div:has(> button[class*='Box-rui'])",
+      "fields": {
+        "date": {
+          "selector": "button > span",
+          "transform": "(dateRange) => dateRange.split(' - ')[0].replace(/(\\d+\\s+\\w+)(?:\\s+\\d{4})?/, '$1 ' + dateRange.match(/\\d{4}/)[0])"
+        }
+      },
+      "forEach": [
+        {
+          "action": "click",
+          "selector": "button",
+          "scopeSelector": true
+        },
+        {
+          "action": "waitForElement",
+          "selector": "[class*='SideWrapper'] [class*='HeaderStickyWrapper']",
+          "description": "Wait for the sidebar to open"
+        },
+        {
+          "action": "if",
+          "selector": "[class*='LayoutSide__'] [class*='ActionButton-rui']",
+          "then": [
+            {
+              "action": "click",
+              "selector": "[class*='OverlayBase'] button:has([style*='icons/BackButtonArrow'])",
+              "scopeSelector": false,
+              "optional": true
+            },
+            {
+              "action": "click",
+              "selector": "[class*='LayoutSide__'] [class*='ActionButton-rui']",
+              "scopeSelector": false
+            },
+
+            {
+              "action": "click",
+              "selector": "button:has([style*='icons/Download'])",
+              "scopeSelector": false
+            },
+            {
+              "action": "waitForElement",
+              "selector": "#header > div > div.title > span:nth-child(2)"
+            },
+            {
+              "action": "extract",
+              "variable": "invoice",
+              "fields": {
+                "id": "#header > div > div.title > span:nth-child(2)",
+                "date": "#dates > div > div > span:nth-child(2)",
+                "total": ".section:last-child .transactions tr:last-child td:last-child"
+              }
+            },
+            {
+              "action": "waitForPdfDownload",
+              "document": {
+                "id": "{{invoice.id}}",
+                "date": "{{invoice.date}}",
+                "total": "{{invoice.total}}",
+                "type": "invoice"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
