@@ -33,7 +33,7 @@
     },
     {
       "action": "extractAll",
-      "script": "Array.from(Array.from(document.querySelectorAll('h2')).filter(el => el.textContent.startsWith('Invoices'))[0].closest('div').querySelectorAll('table tbody tr')).map(row => { const cells = row.querySelectorAll('td'); const date = cells[0].innerText.trim(); const total = cells[1].innerText.trim(); const url = cells[2].querySelector('a').href; const match = url.match(/receipt\\/([^\\/]+)/); const id = match ? match[1] : null; return { id, date, total, url }; })",
+      "script": "Array.from(\n  Array.from(document.querySelectorAll('h2'))\n    .filter((el) => el.textContent.startsWith('Invoices'))[0]\n    .closest('div')\n    .querySelectorAll('table tbody tr'),\n)\n  .map((row) => {\n    const cells = row.querySelectorAll('td')\n    if (cells.length !== 3) {\n      return null\n    }\n    const date = cells[0].innerText.trim()\n    const total = cells[1].innerText.trim()\n    const url = cells[2].querySelector('a').href\n    const match = url.match(/receipt\\/([^\\/]+)/)\n    const id = match ? match[1] : null\n    return { id, date, total, url }\n  })\n  .filter((row) => row !== null)",
       "variable": "item",
       "forEach": [
         {
