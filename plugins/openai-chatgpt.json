@@ -39,28 +39,12 @@
   "getDocuments": [
     {
       "action": "navigate",
-      "url": "about:blank",
-      "description": "Start with clean slate to ensure pricing modal gets triggered"
-    },
-    {
-      "action": "navigate",
-      "url": "https://chatgpt.com/#pricing"
-    },
-    {
-      "action": "waitForElement",
-      "selector": "[role=dialog]"
-    },
-    {
-      "action": "click",
-      "selector": "[data-testid*='pricing-modal-column'] [href$='#']"
-    },
-    {
-      "action": "waitForNavigation"
+      "url": "https://chatgpt.com/"
     },
     {
       "action": "extract",
       "variable": "portalUrl",
-      "script": "window.location.href"
+      "script": "fetch('https://chatgpt.com/backend-api/payments/customer_portal', {\n  headers: {\n    authorization:\n      'Bearer ' +\n      JSON.parse(document.getElementById('__NEXT_DATA__').innerText).props\n        .pageProps.session.accessToken,\n  },\n  referrer: 'https://chatgpt.com/',\n  method: 'GET',\n  mode: 'cors',\n  credentials: 'include',\n})\n  .then((r) => r.json())\n  .then((r) => r.url)"
     },
     {
       "action": "runSnippet",
