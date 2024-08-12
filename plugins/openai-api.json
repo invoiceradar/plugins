@@ -14,15 +14,12 @@
   "checkAuth": [
     {
       "action": "navigate",
-      "url": "https://platform.openai.com/account/billing/history"
-    },
-    {
-      "action": "waitForElement",
-      "selector": ".app-navigation"
+      "url": "https://platform.openai.com/account/billing/history",
+      "waitForNetworkIdle": true
     },
     {
       "action": "checkElementExists",
-      "selector": ".app-navigation"
+      "selector": ".billing-history-table"
     }
   ],
   "startAuth": [
@@ -40,7 +37,7 @@
     },
     {
       "action": "waitForElement",
-      "selector": ".billing-subtext",
+      "selector": ".billing-history-table",
       "timeout": 120000
     }
   ],
@@ -53,7 +50,6 @@
       "action": "waitForElement",
       "selector": ".billing-history-table"
     },
-
     {
       "action": "extractAll",
       "selector": ".billing-history-table > tbody > tr",
@@ -71,8 +67,11 @@
       },
       "forEach": [
         {
-          "action": "getInvoiceFromStripeUrl",
-          "url": "{{item.url}}"
+          "action": "runSnippet",
+          "snippet": "getInvoiceFromStripeUrl",
+          "args": {
+            "url": "{{item.url}}"
+          }
         }
       ]
     }

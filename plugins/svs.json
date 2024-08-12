@@ -1,0 +1,152 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "svs.at",
+  "name": "SVS",
+  "description": "Versicherungsanstalt für Selbständige in Österreich",
+  "homepage": "https://www.meinesv.at/",
+  "configSchema": {
+    "additionalDocuments": {
+      "title": "Zusätzliche Dokumente herunterladen",
+      "description": "Jahreskonten, Zahlungsbestätigungen, Informationen zur Beitragsgrundlage",
+      "default": false,
+      "required": false,
+      "type": "boolean"
+    }
+  },
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.svs.at/cdscontent/login"
+    },
+    {
+      "action": "click",
+      "optional": true,
+      "selector": "[data-test-id='eid-web-generic']"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "#buttonEid"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "#loginIcon",
+      "timeout": 120000
+    }
+  ],
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.svs.at/sva-dashboard/pages/dashboard.xhtml"
+    },
+    {
+      "action": "checkURL",
+      "url": "https://www.svs.at/sva-dashboard/pages/dashboard.xhtml"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://www.svs.at/sva-dashboard/pages/dashboard.xhtml"
+    },
+    {
+      "action": "navigate",
+      "url": "https://www.svs.at/beitragskonto"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "fieldset[title*=Beitragsvorschreibungen]"
+    },
+    {
+      "action": "extractAll",
+      "script": "Array.from(\n  document.querySelectorAll(\n    'fieldset[title*=Beitragsvorschreibungen] select option',\n  ),\n)\n  .map((e) => e.value)\n  .filter((y) => !!y && Number(y) >= Number('{{startDate.year}}'))",
+      "variable": "year",
+      "forEach": [
+        {
+          "action": "dropdownSelect",
+          "selector": "fieldset[title*=Beitragsvorschreibungen] select",
+          "value": "{{year}}"
+        },
+        {
+          "action": "waitForElement",
+          "selector": "body:not(.loading)"
+        },
+        {
+          "action": "extractAll",
+          "selector": "fieldset[title*=Beitragsvorschreibungen] table tbody tr",
+          "fields": {
+            "date": "td:nth-child(3)",
+            "total": {
+              "selector": "td:nth-child(2)",
+              "transform": "(n) => n.replace('-', '')"
+            },
+            "id": "td:nth-child(1)"
+          },
+          "forEach": [
+            {
+              "action": "click",
+              "selector": "a",
+              "scopeSelector": true
+            },
+            {
+              "action": "waitForPdfDownload",
+              "metadata": {
+                "type": "Vorschreiben"
+              },
+              "document": {
+                "id": "{{item.id}}",
+                "date": "{{item.date}}",
+                "total": "{{item.total}}",
+                "type": "invoice"
+              }
+            }
+          ]
+        },
+        {
+          "action": "if",
+          "script": "{{config.additionalDocuments}}",
+          "then": [
+            {
+              "action": "dropdownSelect",
+              "selector": "fieldset[title*=Jahreskonten] select",
+              "value": "{{year}}"
+            },
+            {
+              "action": "waitForElement",
+              "selector": "body:not(.loading)"
+            },
+            {
+              "action": "extractAll",
+              "selector": "fieldset[title*=Jahreskonten] table tbody tr",
+              "fields": {
+                "title": "td:nth-child(1)",
+                "date": {
+                  "selector": "td",
+                  "transform": "() => new Date({{year}} + 1, 0, 1).toISOString()"
+                },
+                "id": "td:nth-child(1)"
+              },
+              "forEach": [
+                {
+                  "action": "click",
+                  "selector": "a",
+                  "scopeSelector": true
+                },
+                {
+                  "action": "waitForPdfDownload",
+                  "metadata": {
+                    "type": "{{item.title}}"
+                  },
+                  "document": {
+                    "id": "{{year}}-{{item.title}}",
+                    "date": "{{item.date}}",
+                    "type": "other"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

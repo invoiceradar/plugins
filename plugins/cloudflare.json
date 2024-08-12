@@ -18,7 +18,8 @@
     "accountId": {
       "type": "string",
       "title": "Account ID",
-      "required": true
+      "required": true,
+      "description": "You can find your Account ID in the URL. https://dash.cloudflare.com/YOUR_ACCOUNT_ID"
     }
   },
   "checkAuth": [

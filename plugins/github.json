@@ -1,0 +1,86 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "github.com",
+  "homepage": "https://github.com",
+  "name": "GitHub",
+  "description": "GitHub is a code hosting platform for version control and collaboration.",
+  "configSchema": {
+    "organization": {
+      "type": "string",
+      "title": "Organization",
+      "example": "my-github-org",
+      "description": "The ID of your organization. Leave blank to download invoices for your personal account.",
+      "required": false
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://github.com"
+    },
+    {
+      "action": "checkElementExists",
+      "selector": "[class='AppHeader-user']"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://github.com/login"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[class='AppHeader-user']",
+      "timeout": 180000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "if",
+      "script": "'{{config.organization}}' === ''",
+      "then": [
+        {
+          "action": "navigate",
+          "url": "https://github.com/account/billing/history"
+        }
+      ],
+      "else": [
+        {
+          "action": "navigate",
+          "url": "https://github.com/organizations/{{config.organization}}/billing/history"
+        }
+      ]
+    },
+    {
+      "action": "extractAll",
+      "selector": ".payment-history ul li:has(div.status span[title='Approved'])",
+      "fields": {
+        "id": {
+          "selector": ".id"
+        },
+        "date": {
+          "selector": ".date"
+        },
+        "url": {
+          "selector": ".receipt a[id^='preview-receipt-']",
+          "attribute": "href"
+        },
+        "total": {
+          "selector": ".amount"
+        }
+      },
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "{{item.url}}",
+          "document": {
+            "type": "receipt",
+            "id": "{{item.id}}",
+            "date": "{{item.date}}",
+            "total": "{{item.total}}"
+          }
+        }
+      ]
+    }
+  ]
+}

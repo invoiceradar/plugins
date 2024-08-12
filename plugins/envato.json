@@ -1,0 +1,67 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "envato",
+  "name": "Envato",
+  "description": "Envato is a marketplace for creative professionals to find, buy, and sell creative assets.",
+  "homepage": "https://www.envato.com/",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://account.elements.envato.com/subscription",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkURL",
+      "url": "https://account.elements.envato.com/subscription"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://elements.envato.com/sign-in?targetUrl=https://account.elements.envato.com/account-details"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://account.elements.envato.com/**",
+      "timeout": 120000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://account.elements.envato.com/subscription"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "ul:has(a[href*=pdf]) li:has(a[href*=pdf])"
+    },
+    {
+      "action": "extractAll",
+      "selector": "ul:has(a[href*=pdf]) li:has(a[href*=pdf])",
+      "fields": {
+        "id": {
+          "selector": "div:nth-child(2) a"
+        },
+        "date": {
+          "selector": "time",
+          "attribute": "datetime"
+        },
+        "url": {
+          "selector": "a",
+          "attribute": "href"
+        },
+        "total": {
+          "selector": "div:nth-child(3)"
+        }
+      },
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "{{item.url}}",
+          "document": "{{item}}"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,96 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "meta-ads",
+  "name": "Meta Ads",
+  "description": "Meta Ads Manager is a tool for creating ads on Facebook, Instagram and Messenger.",
+  "homepage": "https://business.facebook.com/",
+  "configSchema": {
+    "assetId": {
+      "type": "string",
+      "title": "Ad Account ID",
+      "description": "The asset ID of the ad account. You can find in as part of the URL: `?asset_id=[YOUR ID]`.",
+      "required": true,
+      "example": "123456789"
+    },
+    "businessId": {
+      "type": "string",
+      "title": "Business ID",
+      "required": true,
+      "description": "The business ID of the ad account. You can find in as part of the URL: `?business_id=[YOUR ID]`.",
+      "example": "123456789876543"
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://business.facebook.com/billing_hub/payment_activity/"
+    },
+    {
+      "action": "checkURL",
+      "url": "https://business.facebook.com/billing_hub/payment_activity/*"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://business.facebook.com/billing_hub/payment_activity/"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://business.facebook.com/billing_hub/payment_activity/*",
+      "timeout": 12000000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://business.facebook.com/billing_hub/payment_activity/"
+    },
+    {
+      "action": "extract",
+      "variable": "time",
+      "description": "Convert dates to fit the URL format.",
+      "script": "({\n  from: Math.floor(new Date('{{startDate.iso}}').getTime() / 1000),\n  to: Math.floor(new Date('{{currentDate.iso}}').getTime() / 1000),\n})"
+    },
+    {
+      "action": "navigate",
+      "url": "https://business.facebook.com/billing_hub/payment_activity?asset_id={{config.assetId}}&business_id={{config.businessId}}&placement=standalone&date={{time.from}}_{{time.to}}"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "table tbody tr"
+    },
+    {
+      "action": "extractAll",
+      "variable": "invoice",
+      "selector": "table tbody tr",
+      "fields": {
+        "transactionId": "td:nth-child(1) a",
+        "id": "td:nth-child(6) span",
+        "total": "td:nth-child(3)",
+        "date": "td:nth-child(2)",
+        "url": {
+          "selector": "td:nth-child(7) a",
+          "attribute": "href"
+        }
+      },
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "{{invoice.url}}",
+          "document": {
+            "id": "{{invoice.id}}",
+            "date": "{{invoice.date}}",
+            "total": "{{invoice.total}}",
+            "type": "invoice"
+          },
+          "metadata": {
+            "transactionId": "{{invoice.transactionId}}",
+            "adAccount": "{{config.assetId}}",
+            "businessId": "{{config.businessId}}"
+          }
+        }
+      ]
+    }
+  ]
+}

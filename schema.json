@@ -51,8 +51,8 @@
           },
           "title": {
             "type": "string",
-            "description": "The human-readable title of the property",
-            "title": "Title"
+            "description": "a string",
+            "title": "string"
           },
           "description": {
             "type": "string",
@@ -337,6 +337,12 @@
                   "action": {
                     "const": "navigate"
                   },
+                  "waitForNetworkIdle": {
+                    "type": "boolean",
+                    "description": "Whether or not to wait for the network to be idle after navigation",
+                    "title": "Wait for Network Idle",
+                    "default": false
+                  },
                   "url": {
                     "type": "string",
                     "description": "The URL to navigate to",
@@ -845,21 +851,70 @@
                 "type": "object",
                 "required": [
                   "action",
-                  "url"
+                  "base64",
+                  "document"
                 ],
                 "properties": {
                   "action": {
-                    "const": "getInvoiceFromStripeUrl"
+                    "const": "downloadBase64Pdf"
                   },
-                  "url": {
+                  "base64": {
                     "type": "string",
-                    "description": "The URL of the Stripe invoice",
-                    "title": "Stripe Invoice URL"
+                    "description": "The base64 encoded PDF content",
+                    "title": "Base64"
                   },
                   "description": {
                     "type": "string",
                     "description": "A human-readable description of what this step does",
                     "title": "Description"
+                  },
+                  "document": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "required": [
+                          "id",
+                          "date"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "The ID of the document",
+                            "title": "Document ID"
+                          },
+                          "date": {
+                            "type": "string",
+                            "description": "The date of the document",
+                            "title": "Document Date"
+                          },
+                          "type": {
+                            "enum": [
+                              "invoice",
+                              "receipt",
+                              "refund",
+                              "outgoing_invoice",
+                              "other",
+                              "auto"
+                            ],
+                            "description": "The type of the document",
+                            "title": "Document Type",
+                            "default": "auto"
+                          },
+                          "total": {
+                            "type": "string",
+                            "description": "The amount of the document, including the currency symbol or code.",
+                            "title": "Document Amount"
+                          }
+                        },
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "string",
+                        "description": "Shorthand to pass a variable that contains the document data, e.g. `{{invoice}}`. Needs to include required fields `id`, `date`, and `total`",
+                        "title": "Document Variable",
+                        "pattern": "^.*}}$"
+                      }
+                    ]
                   },
                   "metadata": {
                     "type": "object",
@@ -911,8 +966,7 @@
                         "type": "object",
                         "required": [
                           "type",
-                          "selector",
-                          "waitForSelector"
+                          "selector"
                         ],
                         "properties": {
                           "type": {
@@ -941,19 +995,13 @@
                         "type": "object",
                         "required": [
                           "type",
-                          "script",
-                          "waitForSelector"
+                          "selector"
                         ],
                         "properties": {
                           "type": {
-                            "const": "script"
+                            "const": "loadMore"
                           },
-                          "script": {
-                            "type": "string",
-                            "description": "a string",
-                            "title": "string"
-                          },
-                          "waitForSelector": {
+                          "selector": {
                             "type": "string",
                             "description": "The CSS selector to use to find the element",
                             "title": "Selector",
@@ -1009,8 +1057,7 @@
                         "type": "object",
                         "required": [
                           "type",
-                          "selector",
-                          "waitForSelector"
+                          "selector"
                         ],
                         "properties": {
                           "type": {
@@ -1039,19 +1086,13 @@
                         "type": "object",
                         "required": [
                           "type",
-                          "script",
-                          "waitForSelector"
+                          "selector"
                         ],
                         "properties": {
                           "type": {
-                            "const": "script"
+                            "const": "loadMore"
                           },
-                          "script": {
-                            "type": "string",
-                            "description": "a string",
-                            "title": "string"
-                          },
-                          "waitForSelector": {
+                          "selector": {
                             "type": "string",
                             "description": "The CSS selector to use to find the element",
                             "title": "Selector",
@@ -1196,6 +1237,51 @@
             ],
             "description": "Runs the given steps if the condition is true",
             "title": "If"
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "snippet",
+              "args"
+            ],
+            "properties": {
+              "action": {
+                "const": "runSnippet"
+              },
+              "snippet": {
+                "enum": [
+                  "getInvoiceFromStripeUrl",
+                  "getInvoicesFromStripeBillingPortal"
+                ]
+              },
+              "args": {
+                "type": "object",
+                "required": [
+                  "url"
+                ],
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "description": "The URL to use in the snippet",
+                    "title": "URL"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false,
+            "description": "Runs a predefined snippet with the given configuration",
+            "title": "Run Snippet",
+            "examples": [
+              {
+                "action": "runSnippet",
+                "snippet": "getInvoiceFromStripeUrl",
+                "args": {
+                  "url": "https://example.com/invoice"
+                }
+              }
+            ]
           }
         ]
       },
@@ -1428,6 +1514,12 @@
                   "action": {
                     "const": "navigate"
                   },
+                  "waitForNetworkIdle": {
+                    "type": "boolean",
+                    "description": "Whether or not to wait for the network to be idle after navigation",
+                    "title": "Wait for Network Idle",
+                    "default": false
+                  },
                   "url": {
                     "type": "string",
                     "description": "The URL to navigate to",
@@ -1936,21 +2028,70 @@
                 "type": "object",
                 "required": [
                   "action",
-                  "url"
+                  "base64",
+                  "document"
                 ],
                 "properties": {
                   "action": {
-                    "const": "getInvoiceFromStripeUrl"
+                    "const": "downloadBase64Pdf"
                   },
-                  "url": {
+                  "base64": {
                     "type": "string",
-                    "description": "The URL of the Stripe invoice",
-                    "title": "Stripe Invoice URL"
+                    "description": "The base64 encoded PDF content",
+                    "title": "Base64"
                   },
                   "description": {
                     "type": "string",
                     "description": "A human-readable description of what this step does",
                     "title": "Description"
+                  },
+                  "document": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "required": [
+                          "id",
+                          "date"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "The ID of the document",
+                            "title": "Document ID"
+                          },
+                          "date": {
+                            "type": "string",
+                            "description": "The date of the document",
+                            "title": "Document Date"
+                          },
+                          "type": {
+                            "enum": [
+                              "invoice",
+                              "receipt",
+                              "refund",
+                              "outgoing_invoice",
+                              "other",
+                              "auto"
+                            ],
+                            "description": "The type of the document",
+                            "title": "Document Type",
+                            "default": "auto"
+                          },
+                          "total": {
+                            "type": "string",
+                            "description": "The amount of the document, including the currency symbol or code.",
+                            "title": "Document Amount"
+                          }
+                        },
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "string",
+                        "description": "Shorthand to pass a variable that contains the document data, e.g. `{{invoice}}`. Needs to include required fields `id`, `date`, and `total`",
+                        "title": "Document Variable",
+                        "pattern": "^.*}}$"
+                      }
+                    ]
                   },
                   "metadata": {
                     "type": "object",
@@ -2002,8 +2143,7 @@
                         "type": "object",
                         "required": [
                           "type",
-                          "selector",
-                          "waitForSelector"
+                          "selector"
                         ],
                         "properties": {
                           "type": {
@@ -2032,19 +2172,13 @@
                         "type": "object",
                         "required": [
                           "type",
-                          "script",
-                          "waitForSelector"
+                          "selector"
                         ],
                         "properties": {
                           "type": {
-                            "const": "script"
+                            "const": "loadMore"
                           },
-                          "script": {
-                            "type": "string",
-                            "description": "a string",
-                            "title": "string"
-                          },
-                          "waitForSelector": {
+                          "selector": {
                             "type": "string",
                             "description": "The CSS selector to use to find the element",
                             "title": "Selector",
@@ -2100,8 +2234,7 @@
                         "type": "object",
                         "required": [
                           "type",
-                          "selector",
-                          "waitForSelector"
+                          "selector"
                         ],
                         "properties": {
                           "type": {
@@ -2130,19 +2263,13 @@
                         "type": "object",
                         "required": [
                           "type",
-                          "script",
-                          "waitForSelector"
+                          "selector"
                         ],
                         "properties": {
                           "type": {
-                            "const": "script"
+                            "const": "loadMore"
                           },
-                          "script": {
-                            "type": "string",
-                            "description": "a string",
-                            "title": "string"
-                          },
-                          "waitForSelector": {
+                          "selector": {
                             "type": "string",
                             "description": "The CSS selector to use to find the element",
                             "title": "Selector",
@@ -2287,6 +2414,51 @@
             ],
             "description": "Runs the given steps if the condition is true",
             "title": "If"
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "snippet",
+              "args"
+            ],
+            "properties": {
+              "action": {
+                "const": "runSnippet"
+              },
+              "snippet": {
+                "enum": [
+                  "getInvoiceFromStripeUrl",
+                  "getInvoicesFromStripeBillingPortal"
+                ]
+              },
+              "args": {
+                "type": "object",
+                "required": [
+                  "url"
+                ],
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "description": "The URL to use in the snippet",
+                    "title": "URL"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false,
+            "description": "Runs a predefined snippet with the given configuration",
+            "title": "Run Snippet",
+            "examples": [
+              {
+                "action": "runSnippet",
+                "snippet": "getInvoiceFromStripeUrl",
+                "args": {
+                  "url": "https://example.com/invoice"
+                }
+              }
+            ]
           }
         ]
       },
@@ -2519,6 +2691,12 @@
                   "action": {
                     "const": "navigate"
                   },
+                  "waitForNetworkIdle": {
+                    "type": "boolean",
+                    "description": "Whether or not to wait for the network to be idle after navigation",
+                    "title": "Wait for Network Idle",
+                    "default": false
+                  },
                   "url": {
                     "type": "string",
                     "description": "The URL to navigate to",
@@ -3027,21 +3205,70 @@
                 "type": "object",
                 "required": [
                   "action",
-                  "url"
+                  "base64",
+                  "document"
                 ],
                 "properties": {
                   "action": {
-                    "const": "getInvoiceFromStripeUrl"
+                    "const": "downloadBase64Pdf"
                   },
-                  "url": {
+                  "base64": {
                     "type": "string",
-                    "description": "The URL of the Stripe invoice",
-                    "title": "Stripe Invoice URL"
+                    "description": "The base64 encoded PDF content",
+                    "title": "Base64"
                   },
                   "description": {
                     "type": "string",
                     "description": "A human-readable description of what this step does",
                     "title": "Description"
+                  },
+                  "document": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "required": [
+                          "id",
+                          "date"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "The ID of the document",
+                            "title": "Document ID"
+                          },
+                          "date": {
+                            "type": "string",
+                            "description": "The date of the document",
+                            "title": "Document Date"
+                          },
+                          "type": {
+                            "enum": [
+                              "invoice",
+                              "receipt",
+                              "refund",
+                              "outgoing_invoice",
+                              "other",
+                              "auto"
+                            ],
+                            "description": "The type of the document",
+                            "title": "Document Type",
+                            "default": "auto"
+                          },
+                          "total": {
+                            "type": "string",
+                            "description": "The amount of the document, including the currency symbol or code.",
+                            "title": "Document Amount"
+                          }
+                        },
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "string",
+                        "description": "Shorthand to pass a variable that contains the document data, e.g. `{{invoice}}`. Needs to include required fields `id`, `date`, and `total`",
+                        "title": "Document Variable",
+                        "pattern": "^.*}}$"
+                      }
+                    ]
                   },
                   "metadata": {
                     "type": "object",
@@ -3093,8 +3320,7 @@
                         "type": "object",
                         "required": [
                           "type",
-                          "selector",
-                          "waitForSelector"
+                          "selector"
                         ],
                         "properties": {
                           "type": {
@@ -3123,19 +3349,13 @@
                         "type": "object",
                         "required": [
                           "type",
-                          "script",
-                          "waitForSelector"
+                          "selector"
                         ],
                         "properties": {
                           "type": {
-                            "const": "script"
+                            "const": "loadMore"
                           },
-                          "script": {
-                            "type": "string",
-                            "description": "a string",
-                            "title": "string"
-                          },
-                          "waitForSelector": {
+                          "selector": {
                             "type": "string",
                             "description": "The CSS selector to use to find the element",
                             "title": "Selector",
@@ -3191,8 +3411,7 @@
                         "type": "object",
                         "required": [
                           "type",
-                          "selector",
-                          "waitForSelector"
+                          "selector"
                         ],
                         "properties": {
                           "type": {
@@ -3221,19 +3440,13 @@
                         "type": "object",
                         "required": [
                           "type",
-                          "script",
-                          "waitForSelector"
+                          "selector"
                         ],
                         "properties": {
                           "type": {
-                            "const": "script"
+                            "const": "loadMore"
                           },
-                          "script": {
-                            "type": "string",
-                            "description": "a string",
-                            "title": "string"
-                          },
-                          "waitForSelector": {
+                          "selector": {
                             "type": "string",
                             "description": "The CSS selector to use to find the element",
                             "title": "Selector",
@@ -3378,6 +3591,51 @@
             ],
             "description": "Runs the given steps if the condition is true",
             "title": "If"
+          },
+          {
+            "type": "object",
+            "required": [
+              "action",
+              "snippet",
+              "args"
+            ],
+            "properties": {
+              "action": {
+                "const": "runSnippet"
+              },
+              "snippet": {
+                "enum": [
+                  "getInvoiceFromStripeUrl",
+                  "getInvoicesFromStripeBillingPortal"
+                ]
+              },
+              "args": {
+                "type": "object",
+                "required": [
+                  "url"
+                ],
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "description": "The URL to use in the snippet",
+                    "title": "URL"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false,
+            "description": "Runs a predefined snippet with the given configuration",
+            "title": "Run Snippet",
+            "examples": [
+              {
+                "action": "runSnippet",
+                "snippet": "getInvoiceFromStripeUrl",
+                "args": {
+                  "url": "https://example.com/invoice"
+                }
+              }
+            ]
           }
         ]
       },
@@ -3645,6 +3903,12 @@
               "properties": {
                 "action": {
                   "const": "navigate"
+                },
+                "waitForNetworkIdle": {
+                  "type": "boolean",
+                  "description": "Whether or not to wait for the network to be idle after navigation",
+                  "title": "Wait for Network Idle",
+                  "default": false
                 },
                 "url": {
                   "type": "string",
@@ -4154,21 +4418,70 @@
               "type": "object",
               "required": [
                 "action",
-                "url"
+                "base64",
+                "document"
               ],
               "properties": {
                 "action": {
-                  "const": "getInvoiceFromStripeUrl"
+                  "const": "downloadBase64Pdf"
                 },
-                "url": {
+                "base64": {
                   "type": "string",
-                  "description": "The URL of the Stripe invoice",
-                  "title": "Stripe Invoice URL"
+                  "description": "The base64 encoded PDF content",
+                  "title": "Base64"
                 },
                 "description": {
                   "type": "string",
                   "description": "A human-readable description of what this step does",
                   "title": "Description"
+                },
+                "document": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "required": [
+                        "id",
+                        "date"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "The ID of the document",
+                          "title": "Document ID"
+                        },
+                        "date": {
+                          "type": "string",
+                          "description": "The date of the document",
+                          "title": "Document Date"
+                        },
+                        "type": {
+                          "enum": [
+                            "invoice",
+                            "receipt",
+                            "refund",
+                            "outgoing_invoice",
+                            "other",
+                            "auto"
+                          ],
+                          "description": "The type of the document",
+                          "title": "Document Type",
+                          "default": "auto"
+                        },
+                        "total": {
+                          "type": "string",
+                          "description": "The amount of the document, including the currency symbol or code.",
+                          "title": "Document Amount"
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "string",
+                      "description": "Shorthand to pass a variable that contains the document data, e.g. `{{invoice}}`. Needs to include required fields `id`, `date`, and `total`",
+                      "title": "Document Variable",
+                      "pattern": "^.*}}$"
+                    }
+                  ]
                 },
                 "metadata": {
                   "type": "object",
@@ -4220,8 +4533,7 @@
                       "type": "object",
                       "required": [
                         "type",
-                        "selector",
-                        "waitForSelector"
+                        "selector"
                       ],
                       "properties": {
                         "type": {
@@ -4250,19 +4562,13 @@
                       "type": "object",
                       "required": [
                         "type",
-                        "script",
-                        "waitForSelector"
+                        "selector"
                       ],
                       "properties": {
                         "type": {
-                          "const": "script"
+                          "const": "loadMore"
                         },
-                        "script": {
-                          "type": "string",
-                          "description": "a string",
-                          "title": "string"
-                        },
-                        "waitForSelector": {
+                        "selector": {
                           "type": "string",
                           "description": "The CSS selector to use to find the element",
                           "title": "Selector",
@@ -4318,8 +4624,7 @@
                       "type": "object",
                       "required": [
                         "type",
-                        "selector",
-                        "waitForSelector"
+                        "selector"
                       ],
                       "properties": {
                         "type": {
@@ -4348,19 +4653,13 @@
                       "type": "object",
                       "required": [
                         "type",
-                        "script",
-                        "waitForSelector"
+                        "selector"
                       ],
                       "properties": {
                         "type": {
-                          "const": "script"
+                          "const": "loadMore"
                         },
-                        "script": {
-                          "type": "string",
-                          "description": "a string",
-                          "title": "string"
-                        },
-                        "waitForSelector": {
+                        "selector": {
                           "type": "string",
                           "description": "The CSS selector to use to find the element",
                           "title": "Selector",
@@ -4505,6 +4804,51 @@
           ],
           "description": "Runs the given steps if the condition is true",
           "title": "If"
+        },
+        {
+          "type": "object",
+          "required": [
+            "action",
+            "snippet",
+            "args"
+          ],
+          "properties": {
+            "action": {
+              "const": "runSnippet"
+            },
+            "snippet": {
+              "enum": [
+                "getInvoiceFromStripeUrl",
+                "getInvoicesFromStripeBillingPortal"
+              ]
+            },
+            "args": {
+              "type": "object",
+              "required": [
+                "url"
+              ],
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "description": "The URL to use in the snippet",
+                  "title": "URL"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false,
+          "description": "Runs a predefined snippet with the given configuration",
+          "title": "Run Snippet",
+          "examples": [
+            {
+              "action": "runSnippet",
+              "snippet": "getInvoiceFromStripeUrl",
+              "args": {
+                "url": "https://example.com/invoice"
+              }
+            }
+          ]
         }
       ]
     }

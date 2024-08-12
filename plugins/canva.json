@@ -1,0 +1,58 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "canva",
+  "name": "Canva",
+  "description": "Canva is a graphic design platform.",
+  "homepage": "https://www.canva.com",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.canva.com/login/"
+    },
+    {
+      "action": "checkURL",
+      "url": "https://www.canva.com/"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.canva.com/login/"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://www.canva.com/",
+      "timeout": 1200000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://www.canva.com/settings/purchase-history"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "a[href*='https://www.canva.com/invoices/']"
+    },
+    {
+      "action": "extractAll",
+      "variable": "invoice",
+      "script": "fetch(\n  'https://www.canva.com/_ajax/billing/v2/invoices?requestType=OWNING_BRAND&brand=BAFm6ye-HlQ&projections=ITEM_DETAILS&includeFreeInvoices=false&minDate=0&limit=25&includeExternalBilled=false',\n)\n  .then((res) => res.text())\n  .then((text) => {\n    const array = text.split('//')\n    return JSON.parse(array[array.length - 1])\n  })\n  .then(({ invoices }) => {\n    return invoices\n      .filter((invoice) => invoice.paymentStatus === 'PAID')\n      .map((invoice) => ({\n        id: invoice.id,\n        date: invoice.chargeDate,\n        total: invoice.total + invoice.currency,\n      }))\n  })",
+      "forEach": [
+        {
+          "action": "navigate",
+          "url": "https://www.canva.com/invoices/{{invoice.id}}"
+        },
+        {
+          "action": "click",
+          "selector": "#download-section button"
+        },
+        {
+          "action": "waitForPdfDownload",
+          "document": "{{invoice}}"
+        }
+      ]
+    }
+  ]
+}

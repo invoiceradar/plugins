@@ -1,0 +1,89 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "google-ads",
+  "name": "Google Ads",
+  "description": "Google Ads is an advertising platform developed by Google.",
+  "homepage": "https://ads.google.com/",
+  "configSchema": {
+    "accountId": {
+      "type": "string",
+      "title": "Ad Account ID",
+      "description": "The ID of the ad account.",
+      "required": true,
+      "example": "123-456-7890"
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://ads.google.com/aw/billing/documents"
+    },
+    {
+      "action": "checkURL",
+      "url": "https://ads.google.com/**"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://ads.google.com/aw/billing/documents"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://ads.google.com/**",
+      "timeout": 12000000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://ads.google.com/aw/billing/documents"
+    },
+    {
+      "action": "waitForElement",
+      "selector": ".user-customer-list-item"
+    },
+    {
+      "action": "runJs",
+      "description": "Choose the account with the given ID.",
+      "script": "Array.from(document.querySelectorAll('.user-customer-list-item'))\n  .find((el) => el.innerText.includes('{{config.accountId}}'))\n  .click()"
+    },
+    {
+      "action": "waitForNetworkIdle"
+    },
+    {
+      "action": "runJs",
+      "description": "Navigate to billing iframe content to allow extraction",
+      "script": "window.location.href = document.querySelector(\n  'iframe[src*=\"https://payments.google.com/payments\"]',\n).src"
+    },
+    {
+      "action": "waitForNetworkIdle"
+    },
+    {
+      "action": "extractAll",
+      "variable": "invoice",
+      "selector": "tbody tr:has(.b3-button-link)",
+      "fields": {
+        "id": "td:nth-child(4)",
+        "total": "td:nth-child(5)",
+        "date": "td:nth-child(2)"
+      },
+      "forEach": [
+        {
+          "action": "click",
+          "selector": "td:nth-child(6) a[role='button']",
+          "scopeSelector": true
+        },
+        {
+          "action": "waitForPdfDownload",
+          "document": {
+            "id": "{{invoice.id}}",
+            "date": "{{invoice.date}}",
+            "total": "{{invoice.total}}",
+            "type": "invoice"
+          }
+        }
+      ]
+    }
+  ]
+}

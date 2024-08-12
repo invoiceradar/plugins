@@ -46,8 +46,11 @@
       "script": "window.location.href"
     },
     {
-      "action": "getInvoicesFromStripeBillingPortal",
-      "url": "{{portalUrl}}"
+      "action": "runSnippet",
+      "snippet": "getInvoicesFromStripeBillingPortal",
+      "args": {
+        "url": "{{portalUrl}}"
+      }
     }
   ]
 }
