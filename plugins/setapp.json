@@ -32,13 +32,17 @@
       "url": "https://my.setapp.com/login"
     },
     {
+      "action": "waitForNetworkIdle",
+      "timeout": 120000
+    },
+    {
       "action": "type",
-      "selector": "[name='email']",
+      "selector": "#email",
       "value": "{{config.username}}"
     },
     {
       "action": "type",
-      "selector": "[name='password']",
+      "selector": "#password",
       "value": "{{config.password}}"
     },
     {
