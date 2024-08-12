@@ -1,12 +1,14 @@
-# InvoiceRadar Plugin Handbook
+# Invoice Radar Plugin Handbook
 
 ## 1. Introduction
 
-Welcome to the InvoiceRadar Plugin Handbook for developers! This guide will help you create custom plugins to fetch invoices and receipts from various platforms.
+Welcome to the Invoice Radar Plugin Handbook for developers!
 
-InvoiceRadar is a document automation tool that helps you fetch, download, and organize invoices and receipts from various platforms.
+This guide will help you create custom plugins to fetch invoices and receipts from various platforms.
 
-[📟 Learn more about InvoiceRadar](https://invoiceradar.com/)
+Invoice Radar is a document automation tool that helps you fetch, download, and organize invoices and receipts from various platforms.
+
+[📟 Learn more about Invoice Radar](https://invoiceradar.com/)
 
 #### Table of Contents
 
@@ -23,13 +25,13 @@ InvoiceRadar is a document automation tool that helps you fetch, download, and o
 
 - Basic knowledge of JSON, HTML, CSS and JavaScript.
 - A text editor or IDE (e.g., VSCode, Sublime Text).
-- InvoiceRadar installed on macOS or Windows.
+- Invoice Radar installed on macOS or Windows.
 
 ### Installation
 
-1. **Download and Install InvoiceRadar**:
+1. **Download and Install Invoice Radar**:
 
-   - [Request Access to InvoiceRadar](https://invoiceradar.com/)
+   - [Request Access to Invoice Radar](https://invoiceradar.com/)
 
 2. **Download the Blank Plugin**:
 
@@ -37,15 +39,15 @@ InvoiceRadar is a document automation tool that helps you fetch, download, and o
    - Rename the file to `your-plugin-name.json`.
    - Put it into a folder of your choice.
 
-3. **Add the Plugin to InvoiceRadar**:
-   - Open InvoiceRadar.
+3. **Add the Plugin to Invoice Radar**:
+   - Open Invoice Radar.
    - Navigate to settings and choose the `Available Plugins` tab.
    - Choose `Choose Plugin Directory` and select the folder where you saved the plugin.
    - Your plugin should now appear in the list of available plugins.
 
 ## 3. Plugin Structure
 
-Plugins for InvoiceRadar are written in JSON and follow a specific structure. Each plugin consists of the following sections:
+Plugins for Invoice Radar are written in JSON and follow a specific structure. Each plugin consists of the following sections:
 
 **Plugin Description**:
 
@@ -134,7 +136,7 @@ Let's create a simple plugin to fetch invoices from a hypothetical service.
 
 1. **Define Metadata**:
 
-   This information is used to identify and display the plugin in InvoiceRadar. The homepage URL is used to get the favicon of the service.
+   This information is used to identify and display the plugin in Invoice Radar. The homepage URL is used to get the favicon of the service.
 
    Note that the `id` should be unique and lowercase.
 
@@ -153,7 +155,7 @@ Let's create a simple plugin to fetch invoices from a hypothetical service.
 
    The configuration schema defines which fields are required for the plugin to function. In this example, we need a `teamID` and `password` to authenticate.
 
-   These fields will be displayed to the user when adding the plugin in InvoiceRadar.
+   These fields will be displayed to the user when adding the plugin in Invoice Radar.
 
    ```json
    "configSchema": {
@@ -255,7 +257,7 @@ Let's create a simple plugin to fetch invoices from a hypothetical service.
 
 6. **You are done!**:
 
-   Save the file and add it to InvoiceRadar. You can now run the plugin to fetch invoices from the service.
+   Save the file and add it to Invoice Radar. You can now run the plugin to fetch invoices from the service.
 
 ## 5. Useful Patterns
 
@@ -349,7 +351,7 @@ To give the user enough time to log in, it's recommend to provide a long timeout
 
 ## Steps Reference
 
-This section provides an overview of the available steps that can be used to create plugins for InvoiceRadar. Each step represents a specific action that can be performed during the automation process.
+This section provides an overview of the available steps that can be used to create plugins for Invoice Radar. Each step represents a specific action that can be performed during the automation process.
 
 ### Table of Contents
 
@@ -384,25 +386,40 @@ This section provides an overview of the available steps that can be used to cre
   - [Download PDF (`downloadPdf`)](#download-pdf-downloadpdf)
   - [Wait for PDF Download (`waitForPdfDownload`)](#wait-for-pdf-download-waitforpdfdownload)
   - [Print Page as PDF (`printPdf`)](#print-page-as-pdf-printpdf)
-  - [Get Invoice from Stripe URL (`getInvoiceFromStripeUrl`)](#get-invoice-from-stripe-url-getinvoicefromstripeurl)
+  - [Download Base64 PDF (`downloadBase64Pdf`)](#download-base64-pdf-downloadbase64pdf)
 
 - [🔀 Conditional Logic Steps](#🔀-conditional-logic-steps)
 
   - [If (`if`)](#if-if)
 
 - [📦 Miscellaneous Steps](#📦-miscellaneous-steps)
+
   - [Sleep (`sleep`)](#sleep-sleep)
+
+- [✂️ Snippets](#✂️-snippets)
+  - [Get Invoice from Stripe URL (`getInvoiceFromStripeUrl`)](#get-invoice-from-stripe-url-getinvoicefromstripeurl)
+  - [Get Invoices from Stripe Customer Portal (`getInvoicesFromStripeBillingPortal`)](#get-invoices-from-stripe-customer-portal-getinvoicesfromstripebillingportal)
 
 ### 🌐 Navigation Steps
 
 #### Navigate (`navigate`)
 
-Navigates to the given URL and waits for the page to load. Note that this only waits for the initial page load, not for any subsequent AJAX requests. You can [waitForNetworkIdle](#wait-for-network-idle-waitfornetworkidle) if you need to wait for all resources to be loaded.
+Navigates to the given URL and waits for the page to load. By default, it only waits for the initial page load, not for any subsequent AJAX requests.
 
 ```json
 {
   "action": "navigate",
   "url": "https://example.com"
+}
+```
+
+You can set `waitForNetworkIdle` to `true` to ensure the page is fully loaded before continuing.
+
+```json
+{
+  "action": "navigate",
+  "url": "https://example.com/dashboard",
+  "waitForNetworkIdle": true
 }
 ```
 
@@ -418,7 +435,7 @@ Waits for the current URL to match the given URL, optionally with a timeout. Sup
 ```json
 {
   "action": "waitForURL",
-  "url": "https://example.com/profile/*",
+  "url": "https://example.com/profile/**",
   "timeout": 3000
 }
 ```
@@ -437,7 +454,7 @@ Waits for the given selector to appear on the page, optionally with a timeout.
 
 #### Wait for Navigation (`waitForNavigation`)
 
-Waits for the page to finish navigating. Timeout is optional and defaults to 15 seconds.
+Waits for the page navigation to happen. This step will not wait for the page to be fully loaded. Use the [waitForNetworkIdle](#wait-for-network-idle-waitfornetworkidle) step for that purpose. Timeout is optional and defaults to 10 seconds
 
 ```json
 {
@@ -448,7 +465,9 @@ Waits for the page to finish navigating. Timeout is optional and defaults to 15 
 
 #### Wait for Network Idle (`waitForNetworkIdle`)
 
-Waits for the network to be idle. This is useful if you want to ensure the page has finished loading all resources. The steps completes when there are no more network requests for 1000ms. Timeout is optional and defaults to 15 seconds.
+Waits for the network to be idle. This is useful if you want to ensure the page has finished loading all resources. The steps completes when there are no more network requests for 500ms. Timeout is optional and defaults to 15 seconds.
+
+The [`navigate`](#navigate-navigate) step has a `waitForNetworkIdle` option that can be set to `true` to get the same behavior.
 
 ```json
 {
@@ -740,14 +759,19 @@ Prints the current page to a PDF file.
 }
 ```
 
-#### Get Invoice from Stripe URL (`getInvoiceFromStripeUrl`)
+#### Download Base64 PDF (`downloadBase64Pdf`)
 
-Extracts the invoice PDF and details from a Stripe invoice URL.
+Downloads a PDF from a base64 encoded string.
 
 ```json
 {
-  "action": "getInvoiceFromStripeUrl",
-  "url": "https://invoice.stripe.com/i/inv_123"
+  "action": "downloadBase64Pdf",
+  "base64": "{{item.base64String}}",
+  "document": {
+    "id": "{{item.invoiceId}}",
+    "date": "{{item.date}}",
+    "total": "{{item.total}}"
+  }
 }
 ```
 
@@ -781,11 +805,45 @@ Runs the given steps if the condition is true. If the condition is false, the `e
 #### Sleep (`sleep`)
 
 Waits for the given amount of time in milliseconds.
-This is generally not recommended. In most cases, it's better to use the [waitForElement](#wait-for-element-waitforelement) or [waitForURL](#wait-for-url-waitforurl).
+This is generally not recommended. In most cases, it's better to use the [waitForElement](#wait-for-element-waitforelement), [waitForURL](#wait-for-url-waitforurl) or [waitForNetworkIdle](#wait-for-network-idle-waitfornetworkidle) steps.
 
 ```json
 {
   "action": "sleep",
   "duration": 1000
+}
+```
+
+### ✂️ Snippets
+
+Snippets are pre-built sets of steps that simplify common tasks. The steps for a specific snippet are visible inside the developer tools
+
+Currently, it's not possible to create custom snippets. If you have a common task that you think would be useful as a snippet, please create an issue on GitHub.
+
+#### Get Invoice from Stripe URL (`getInvoiceFromStripeUrl`)
+
+Extracts an invoice from a Stripe invoice URL.
+
+```json
+{
+  "action": "runSnippet",
+  "snippet": "getInvoiceFromStripeUrl",
+  "args": {
+    "url": "https://invoice.stripe.com/i/inv_123"
+  }
+}
+```
+
+#### Get Invoices from Stripe Customer Portal (`getInvoicesFromStripeBillingPortal`)
+
+Extracts available invoices from a Stripe billing portal.
+
+```json
+{
+  "action": "runSnippet",
+  "snippet": "getInvoicesFromStripeBillingPortal",
+  "args": {
+    "url": "https://stripe-portal.example.com/billing"
+  }
 }
 ```

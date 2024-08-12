@@ -1,0 +1,53 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "sentry",
+  "name": "Sentry",
+  "description": "Sentry is an application monitoring software.",
+  "homepage": "https://sentry.io",
+  "configSchema": {
+    "organization-id": {
+      "type": "string",
+      "title": "Organization ID",
+      "required": true,
+      "description": "You can find your organization ID in the URL. '<organization-id>.sentry.io'"
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://{{config.organization-id}}.sentry.io/settings/billing/overview/"
+    },
+    {
+      "action": "checkURL",
+      "url": "/settings/billing/overview/"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://{{config.organization-id}}.sentry.io/auth/login/{{config.organization-id}}/"
+    },
+    {
+      "action": "waitForURL",
+      "url": "/issues/",
+      "timeout": 120000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://{{config.organization-id}}.sentry.io/settings/billing/receipts/"
+    },
+    {
+      "action": "extractAll",
+      "script": "fetch('https://sentry.io/api/0/customers/{{config.organization-id}}/invoices/', {\n  credentials: 'include',\n})\n  .then((res) => res.json())\n  .then((items) =>\n    items.map((item) => ({\n      id: item.id,\n      date: item.dateCreated,\n      total: 'USD ' + item.amount / 100,\n      url: item.receipt.url,\n    })),\n  )",
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "document": "{{item}}",
+          "url": "{{item.url}}"
+        }
+      ]
+    }
+  ]
+}
