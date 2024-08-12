@@ -22,12 +22,8 @@
       "url": "https://www.deepl.com/login"
     },
     {
-      "action": "waitForElement",
-      "selector": "[data-testid^='menu-account-']"
-    },
-    {
-      "action": "checkElementExists",
-      "selector": "[data-testid='menu-account-in-btn']"
+      "action": "waitForURL",
+      "url": "https://www.deepl.com/en/translator#login_successful"
     }
   ],
   "startAuth": [
@@ -46,8 +42,8 @@
       "value": "{{config.password}}"
     },
     {
-      "action": "waitForElement",
-      "selector": "[data-testid='menu-account-in-btn']",
+      "action": "waitForURL",
+      "url": "https://www.deepl.com/en/translator#login_successful",
       "timeout": 120000
     }
   ],
@@ -58,7 +54,7 @@
     },
     {
       "action": "extractAll",
-      "script": "fetch('https://w.deepl.com/invoices?request_type=jsonrpc&il=en&method=getInvoices', { headers: { 'content-type': 'application/json' }, body: '{\"id\":68330001,\"jsonrpc\":\"2.0\",\"method\":\"getInvoices\",\"params\":{\"limit\":100}}', method: 'POST', mode: 'cors', credentials: 'include' }).then(res => res.json()).then(d => d.result.data.map(i => ({ id: i.id, date: i.date, total: i.invoicedAmount.amount/100 + i.invoicedAmount.currencyCode })));",
+      "script": "fetch('https://w.deepl.com/invoices?request_type=jsonrpc&il=en&method=getInvoices', { headers: { 'content-type': 'application/json' }, body: JSON.stringify({\"jsonrpc\":\"2.0\",\"method\":\"getInvoices\",\"params\":{\"limit\":100}}), method: 'POST', mode: 'cors', credentials: 'include' }).then(res => res.json()).then(d => d.result.data.map(i => ({ id: i.id, date: i.date, total: i.invoicedAmount.amount/100 + i.invoicedAmount.currencyCode })));",
       "forEach": [
         {
           "action": "downloadPdf",
