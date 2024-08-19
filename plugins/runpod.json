@@ -1,0 +1,81 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "runpod",
+  "name": "RunPod",
+  "description": "Develop, train, and scale AI models in one cloud.",
+  "homepage": "https://www.runpod.io",
+  "configSchema": {
+    "username": {
+      "type": "string",
+      "title": "Username",
+      "required": false
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.runpod.io/console/login"
+    },
+    { "action": "waitForNetworkIdle", "timeout": 12000 },
+    {
+      "action": "checkElementExists",
+      "selector": "a[href='/console/home']"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.runpod.io/console/login"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "#identifier-field",
+      "timeout": 12000
+    },
+    {
+      "action": "type",
+      "selector": "#identifier-field",
+      "value": "{{config.username}}"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://www.runpod.io/console/pods",
+      "timeout": 30000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://www.runpod.io/console/user/billing"
+    },
+    {
+      "action": "waitForNetworkIdle",
+      "timeout": 30000
+    },
+    {
+      "action": "extractAll",
+      "selector": "div[class*='MuiCard-root'] div[class*='MuiCardHeader'] + div[class*='MuiTableContainer'] table tbody tr",
+      "variable": "item",
+      "fields": {
+        "date": "td:nth-child(1)",
+        "id": {
+          "selector": "td:nth-child(6) a",
+          "attribute": "href",
+          "transform": "(url) => url.split('/').pop()"
+        },
+        "total": "td:nth-child(5)",
+        "url": {
+          "selector": "td:nth-child(6) a",
+          "attribute": "href"
+        }
+      },
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "{{item.url}}",
+          "document": "{{item}}"
+        }
+      ]
+    }
+  ]
+}
