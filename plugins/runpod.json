@@ -59,15 +59,19 @@
       "fields": {
         "date": "td:nth-child(1)",
         "id": {
-          "selector": "td:nth-child(6) a",
-          "attribute": "href",
-          "transform": "(url) => url.split('/').pop()"
+          "selector": "td:nth-child(1)",
+          "transform": "(date) => new Date(date.replace(/(\\w+)$/, '+0000')).getTime().toString()"
         },
         "total": "td:nth-child(5)",
         "url": {
           "selector": "td:nth-child(6) a",
           "attribute": "href"
         }
+      },
+      "pagination": {
+        "type": "next",
+        "selector": ".MuiTablePagination-actions > button:nth-child(2):not(.Mui-disabled)",
+        "waitForSelector": "div[class*='MuiCard-root'] div[class*='MuiCardHeader'] + div[class*='MuiTableContainer'] table tbody tr"
       },
       "forEach": [
         {
