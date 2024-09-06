@@ -1,0 +1,72 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "hetzner",
+  "name": "Hetzner",
+  "description": "Hetzner is a German cloud hosting provider.",
+  "homepage": "https://www.hetzner.com/",
+  "configSchema": {
+    "username": {
+      "type": "string",
+      "title": "Username",
+      "required": false
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://accounts.hetzner.com/invoice"
+    },
+    {
+      "action": "checkURL",
+      "url": "https://accounts.hetzner.com/invoice"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://accounts.hetzner.com/login"
+    },
+    {
+      "action": "waitForElement",
+      "selector": ".link-logout",
+      "timeout": 120000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://accounts.hetzner.com/invoice"
+    },
+    {
+      "action": "waitForElement",
+      "selector": ".invoice-container .invoice-list",
+      "timeout": 30000
+    },
+    {
+      "action": "extractAll",
+      "selector": ".invoice-container .invoice-list li",
+      "fields": {
+        "id": {
+          "selector": "span.invoice-number"
+        },
+        "date": {
+          "selector": "span.invoice-date"
+        },
+        "total": {
+          "selector": "span.invoice-value"
+        },
+        "pdfLink": {
+          "selector": "a[href$='pdf']",
+          "attribute": "href"
+        }
+      },
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "https://accounts.hetzner.com{{item.pdfLink}}",
+          "document": "{{item}}"
+        }
+      ]
+    }
+  ]
+}
