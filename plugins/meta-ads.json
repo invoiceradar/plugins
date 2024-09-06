@@ -23,11 +23,13 @@
   "checkAuth": [
     {
       "action": "navigate",
-      "url": "https://business.facebook.com/billing_hub/payment_activity/"
+      "url": "https://business.facebook.com/billing_hub/payment_activity/",
+      "waitForNetworkIdle": true
     },
+    { "action": "sleep", "duration": 500 },
     {
       "action": "checkURL",
-      "url": "https://business.facebook.com/billing_hub/payment_activity/*"
+      "url": "https://business.facebook.com/billing_hub/payment_activity*"
     }
   ],
   "startAuth": [
@@ -37,7 +39,7 @@
     },
     {
       "action": "waitForURL",
-      "url": "https://business.facebook.com/billing_hub/payment_activity/*",
+      "url": "https://business.facebook.com/billing_hub/payment_activity*",
       "timeout": 12000000
     }
   ],
