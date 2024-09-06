@@ -49,12 +49,13 @@
       "script": "Array.from(document.querySelectorAll('.user-customer-list-item'))\n  .find((el) => el.innerText.includes('{{config.accountId}}'))\n  .click()"
     },
     {
-      "action": "waitForNetworkIdle"
+      "action": "waitForNetworkIdle",
+      "timeout": 60000
     },
     {
       "action": "runJs",
       "description": "Navigate to billing iframe content to allow extraction",
-      "script": "window.location.href = document.querySelector(\n  'iframe[src*=\"https://payments.google.com/payments\"]',\n).src"
+      "script": "(() => {\n  window.location.href = document.querySelector(\n    'iframe[src*=\"https://payments.google.com/payments\"]',\n  ).src\n})()"
     },
     {
       "action": "waitForNetworkIdle"
