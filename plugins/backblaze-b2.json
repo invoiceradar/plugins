@@ -52,7 +52,7 @@
   "getDocuments": [
     {
       "action": "navigate",
-      "url": "https://secure.backblaze.com/billing_card.htm"
+      "url": "https://secure.backblaze.com/billing_card.htm?billing_page=b2"
     },
     {
       "action": "waitForElement",
@@ -65,7 +65,7 @@
       "forEach": [
         {
           "action": "navigate",
-          "url": "https://secure.backblaze.com/billing_card.htm"
+          "url": "https://secure.backblaze.com/billing_card.htm?billing_page=b2"
         },
         {
           "action": "if",
@@ -104,7 +104,7 @@
           "forEach": [
             {
               "action": "navigate",
-              "url": "https://secure.backblaze.com/billing_card.htm"
+              "url": "https://secure.backblaze.com/billing_card.htm?billing_page=b2"
             },
 
             {
