@@ -16,7 +16,7 @@
   "checkAuth": [
     {
       "action": "navigate",
-      "url": "https://dashboard.heroku.com/"
+      "url": "https://id.heroku.com/"
     },
     {
       "action": "checkURL",
@@ -30,7 +30,7 @@
     },
     {
       "action": "waitForURL",
-      "url": "https://dashboard.heroku.com/*",
+      "url": "https://dashboard.heroku.com/**",
       "timeout": 120000
     }
   ],
@@ -67,7 +67,7 @@
     },
     {
       "action": "extractAll",
-      "selector": ".invoices .invoice-row",
+      "selector": ".invoices .invoice-row:has(.paid)",
       "fields": {
         "id": {
           "selector": ".invoice-title form",
