@@ -9,7 +9,7 @@
       "type": "string",
       "title": "Ad Account ID",
       "description": "The ID of the ad account.",
-      "required": true,
+      "required": false,
       "example": "123-456-7890"
     }
   },
@@ -37,16 +37,28 @@
   "getDocuments": [
     {
       "action": "navigate",
-      "url": "https://ads.google.com/aw/billing/documents"
+      "url": "https://ads.google.com/aw/billing/documents",
+      "waitForNetworkIdle": true
     },
     {
-      "action": "waitForElement",
-      "selector": ".user-customer-list-item"
-    },
-    {
-      "action": "runJs",
-      "description": "Choose the account with the given ID.",
-      "script": "Array.from(document.querySelectorAll('.user-customer-list-item'))\n  .find((el) => el.innerText.includes('{{config.accountId}}'))\n  .click()"
+      "action": "if",
+      "selector": ".user-customer-list-item",
+      "then": [
+        {
+          "action": "runJs",
+          "description": "Ensure an account ID is specified if there are multiple accounts.",
+          "script": "(() => {\n  if ('{{config.accountId}}'.length === 0) {\n    throw new Error(\n      'Multiple Ad accounts detected. Please specify an account ID.',\n    )\n  }\n})()"
+        },
+        {
+          "action": "waitForElement",
+          "selector": ".user-customer-list-item"
+        },
+        {
+          "action": "runJs",
+          "description": "Choose the account with the given ID.",
+          "script": "Array.from(document.querySelectorAll('.user-customer-list-item'))\n  .find((el) => el.innerText.includes('{{config.accountId}}'))\n  .click()"
+        }
+      ]
     },
     {
       "action": "waitForNetworkIdle",
