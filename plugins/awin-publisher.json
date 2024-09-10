@@ -1,0 +1,109 @@
+{
+	"$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+	"id": "awin-publisher",
+	"name": "AWIN Publisher",
+	"description": "AWIN is a global affiliate plattform. This plugin allows you to download invoices from your AWIN publisher account.",
+	"homepage": "https://awin.com",
+	"configSchema": {},
+	"checkAuth": [
+		{
+			"action": "navigate",
+			"url": "https://ui.awin.com/user"
+		},
+		{
+			"action": "checkElementExists",
+			"selector": "#accountsOverview"
+		}
+	],
+	"startAuth": [
+		{
+			"action": "navigate",
+			"url": "https://ui.awin.com/idp/en/awin/login"
+		},
+		{
+			"action": "waitForElement",
+			"selector": "app-total-earnings",
+			"timeout": 120000
+		}
+	],
+	"getDocuments": [
+    {
+			"action": "navigate",
+			"url": "https://ui.awin.com/user"
+		},
+    {
+			"action": "extractAll",
+			"selector": "li.affiliateDetail",
+			"variable": "account",
+			"fields": {
+				"id": {
+					"selector": "small"
+				}
+			},
+			"forEach": [
+        {
+          "action": "navigate",
+          "url": "https://ui.awin.com/finance/publisher/{{account.id}}/payments/history/network/awin"
+        },
+        {
+          "action": "extractAll",
+          "selector": "#payments ul li",
+          "variable": "currency",
+          "fields": {
+            "code": {
+              "selector": "a"
+            },
+            "url": {
+              "selector": "a",
+              "attribute": "href"
+            }
+          },
+          "forEach": [
+            {
+              "action": "navigate",
+              "url": "{{currency.url}}"
+            },
+            {
+              "action": "waitForElement",
+              "selector": "#paymentHistory table"
+            },
+            {
+              "action": "extractAll",
+              "selector": "#paymentHistory table tbody tr",
+              "variable": "invoice",
+              "fields": {
+                "id": {
+                  "selector": "td:nth-child(1) a",
+                  "attribute": "href",
+                  "transform": "(url) => url.split('/')[5]"
+                },
+                "date": {
+                  "selector": "td:nth-child(1)"
+                },
+                "total": {
+                  "selector": ".total"
+                },
+                "url": {
+                  "selector": ".csvIcon a:nth-child(3)",
+                  "attribute": "href"
+                }
+              },
+              "forEach": [
+                {
+                  "action": "downloadPdf",
+                  "url": "https://ui.awin.com{{invoice.url}}",
+                  "document": {
+                    "type": "outgoing_invoice",
+                    "id": "{{invoice.id}}",
+                    "date": "{{invoice.date}}",
+                    "total": "{{invoice.total}} {{currency.code}}"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+		}
+	]
+}
