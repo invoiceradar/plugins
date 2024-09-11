@@ -1,0 +1,111 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "dhl-de-business",
+  "name": "DHL Geschäftskunden",
+  "description": "DHL.de business customer portal",
+  "homepage": "https://www.dhl.de/de/geschaeftskunden/paket.html",
+  "configSchema": {
+    "username": {
+      "type": "string",
+      "title": "Username",
+      "required": true
+    },
+    "password": {
+      "type": "password",
+      "title": "Password",
+      "required": true
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://geschaeftskunden.dhl.de/billing/invoice/overview"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[class='nav-primary']"
+    },
+    {
+      "action": "checkElementExists",
+      "selector": "[data-testid='myAcc']"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.dhl.de/geschaeftskundenportal"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "#button-noName",
+      "timeout": 120000
+    },
+    {
+      "action": "click",
+      "selector": "#button-noName",
+      "scopeSelector": true
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://sso.geschaeftskunden.dhl.de/**"
+    },
+    {
+      "action": "type",
+      "selector": "[id='username']",
+      "value": "{{config.username}}"
+    },
+    {
+      "action": "type",
+      "selector": "[id='password']",
+      "value": "{{config.password}}"
+    },
+    {
+      "action": "click",
+      "selector": "#kc-login",
+      "scopeSelector": true
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://geschaeftskunden.dhl.de/"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://geschaeftskunden.dhl.de/billing/invoice/overview",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "extractAll",
+      "selector": "tbody tr[data-testid]",
+      "variable": "invoice",
+      "fields": {
+        "date": {
+          "selector": "td:nth-child(2)"
+        },
+        "id": {
+          "selector": "td:nth-child(3)"
+        },
+        "total": {
+          "selector": "td:nth-child(5)"
+        }
+      },
+      "forEach": [
+        {
+          "action": "click",
+          "selector": "td:nth-child(7) button",
+          "scopeSelector": true
+        },
+        {
+          "action": "waitForPdfDownload",
+          "document": {
+            "id": "{{invoice.id}}",
+            "date": "{{invoice.date}}",
+            "total": "{{invoice.total}}",
+            "type": "invoice"
+          }
+        }
+      ]
+    }
+  ]
+}
