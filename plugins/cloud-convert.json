@@ -1,0 +1,69 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "cloud-convert",
+  "name": "CloudConvert",
+  "description": "CloudConvert is an online file converter.",
+  "homepage": "https://cloudconvert.com/",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://cloudconvert.com/dashboard"
+    },
+    {
+      "action": "checkElementExists",
+      "selector": "span.avatar img"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://cloudconvert.com/login"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "a[href='/logout']"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://cloudconvert.com/settings/billing/invoices"
+    },
+    {
+      "action": "waitForElement",
+      "selector": ".vuetable tbody tr",
+      "timeout": 60000
+    },
+    {
+      "action": "extractAll",
+      "selector": ".vuetable tbody tr",
+      "fields": {
+        "id": {
+          "selector": "td:nth-child(2)"
+        },
+        "date": {
+          "selector": "td:nth-child(1)"
+        },
+        "total": {
+          "selector": "td:nth-child(3)"
+        },
+        "pdfLink": {
+          "selector": "td:nth-child(4) a",
+          "attribute": "href"
+        }
+      },
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "{{item.pdfLink}}",
+          "document": {
+            "id": "{{item.id}}",
+            "date": "{{item.date}}",
+            "total": "{{item.total}}"
+          }
+        }
+      ]
+    }
+  ]
+}
