@@ -40,11 +40,17 @@
       "action": "navigate",
       "url": "https://www.namestation.com/account/billing"
     },
-    { "action": "waitForElement", "selector": "a[href*='chargebee.com']", "timeout": 120000 },
+    {
+      "action": "waitForElement",
+      "selector": "a[href*='chargebee.com']",
+      "timeout": 120000
+    },
     {
       "action": "extract",
       "variable": "customer_portal_url",
-      "fields": { "url": { "selector": "a[href*='chargebee.com']", "attribute": "href" } }
+      "fields": {
+        "url": { "selector": "a[href*='chargebee.com']", "attribute": "href" }
+      }
     },
     {
       "action": "navigate",
