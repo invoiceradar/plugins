@@ -1,0 +1,83 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "github-sponsors",
+  "homepage": "https://github.com",
+  "name": "GitHub Sponsors",
+  "description": "GitHub is a code hosting platform for version control and collaboration.",
+  "configSchema": {
+    "username": {
+      "type": "string",
+      "title": "Username",
+      "example": "my-github-org",
+      "description": "The username of your GitHub Sponsor account.",
+      "required": true
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://github.com"
+    },
+    {
+      "action": "checkElementExists",
+      "selector": "[class='AppHeader-user']"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://github.com/login"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[class='AppHeader-user']",
+      "timeout": 180000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://github.com/sponsors/{{config.username}}/dashboard/payouts",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "waitForElement",
+      "selector": "tab-container [role='menu'] .js-sponsors-stripe-payout-container"
+    },
+    {
+      "action": "extractAll",
+      "selector": ".SelectMenu-list[role='tabpanel']:not([hidden]) .js-sponsors-stripe-payout-container",
+      "fields": {
+        "id": {
+          "selector": "[name='payout_id']",
+          "attribute": "value"
+        },
+        "date": {
+          "selector": "[name='payout_id']",
+          "attribute": "data-payout-start-date-unix",
+          "transform": "(v) => new Date(v * 1000).toLocaleDateString()"
+        }
+      },
+      "forEach": [
+        { "action": "click", "selector": "#choose-a-payout" },
+        {
+          "action": "click",
+          "selector": "& > div",
+          "scopeSelector": true
+        },
+        {
+          "action": "click",
+          "selector": ".js-sponsors-generate-receipt-button"
+        },
+        {
+          "action": "waitForPdfDownload",
+          "document": {
+            "id": "{{item.id}}",
+            "date": "{{item.date}}",
+            "type": "outgoing_invoice"
+          }
+        }
+      ]
+    }
+  ]
+}
