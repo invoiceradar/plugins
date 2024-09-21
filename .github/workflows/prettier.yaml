@@ -20,3 +20,4 @@ jobs:
         uses: creyD/prettier_action@v4.3
         with:
           prettier_options: --write plugins/*.json
+          commit_message: "Style: Apply prettier"
