@@ -1,13 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
-  "required": [
-    "id",
-    "name",
-    "startAuth",
-    "checkAuth",
-    "getDocuments"
-  ],
+  "required": ["id", "name", "startAuth", "checkAuth", "getDocuments"],
   "properties": {
     "$schema": {
       "type": "string",
@@ -40,9 +34,7 @@
       "properties": {},
       "additionalProperties": {
         "type": "object",
-        "required": [
-          "type"
-        ],
+        "required": ["type"],
         "properties": {
           "required": {
             "type": "boolean",
@@ -65,12 +57,7 @@
             "title": "Example"
           },
           "type": {
-            "enum": [
-              "string",
-              "number",
-              "boolean",
-              "password"
-            ],
+            "enum": ["string", "number", "boolean", "password"],
             "description": "The type of the property.",
             "title": "Type"
           },
@@ -119,10 +106,7 @@
             "anyOf": [
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "script"
-                ],
+                "required": ["action", "script"],
                 "properties": {
                   "action": {
                     "const": "runJs"
@@ -147,10 +131,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "selector"
-                ],
+                "required": ["action", "selector"],
                 "properties": {
                   "action": {
                     "const": "click"
@@ -170,9 +151,7 @@
                     "type": "string",
                     "description": "The CSS selector to use to find the element",
                     "title": "Selector",
-                    "examples": [
-                      "#example"
-                    ]
+                    "examples": ["#example"]
                   },
                   "description": {
                     "type": "string",
@@ -184,11 +163,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "selector",
-                  "value"
-                ],
+                "required": ["action", "selector", "value"],
                 "properties": {
                   "action": {
                     "const": "type"
@@ -208,9 +183,7 @@
                     "type": "string",
                     "description": "The CSS selector to use to find the element",
                     "title": "Selector",
-                    "examples": [
-                      "#example"
-                    ]
+                    "examples": ["#example"]
                   },
                   "value": {
                     "type": "string",
@@ -227,10 +200,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "selector"
-                ],
+                "required": ["action", "selector"],
                 "properties": {
                   "action": {
                     "const": "waitForElement"
@@ -244,17 +214,13 @@
                     "type": "string",
                     "description": "The CSS selector to use to find the element",
                     "title": "Selector",
-                    "examples": [
-                      "#example"
-                    ]
+                    "examples": ["#example"]
                   },
                   "timeout": {
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
-                    "examples": [
-                      15000
-                    ],
+                    "examples": [15000],
                     "default": 15000
                   },
                   "description": {
@@ -267,9 +233,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action"
-                ],
+                "required": ["action"],
                 "properties": {
                   "action": {
                     "const": "waitForNavigation"
@@ -283,9 +247,7 @@
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
-                    "examples": [
-                      15000
-                    ],
+                    "examples": [15000],
                     "default": 15000
                   },
                   "description": {
@@ -298,9 +260,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action"
-                ],
+                "required": ["action"],
                 "properties": {
                   "action": {
                     "const": "waitForNetworkIdle"
@@ -314,9 +274,7 @@
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
-                    "examples": [
-                      15000
-                    ],
+                    "examples": [15000],
                     "default": 15000
                   },
                   "description": {
@@ -329,10 +287,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "url"
-                ],
+                "required": ["action", "url"],
                 "properties": {
                   "action": {
                     "const": "navigate"
@@ -358,10 +313,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "selector"
-                ],
+                "required": ["action", "selector"],
                 "properties": {
                   "action": {
                     "const": "checkElementExists"
@@ -370,9 +322,7 @@
                     "type": "string",
                     "description": "The CSS selector to use to find the element",
                     "title": "Selector",
-                    "examples": [
-                      "#example"
-                    ]
+                    "examples": ["#example"]
                   },
                   "description": {
                     "type": "string",
@@ -384,10 +334,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "url"
-                ],
+                "required": ["action", "url"],
                 "properties": {
                   "action": {
                     "const": "checkURL"
@@ -407,10 +354,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "document"
-                ],
+                "required": ["action", "document"],
                 "properties": {
                   "action": {
                     "const": "waitForPdfDownload"
@@ -419,9 +363,7 @@
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
-                    "examples": [
-                      15000
-                    ],
+                    "examples": [15000],
                     "default": 15000
                   },
                   "description": {
@@ -433,10 +375,7 @@
                     "anyOf": [
                       {
                         "type": "object",
-                        "required": [
-                          "id",
-                          "date"
-                        ],
+                        "required": ["id", "date"],
                         "properties": {
                           "id": {
                             "type": "string",
@@ -494,10 +433,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "url"
-                ],
+                "required": ["action", "url"],
                 "properties": {
                   "action": {
                     "const": "waitForURL"
@@ -511,9 +447,7 @@
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
-                    "examples": [
-                      15000
-                    ],
+                    "examples": [15000],
                     "default": 15000
                   },
                   "description": {
@@ -526,11 +460,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "selector",
-                  "value"
-                ],
+                "required": ["action", "selector", "value"],
                 "properties": {
                   "action": {
                     "const": "dropdownSelect"
@@ -545,9 +475,7 @@
                     "type": "string",
                     "description": "The CSS selector to use to find the element",
                     "title": "Selector",
-                    "examples": [
-                      "#example"
-                    ]
+                    "examples": ["#example"]
                   },
                   "value": {
                     "type": "string",
@@ -564,10 +492,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "document"
-                ],
+                "required": ["action", "document"],
                 "properties": {
                   "action": {
                     "const": "printPdf"
@@ -581,10 +506,7 @@
                     "anyOf": [
                       {
                         "type": "object",
-                        "required": [
-                          "id",
-                          "date"
-                        ],
+                        "required": ["id", "date"],
                         "properties": {
                           "id": {
                             "type": "string",
@@ -642,11 +564,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "variable",
-                  "script"
-                ],
+                "required": ["action", "variable", "script"],
                 "properties": {
                   "action": {
                     "const": "extract"
@@ -660,9 +578,7 @@
                     "type": "string",
                     "description": "A JavaScript script to run in the page context",
                     "title": "Script",
-                    "examples": [
-                      "console.log(\"Hello World\");"
-                    ]
+                    "examples": ["console.log(\"Hello World\");"]
                   },
                   "description": {
                     "type": "string",
@@ -674,11 +590,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "variable",
-                  "fields"
-                ],
+                "required": ["action", "variable", "fields"],
                 "properties": {
                   "action": {
                     "const": "extract"
@@ -701,17 +613,13 @@
                       "anyOf": [
                         {
                           "type": "object",
-                          "required": [
-                            "selector"
-                          ],
+                          "required": ["selector"],
                           "properties": {
                             "selector": {
                               "type": "string",
                               "description": "The CSS selector to use to find the element",
                               "title": "Selector",
-                              "examples": [
-                                "#example"
-                              ]
+                              "examples": ["#example"]
                             },
                             "attribute": {
                               "type": "string",
@@ -722,9 +630,7 @@
                               "type": "string",
                               "description": "A JavaScript function to transform the value",
                               "title": "Transform",
-                              "examples": [
-                                "(v) => Number(v.replace('$', ''))"
-                              ]
+                              "examples": ["(v) => Number(v.replace('$', ''))"]
                             }
                           },
                           "additionalProperties": false
@@ -742,10 +648,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "duration"
-                ],
+                "required": ["action", "duration"],
                 "properties": {
                   "action": {
                     "const": "sleep"
@@ -765,11 +668,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "url",
-                  "document"
-                ],
+                "required": ["action", "url", "document"],
                 "properties": {
                   "action": {
                     "const": "downloadPdf"
@@ -788,10 +687,7 @@
                     "anyOf": [
                       {
                         "type": "object",
-                        "required": [
-                          "id",
-                          "date"
-                        ],
+                        "required": ["id", "date"],
                         "properties": {
                           "id": {
                             "type": "string",
@@ -849,11 +745,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "base64",
-                  "document"
-                ],
+                "required": ["action", "base64", "document"],
                 "properties": {
                   "action": {
                     "const": "downloadBase64Pdf"
@@ -872,10 +764,7 @@
                     "anyOf": [
                       {
                         "type": "object",
-                        "required": [
-                          "id",
-                          "date"
-                        ],
+                        "required": ["id", "date"],
                         "properties": {
                           "id": {
                             "type": "string",
@@ -937,11 +826,7 @@
             "anyOf": [
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "script",
-                  "forEach"
-                ],
+                "required": ["action", "script", "forEach"],
                 "properties": {
                   "action": {
                     "const": "extractAll"
@@ -956,18 +841,13 @@
                     "type": "string",
                     "description": "A JavaScript script to run in the page context",
                     "title": "Script",
-                    "examples": [
-                      "console.log(\"Hello World\");"
-                    ]
+                    "examples": ["console.log(\"Hello World\");"]
                   },
                   "pagination": {
                     "anyOf": [
                       {
                         "type": "object",
-                        "required": [
-                          "type",
-                          "selector"
-                        ],
+                        "required": ["type", "selector"],
                         "properties": {
                           "type": {
                             "const": "next"
@@ -976,27 +856,20 @@
                             "type": "string",
                             "description": "The CSS selector to use to find the element",
                             "title": "Selector",
-                            "examples": [
-                              "#example"
-                            ]
+                            "examples": ["#example"]
                           },
                           "waitForSelector": {
                             "type": "string",
                             "description": "The CSS selector to use to find the element",
                             "title": "Selector",
-                            "examples": [
-                              "#example"
-                            ]
+                            "examples": ["#example"]
                           }
                         },
                         "additionalProperties": false
                       },
                       {
                         "type": "object",
-                        "required": [
-                          "type",
-                          "selector"
-                        ],
+                        "required": ["type", "selector"],
                         "properties": {
                           "type": {
                             "const": "loadMore"
@@ -1005,9 +878,7 @@
                             "type": "string",
                             "description": "The CSS selector to use to find the element",
                             "title": "Selector",
-                            "examples": [
-                              "#example"
-                            ]
+                            "examples": ["#example"]
                           }
                         },
                         "additionalProperties": false
@@ -1027,12 +898,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "selector",
-                  "forEach",
-                  "fields"
-                ],
+                "required": ["action", "selector", "forEach", "fields"],
                 "properties": {
                   "action": {
                     "const": "extractAll"
@@ -1047,18 +913,13 @@
                     "type": "string",
                     "description": "The CSS selector to use to find the element",
                     "title": "Selector",
-                    "examples": [
-                      "#example"
-                    ]
+                    "examples": ["#example"]
                   },
                   "pagination": {
                     "anyOf": [
                       {
                         "type": "object",
-                        "required": [
-                          "type",
-                          "selector"
-                        ],
+                        "required": ["type", "selector"],
                         "properties": {
                           "type": {
                             "const": "next"
@@ -1067,27 +928,20 @@
                             "type": "string",
                             "description": "The CSS selector to use to find the element",
                             "title": "Selector",
-                            "examples": [
-                              "#example"
-                            ]
+                            "examples": ["#example"]
                           },
                           "waitForSelector": {
                             "type": "string",
                             "description": "The CSS selector to use to find the element",
                             "title": "Selector",
-                            "examples": [
-                              "#example"
-                            ]
+                            "examples": ["#example"]
                           }
                         },
                         "additionalProperties": false
                       },
                       {
                         "type": "object",
-                        "required": [
-                          "type",
-                          "selector"
-                        ],
+                        "required": ["type", "selector"],
                         "properties": {
                           "type": {
                             "const": "loadMore"
@@ -1096,9 +950,7 @@
                             "type": "string",
                             "description": "The CSS selector to use to find the element",
                             "title": "Selector",
-                            "examples": [
-                              "#example"
-                            ]
+                            "examples": ["#example"]
                           }
                         },
                         "additionalProperties": false
@@ -1121,17 +973,13 @@
                       "anyOf": [
                         {
                           "type": "object",
-                          "required": [
-                            "selector"
-                          ],
+                          "required": ["selector"],
                           "properties": {
                             "selector": {
                               "type": "string",
                               "description": "The CSS selector to use to find the element",
                               "title": "Selector",
-                              "examples": [
-                                "#example"
-                              ]
+                              "examples": ["#example"]
                             },
                             "attribute": {
                               "type": "string",
@@ -1142,9 +990,7 @@
                               "type": "string",
                               "description": "A JavaScript function to transform the value",
                               "title": "Transform",
-                              "examples": [
-                                "(v) => Number(v.replace('$', ''))"
-                              ]
+                              "examples": ["(v) => Number(v.replace('$', ''))"]
                             }
                           },
                           "additionalProperties": false
@@ -1168,11 +1014,7 @@
             "anyOf": [
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "script",
-                  "then"
-                ],
+                "required": ["action", "script", "then"],
                 "properties": {
                   "action": {
                     "const": "if"
@@ -1181,9 +1023,7 @@
                     "type": "string",
                     "description": "A JavaScript script to run in the page context",
                     "title": "Script",
-                    "examples": [
-                      "console.log(\"Hello World\");"
-                    ]
+                    "examples": ["console.log(\"Hello World\");"]
                   },
                   "then": {
                     "type": "array",
@@ -1202,11 +1042,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "selector",
-                  "then"
-                ],
+                "required": ["action", "selector", "then"],
                 "properties": {
                   "action": {
                     "const": "if"
@@ -1215,9 +1051,7 @@
                     "type": "string",
                     "description": "The CSS selector to use to find the element",
                     "title": "Selector",
-                    "examples": [
-                      "#example"
-                    ]
+                    "examples": ["#example"]
                   },
                   "then": {
                     "type": "array",
@@ -1240,11 +1074,7 @@
           },
           {
             "type": "object",
-            "required": [
-              "action",
-              "snippet",
-              "args"
-            ],
+            "required": ["action", "snippet", "args"],
             "properties": {
               "action": {
                 "const": "runSnippet"
@@ -1257,9 +1087,7 @@
               },
               "args": {
                 "type": "object",
-                "required": [
-                  "url"
-                ],
+                "required": ["url"],
                 "properties": {
                   "url": {
                     "type": "string",
@@ -1296,10 +1124,7 @@
             "anyOf": [
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "script"
-                ],
+                "required": ["action", "script"],
                 "properties": {
                   "action": {
                     "const": "runJs"
@@ -1324,10 +1149,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "selector"
-                ],
+                "required": ["action", "selector"],
                 "properties": {
                   "action": {
                     "const": "click"
@@ -1347,9 +1169,7 @@
                     "type": "string",
                     "description": "The CSS selector to use to find the element",
                     "title": "Selector",
-                    "examples": [
-                      "#example"
-                    ]
+                    "examples": ["#example"]
                   },
                   "description": {
                     "type": "string",
@@ -1361,11 +1181,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "selector",
-                  "value"
-                ],
+                "required": ["action", "selector", "value"],
                 "properties": {
                   "action": {
                     "const": "type"
@@ -1385,9 +1201,7 @@
                     "type": "string",
                     "description": "The CSS selector to use to find the element",
                     "title": "Selector",
-                    "examples": [
-                      "#example"
-                    ]
+                    "examples": ["#example"]
                   },
                   "value": {
                     "type": "string",
@@ -1404,10 +1218,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "selector"
-                ],
+                "required": ["action", "selector"],
                 "properties": {
                   "action": {
                     "const": "waitForElement"
@@ -1421,17 +1232,13 @@
                     "type": "string",
                     "description": "The CSS selector to use to find the element",
                     "title": "Selector",
-                    "examples": [
-                      "#example"
-                    ]
+                    "examples": ["#example"]
                   },
                   "timeout": {
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
-                    "examples": [
-                      15000
-                    ],
+                    "examples": [15000],
                     "default": 15000
                   },
                   "description": {
@@ -1444,9 +1251,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action"
-                ],
+                "required": ["action"],
                 "properties": {
                   "action": {
                     "const": "waitForNavigation"
@@ -1460,9 +1265,7 @@
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
-                    "examples": [
-                      15000
-                    ],
+                    "examples": [15000],
                     "default": 15000
                   },
                   "description": {
@@ -1475,9 +1278,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action"
-                ],
+                "required": ["action"],
                 "properties": {
                   "action": {
                     "const": "waitForNetworkIdle"
@@ -1491,9 +1292,7 @@
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
-                    "examples": [
-                      15000
-                    ],
+                    "examples": [15000],
                     "default": 15000
                   },
                   "description": {
@@ -1506,10 +1305,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "url"
-                ],
+                "required": ["action", "url"],
                 "properties": {
                   "action": {
                     "const": "navigate"
@@ -1535,10 +1331,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "selector"
-                ],
+                "required": ["action", "selector"],
                 "properties": {
                   "action": {
                     "const": "checkElementExists"
@@ -1547,9 +1340,7 @@
                     "type": "string",
                     "description": "The CSS selector to use to find the element",
                     "title": "Selector",
-                    "examples": [
-                      "#example"
-                    ]
+                    "examples": ["#example"]
                   },
                   "description": {
                     "type": "string",
@@ -1561,10 +1352,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "url"
-                ],
+                "required": ["action", "url"],
                 "properties": {
                   "action": {
                     "const": "checkURL"
@@ -1584,10 +1372,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "document"
-                ],
+                "required": ["action", "document"],
                 "properties": {
                   "action": {
                     "const": "waitForPdfDownload"
@@ -1596,9 +1381,7 @@
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
-                    "examples": [
-                      15000
-                    ],
+                    "examples": [15000],
                     "default": 15000
                   },
                   "description": {
@@ -1610,10 +1393,7 @@
                     "anyOf": [
                       {
                         "type": "object",
-                        "required": [
-                          "id",
-                          "date"
-                        ],
+                        "required": ["id", "date"],
                         "properties": {
                           "id": {
                             "type": "string",
@@ -1671,10 +1451,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "url"
-                ],
+                "required": ["action", "url"],
                 "properties": {
                   "action": {
                     "const": "waitForURL"
@@ -1688,9 +1465,7 @@
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
-                    "examples": [
-                      15000
-                    ],
+                    "examples": [15000],
                     "default": 15000
                   },
                   "description": {
@@ -1703,11 +1478,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "selector",
-                  "value"
-                ],
+                "required": ["action", "selector", "value"],
                 "properties": {
                   "action": {
                     "const": "dropdownSelect"
@@ -1722,9 +1493,7 @@
                     "type": "string",
                     "description": "The CSS selector to use to find the element",
                     "title": "Selector",
-                    "examples": [
-                      "#example"
-                    ]
+                    "examples": ["#example"]
                   },
                   "value": {
                     "type": "string",
@@ -1741,10 +1510,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "document"
-                ],
+                "required": ["action", "document"],
                 "properties": {
                   "action": {
                     "const": "printPdf"
@@ -1758,10 +1524,7 @@
                     "anyOf": [
                       {
                         "type": "object",
-                        "required": [
-                          "id",
-                          "date"
-                        ],
+                        "required": ["id", "date"],
                         "properties": {
                           "id": {
                             "type": "string",
@@ -1819,11 +1582,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "variable",
-                  "script"
-                ],
+                "required": ["action", "variable", "script"],
                 "properties": {
                   "action": {
                     "const": "extract"
@@ -1837,9 +1596,7 @@
                     "type": "string",
                     "description": "A JavaScript script to run in the page context",
                     "title": "Script",
-                    "examples": [
-                      "console.log(\"Hello World\");"
-                    ]
+                    "examples": ["console.log(\"Hello World\");"]
                   },
                   "description": {
                     "type": "string",
@@ -1851,11 +1608,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "variable",
-                  "fields"
-                ],
+                "required": ["action", "variable", "fields"],
                 "properties": {
                   "action": {
                     "const": "extract"
@@ -1878,17 +1631,13 @@
                       "anyOf": [
                         {
                           "type": "object",
-                          "required": [
-                            "selector"
-                          ],
+                          "required": ["selector"],
                           "properties": {
                             "selector": {
                               "type": "string",
                               "description": "The CSS selector to use to find the element",
                               "title": "Selector",
-                              "examples": [
-                                "#example"
-                              ]
+                              "examples": ["#example"]
                             },
                             "attribute": {
                               "type": "string",
@@ -1899,9 +1648,7 @@
                               "type": "string",
                               "description": "A JavaScript function to transform the value",
                               "title": "Transform",
-                              "examples": [
-                                "(v) => Number(v.replace('$', ''))"
-                              ]
+                              "examples": ["(v) => Number(v.replace('$', ''))"]
                             }
                           },
                           "additionalProperties": false
@@ -1919,10 +1666,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "duration"
-                ],
+                "required": ["action", "duration"],
                 "properties": {
                   "action": {
                     "const": "sleep"
@@ -1942,11 +1686,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "url",
-                  "document"
-                ],
+                "required": ["action", "url", "document"],
                 "properties": {
                   "action": {
                     "const": "downloadPdf"
@@ -1965,10 +1705,7 @@
                     "anyOf": [
                       {
                         "type": "object",
-                        "required": [
-                          "id",
-                          "date"
-                        ],
+                        "required": ["id", "date"],
                         "properties": {
                           "id": {
                             "type": "string",
@@ -2026,11 +1763,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "base64",
-                  "document"
-                ],
+                "required": ["action", "base64", "document"],
                 "properties": {
                   "action": {
                     "const": "downloadBase64Pdf"
@@ -2049,10 +1782,7 @@
                     "anyOf": [
                       {
                         "type": "object",
-                        "required": [
-                          "id",
-                          "date"
-                        ],
+                        "required": ["id", "date"],
                         "properties": {
                           "id": {
                             "type": "string",
@@ -2114,11 +1844,7 @@
             "anyOf": [
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "script",
-                  "forEach"
-                ],
+                "required": ["action", "script", "forEach"],
                 "properties": {
                   "action": {
                     "const": "extractAll"
@@ -2133,18 +1859,13 @@
                     "type": "string",
                     "description": "A JavaScript script to run in the page context",
                     "title": "Script",
-                    "examples": [
-                      "console.log(\"Hello World\");"
-                    ]
+                    "examples": ["console.log(\"Hello World\");"]
                   },
                   "pagination": {
                     "anyOf": [
                       {
                         "type": "object",
-                        "required": [
-                          "type",
-                          "selector"
-                        ],
+                        "required": ["type", "selector"],
                         "properties": {
                           "type": {
                             "const": "next"
@@ -2153,27 +1874,20 @@
                             "type": "string",
                             "description": "The CSS selector to use to find the element",
                             "title": "Selector",
-                            "examples": [
-                              "#example"
-                            ]
+                            "examples": ["#example"]
                           },
                           "waitForSelector": {
                             "type": "string",
                             "description": "The CSS selector to use to find the element",
                             "title": "Selector",
-                            "examples": [
-                              "#example"
-                            ]
+                            "examples": ["#example"]
                           }
                         },
                         "additionalProperties": false
                       },
                       {
                         "type": "object",
-                        "required": [
-                          "type",
-                          "selector"
-                        ],
+                        "required": ["type", "selector"],
                         "properties": {
                           "type": {
                             "const": "loadMore"
@@ -2182,9 +1896,7 @@
                             "type": "string",
                             "description": "The CSS selector to use to find the element",
                             "title": "Selector",
-                            "examples": [
-                              "#example"
-                            ]
+                            "examples": ["#example"]
                           }
                         },
                         "additionalProperties": false
@@ -2204,12 +1916,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "selector",
-                  "forEach",
-                  "fields"
-                ],
+                "required": ["action", "selector", "forEach", "fields"],
                 "properties": {
                   "action": {
                     "const": "extractAll"
@@ -2224,18 +1931,13 @@
                     "type": "string",
                     "description": "The CSS selector to use to find the element",
                     "title": "Selector",
-                    "examples": [
-                      "#example"
-                    ]
+                    "examples": ["#example"]
                   },
                   "pagination": {
                     "anyOf": [
                       {
                         "type": "object",
-                        "required": [
-                          "type",
-                          "selector"
-                        ],
+                        "required": ["type", "selector"],
                         "properties": {
                           "type": {
                             "const": "next"
@@ -2244,27 +1946,20 @@
                             "type": "string",
                             "description": "The CSS selector to use to find the element",
                             "title": "Selector",
-                            "examples": [
-                              "#example"
-                            ]
+                            "examples": ["#example"]
                           },
                           "waitForSelector": {
                             "type": "string",
                             "description": "The CSS selector to use to find the element",
                             "title": "Selector",
-                            "examples": [
-                              "#example"
-                            ]
+                            "examples": ["#example"]
                           }
                         },
                         "additionalProperties": false
                       },
                       {
                         "type": "object",
-                        "required": [
-                          "type",
-                          "selector"
-                        ],
+                        "required": ["type", "selector"],
                         "properties": {
                           "type": {
                             "const": "loadMore"
@@ -2273,9 +1968,7 @@
                             "type": "string",
                             "description": "The CSS selector to use to find the element",
                             "title": "Selector",
-                            "examples": [
-                              "#example"
-                            ]
+                            "examples": ["#example"]
                           }
                         },
                         "additionalProperties": false
@@ -2298,17 +1991,13 @@
                       "anyOf": [
                         {
                           "type": "object",
-                          "required": [
-                            "selector"
-                          ],
+                          "required": ["selector"],
                           "properties": {
                             "selector": {
                               "type": "string",
                               "description": "The CSS selector to use to find the element",
                               "title": "Selector",
-                              "examples": [
-                                "#example"
-                              ]
+                              "examples": ["#example"]
                             },
                             "attribute": {
                               "type": "string",
@@ -2319,9 +2008,7 @@
                               "type": "string",
                               "description": "A JavaScript function to transform the value",
                               "title": "Transform",
-                              "examples": [
-                                "(v) => Number(v.replace('$', ''))"
-                              ]
+                              "examples": ["(v) => Number(v.replace('$', ''))"]
                             }
                           },
                           "additionalProperties": false
@@ -2345,11 +2032,7 @@
             "anyOf": [
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "script",
-                  "then"
-                ],
+                "required": ["action", "script", "then"],
                 "properties": {
                   "action": {
                     "const": "if"
@@ -2358,9 +2041,7 @@
                     "type": "string",
                     "description": "A JavaScript script to run in the page context",
                     "title": "Script",
-                    "examples": [
-                      "console.log(\"Hello World\");"
-                    ]
+                    "examples": ["console.log(\"Hello World\");"]
                   },
                   "then": {
                     "type": "array",
@@ -2379,11 +2060,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "selector",
-                  "then"
-                ],
+                "required": ["action", "selector", "then"],
                 "properties": {
                   "action": {
                     "const": "if"
@@ -2392,9 +2069,7 @@
                     "type": "string",
                     "description": "The CSS selector to use to find the element",
                     "title": "Selector",
-                    "examples": [
-                      "#example"
-                    ]
+                    "examples": ["#example"]
                   },
                   "then": {
                     "type": "array",
@@ -2417,11 +2092,7 @@
           },
           {
             "type": "object",
-            "required": [
-              "action",
-              "snippet",
-              "args"
-            ],
+            "required": ["action", "snippet", "args"],
             "properties": {
               "action": {
                 "const": "runSnippet"
@@ -2434,9 +2105,7 @@
               },
               "args": {
                 "type": "object",
-                "required": [
-                  "url"
-                ],
+                "required": ["url"],
                 "properties": {
                   "url": {
                     "type": "string",
@@ -2473,10 +2142,7 @@
             "anyOf": [
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "script"
-                ],
+                "required": ["action", "script"],
                 "properties": {
                   "action": {
                     "const": "runJs"
@@ -2501,10 +2167,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "selector"
-                ],
+                "required": ["action", "selector"],
                 "properties": {
                   "action": {
                     "const": "click"
@@ -2524,9 +2187,7 @@
                     "type": "string",
                     "description": "The CSS selector to use to find the element",
                     "title": "Selector",
-                    "examples": [
-                      "#example"
-                    ]
+                    "examples": ["#example"]
                   },
                   "description": {
                     "type": "string",
@@ -2538,11 +2199,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "selector",
-                  "value"
-                ],
+                "required": ["action", "selector", "value"],
                 "properties": {
                   "action": {
                     "const": "type"
@@ -2562,9 +2219,7 @@
                     "type": "string",
                     "description": "The CSS selector to use to find the element",
                     "title": "Selector",
-                    "examples": [
-                      "#example"
-                    ]
+                    "examples": ["#example"]
                   },
                   "value": {
                     "type": "string",
@@ -2581,10 +2236,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "selector"
-                ],
+                "required": ["action", "selector"],
                 "properties": {
                   "action": {
                     "const": "waitForElement"
@@ -2598,17 +2250,13 @@
                     "type": "string",
                     "description": "The CSS selector to use to find the element",
                     "title": "Selector",
-                    "examples": [
-                      "#example"
-                    ]
+                    "examples": ["#example"]
                   },
                   "timeout": {
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
-                    "examples": [
-                      15000
-                    ],
+                    "examples": [15000],
                     "default": 15000
                   },
                   "description": {
@@ -2621,9 +2269,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action"
-                ],
+                "required": ["action"],
                 "properties": {
                   "action": {
                     "const": "waitForNavigation"
@@ -2637,9 +2283,7 @@
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
-                    "examples": [
-                      15000
-                    ],
+                    "examples": [15000],
                     "default": 15000
                   },
                   "description": {
@@ -2652,9 +2296,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action"
-                ],
+                "required": ["action"],
                 "properties": {
                   "action": {
                     "const": "waitForNetworkIdle"
@@ -2668,9 +2310,7 @@
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
-                    "examples": [
-                      15000
-                    ],
+                    "examples": [15000],
                     "default": 15000
                   },
                   "description": {
@@ -2683,10 +2323,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "url"
-                ],
+                "required": ["action", "url"],
                 "properties": {
                   "action": {
                     "const": "navigate"
@@ -2712,10 +2349,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "selector"
-                ],
+                "required": ["action", "selector"],
                 "properties": {
                   "action": {
                     "const": "checkElementExists"
@@ -2724,9 +2358,7 @@
                     "type": "string",
                     "description": "The CSS selector to use to find the element",
                     "title": "Selector",
-                    "examples": [
-                      "#example"
-                    ]
+                    "examples": ["#example"]
                   },
                   "description": {
                     "type": "string",
@@ -2738,10 +2370,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "url"
-                ],
+                "required": ["action", "url"],
                 "properties": {
                   "action": {
                     "const": "checkURL"
@@ -2761,10 +2390,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "document"
-                ],
+                "required": ["action", "document"],
                 "properties": {
                   "action": {
                     "const": "waitForPdfDownload"
@@ -2773,9 +2399,7 @@
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
-                    "examples": [
-                      15000
-                    ],
+                    "examples": [15000],
                     "default": 15000
                   },
                   "description": {
@@ -2787,10 +2411,7 @@
                     "anyOf": [
                       {
                         "type": "object",
-                        "required": [
-                          "id",
-                          "date"
-                        ],
+                        "required": ["id", "date"],
                         "properties": {
                           "id": {
                             "type": "string",
@@ -2848,10 +2469,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "url"
-                ],
+                "required": ["action", "url"],
                 "properties": {
                   "action": {
                     "const": "waitForURL"
@@ -2865,9 +2483,7 @@
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
-                    "examples": [
-                      15000
-                    ],
+                    "examples": [15000],
                     "default": 15000
                   },
                   "description": {
@@ -2880,11 +2496,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "selector",
-                  "value"
-                ],
+                "required": ["action", "selector", "value"],
                 "properties": {
                   "action": {
                     "const": "dropdownSelect"
@@ -2899,9 +2511,7 @@
                     "type": "string",
                     "description": "The CSS selector to use to find the element",
                     "title": "Selector",
-                    "examples": [
-                      "#example"
-                    ]
+                    "examples": ["#example"]
                   },
                   "value": {
                     "type": "string",
@@ -2918,10 +2528,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "document"
-                ],
+                "required": ["action", "document"],
                 "properties": {
                   "action": {
                     "const": "printPdf"
@@ -2935,10 +2542,7 @@
                     "anyOf": [
                       {
                         "type": "object",
-                        "required": [
-                          "id",
-                          "date"
-                        ],
+                        "required": ["id", "date"],
                         "properties": {
                           "id": {
                             "type": "string",
@@ -2996,11 +2600,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "variable",
-                  "script"
-                ],
+                "required": ["action", "variable", "script"],
                 "properties": {
                   "action": {
                     "const": "extract"
@@ -3014,9 +2614,7 @@
                     "type": "string",
                     "description": "A JavaScript script to run in the page context",
                     "title": "Script",
-                    "examples": [
-                      "console.log(\"Hello World\");"
-                    ]
+                    "examples": ["console.log(\"Hello World\");"]
                   },
                   "description": {
                     "type": "string",
@@ -3028,11 +2626,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "variable",
-                  "fields"
-                ],
+                "required": ["action", "variable", "fields"],
                 "properties": {
                   "action": {
                     "const": "extract"
@@ -3055,17 +2649,13 @@
                       "anyOf": [
                         {
                           "type": "object",
-                          "required": [
-                            "selector"
-                          ],
+                          "required": ["selector"],
                           "properties": {
                             "selector": {
                               "type": "string",
                               "description": "The CSS selector to use to find the element",
                               "title": "Selector",
-                              "examples": [
-                                "#example"
-                              ]
+                              "examples": ["#example"]
                             },
                             "attribute": {
                               "type": "string",
@@ -3076,9 +2666,7 @@
                               "type": "string",
                               "description": "A JavaScript function to transform the value",
                               "title": "Transform",
-                              "examples": [
-                                "(v) => Number(v.replace('$', ''))"
-                              ]
+                              "examples": ["(v) => Number(v.replace('$', ''))"]
                             }
                           },
                           "additionalProperties": false
@@ -3096,10 +2684,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "duration"
-                ],
+                "required": ["action", "duration"],
                 "properties": {
                   "action": {
                     "const": "sleep"
@@ -3119,11 +2704,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "url",
-                  "document"
-                ],
+                "required": ["action", "url", "document"],
                 "properties": {
                   "action": {
                     "const": "downloadPdf"
@@ -3142,10 +2723,7 @@
                     "anyOf": [
                       {
                         "type": "object",
-                        "required": [
-                          "id",
-                          "date"
-                        ],
+                        "required": ["id", "date"],
                         "properties": {
                           "id": {
                             "type": "string",
@@ -3203,11 +2781,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "base64",
-                  "document"
-                ],
+                "required": ["action", "base64", "document"],
                 "properties": {
                   "action": {
                     "const": "downloadBase64Pdf"
@@ -3226,10 +2800,7 @@
                     "anyOf": [
                       {
                         "type": "object",
-                        "required": [
-                          "id",
-                          "date"
-                        ],
+                        "required": ["id", "date"],
                         "properties": {
                           "id": {
                             "type": "string",
@@ -3291,11 +2862,7 @@
             "anyOf": [
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "script",
-                  "forEach"
-                ],
+                "required": ["action", "script", "forEach"],
                 "properties": {
                   "action": {
                     "const": "extractAll"
@@ -3310,18 +2877,13 @@
                     "type": "string",
                     "description": "A JavaScript script to run in the page context",
                     "title": "Script",
-                    "examples": [
-                      "console.log(\"Hello World\");"
-                    ]
+                    "examples": ["console.log(\"Hello World\");"]
                   },
                   "pagination": {
                     "anyOf": [
                       {
                         "type": "object",
-                        "required": [
-                          "type",
-                          "selector"
-                        ],
+                        "required": ["type", "selector"],
                         "properties": {
                           "type": {
                             "const": "next"
@@ -3330,27 +2892,20 @@
                             "type": "string",
                             "description": "The CSS selector to use to find the element",
                             "title": "Selector",
-                            "examples": [
-                              "#example"
-                            ]
+                            "examples": ["#example"]
                           },
                           "waitForSelector": {
                             "type": "string",
                             "description": "The CSS selector to use to find the element",
                             "title": "Selector",
-                            "examples": [
-                              "#example"
-                            ]
+                            "examples": ["#example"]
                           }
                         },
                         "additionalProperties": false
                       },
                       {
                         "type": "object",
-                        "required": [
-                          "type",
-                          "selector"
-                        ],
+                        "required": ["type", "selector"],
                         "properties": {
                           "type": {
                             "const": "loadMore"
@@ -3359,9 +2914,7 @@
                             "type": "string",
                             "description": "The CSS selector to use to find the element",
                             "title": "Selector",
-                            "examples": [
-                              "#example"
-                            ]
+                            "examples": ["#example"]
                           }
                         },
                         "additionalProperties": false
@@ -3381,12 +2934,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "selector",
-                  "forEach",
-                  "fields"
-                ],
+                "required": ["action", "selector", "forEach", "fields"],
                 "properties": {
                   "action": {
                     "const": "extractAll"
@@ -3401,18 +2949,13 @@
                     "type": "string",
                     "description": "The CSS selector to use to find the element",
                     "title": "Selector",
-                    "examples": [
-                      "#example"
-                    ]
+                    "examples": ["#example"]
                   },
                   "pagination": {
                     "anyOf": [
                       {
                         "type": "object",
-                        "required": [
-                          "type",
-                          "selector"
-                        ],
+                        "required": ["type", "selector"],
                         "properties": {
                           "type": {
                             "const": "next"
@@ -3421,27 +2964,20 @@
                             "type": "string",
                             "description": "The CSS selector to use to find the element",
                             "title": "Selector",
-                            "examples": [
-                              "#example"
-                            ]
+                            "examples": ["#example"]
                           },
                           "waitForSelector": {
                             "type": "string",
                             "description": "The CSS selector to use to find the element",
                             "title": "Selector",
-                            "examples": [
-                              "#example"
-                            ]
+                            "examples": ["#example"]
                           }
                         },
                         "additionalProperties": false
                       },
                       {
                         "type": "object",
-                        "required": [
-                          "type",
-                          "selector"
-                        ],
+                        "required": ["type", "selector"],
                         "properties": {
                           "type": {
                             "const": "loadMore"
@@ -3450,9 +2986,7 @@
                             "type": "string",
                             "description": "The CSS selector to use to find the element",
                             "title": "Selector",
-                            "examples": [
-                              "#example"
-                            ]
+                            "examples": ["#example"]
                           }
                         },
                         "additionalProperties": false
@@ -3475,17 +3009,13 @@
                       "anyOf": [
                         {
                           "type": "object",
-                          "required": [
-                            "selector"
-                          ],
+                          "required": ["selector"],
                           "properties": {
                             "selector": {
                               "type": "string",
                               "description": "The CSS selector to use to find the element",
                               "title": "Selector",
-                              "examples": [
-                                "#example"
-                              ]
+                              "examples": ["#example"]
                             },
                             "attribute": {
                               "type": "string",
@@ -3496,9 +3026,7 @@
                               "type": "string",
                               "description": "A JavaScript function to transform the value",
                               "title": "Transform",
-                              "examples": [
-                                "(v) => Number(v.replace('$', ''))"
-                              ]
+                              "examples": ["(v) => Number(v.replace('$', ''))"]
                             }
                           },
                           "additionalProperties": false
@@ -3522,11 +3050,7 @@
             "anyOf": [
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "script",
-                  "then"
-                ],
+                "required": ["action", "script", "then"],
                 "properties": {
                   "action": {
                     "const": "if"
@@ -3535,9 +3059,7 @@
                     "type": "string",
                     "description": "A JavaScript script to run in the page context",
                     "title": "Script",
-                    "examples": [
-                      "console.log(\"Hello World\");"
-                    ]
+                    "examples": ["console.log(\"Hello World\");"]
                   },
                   "then": {
                     "type": "array",
@@ -3556,11 +3078,7 @@
               },
               {
                 "type": "object",
-                "required": [
-                  "action",
-                  "selector",
-                  "then"
-                ],
+                "required": ["action", "selector", "then"],
                 "properties": {
                   "action": {
                     "const": "if"
@@ -3569,9 +3087,7 @@
                     "type": "string",
                     "description": "The CSS selector to use to find the element",
                     "title": "Selector",
-                    "examples": [
-                      "#example"
-                    ]
+                    "examples": ["#example"]
                   },
                   "then": {
                     "type": "array",
@@ -3594,11 +3110,7 @@
           },
           {
             "type": "object",
-            "required": [
-              "action",
-              "snippet",
-              "args"
-            ],
+            "required": ["action", "snippet", "args"],
             "properties": {
               "action": {
                 "const": "runSnippet"
@@ -3611,9 +3123,7 @@
               },
               "args": {
                 "type": "object",
-                "required": [
-                  "url"
-                ],
+                "required": ["url"],
                 "properties": {
                   "url": {
                     "type": "string",
@@ -3686,10 +3196,7 @@
           "anyOf": [
             {
               "type": "object",
-              "required": [
-                "action",
-                "script"
-              ],
+              "required": ["action", "script"],
               "properties": {
                 "action": {
                   "const": "runJs"
@@ -3714,10 +3221,7 @@
             },
             {
               "type": "object",
-              "required": [
-                "action",
-                "selector"
-              ],
+              "required": ["action", "selector"],
               "properties": {
                 "action": {
                   "const": "click"
@@ -3737,9 +3241,7 @@
                   "type": "string",
                   "description": "The CSS selector to use to find the element",
                   "title": "Selector",
-                  "examples": [
-                    "#example"
-                  ]
+                  "examples": ["#example"]
                 },
                 "description": {
                   "type": "string",
@@ -3751,11 +3253,7 @@
             },
             {
               "type": "object",
-              "required": [
-                "action",
-                "selector",
-                "value"
-              ],
+              "required": ["action", "selector", "value"],
               "properties": {
                 "action": {
                   "const": "type"
@@ -3775,9 +3273,7 @@
                   "type": "string",
                   "description": "The CSS selector to use to find the element",
                   "title": "Selector",
-                  "examples": [
-                    "#example"
-                  ]
+                  "examples": ["#example"]
                 },
                 "value": {
                   "type": "string",
@@ -3794,10 +3290,7 @@
             },
             {
               "type": "object",
-              "required": [
-                "action",
-                "selector"
-              ],
+              "required": ["action", "selector"],
               "properties": {
                 "action": {
                   "const": "waitForElement"
@@ -3811,17 +3304,13 @@
                   "type": "string",
                   "description": "The CSS selector to use to find the element",
                   "title": "Selector",
-                  "examples": [
-                    "#example"
-                  ]
+                  "examples": ["#example"]
                 },
                 "timeout": {
                   "type": "number",
                   "description": "The number of milliseconds to wait for. Defaults to 15s.",
                   "title": "Timeout",
-                  "examples": [
-                    15000
-                  ],
+                  "examples": [15000],
                   "default": 15000
                 },
                 "description": {
@@ -3834,9 +3323,7 @@
             },
             {
               "type": "object",
-              "required": [
-                "action"
-              ],
+              "required": ["action"],
               "properties": {
                 "action": {
                   "const": "waitForNavigation"
@@ -3850,9 +3337,7 @@
                   "type": "number",
                   "description": "The number of milliseconds to wait for. Defaults to 15s.",
                   "title": "Timeout",
-                  "examples": [
-                    15000
-                  ],
+                  "examples": [15000],
                   "default": 15000
                 },
                 "description": {
@@ -3865,9 +3350,7 @@
             },
             {
               "type": "object",
-              "required": [
-                "action"
-              ],
+              "required": ["action"],
               "properties": {
                 "action": {
                   "const": "waitForNetworkIdle"
@@ -3881,9 +3364,7 @@
                   "type": "number",
                   "description": "The number of milliseconds to wait for. Defaults to 15s.",
                   "title": "Timeout",
-                  "examples": [
-                    15000
-                  ],
+                  "examples": [15000],
                   "default": 15000
                 },
                 "description": {
@@ -3896,10 +3377,7 @@
             },
             {
               "type": "object",
-              "required": [
-                "action",
-                "url"
-              ],
+              "required": ["action", "url"],
               "properties": {
                 "action": {
                   "const": "navigate"
@@ -3925,10 +3403,7 @@
             },
             {
               "type": "object",
-              "required": [
-                "action",
-                "selector"
-              ],
+              "required": ["action", "selector"],
               "properties": {
                 "action": {
                   "const": "checkElementExists"
@@ -3937,9 +3412,7 @@
                   "type": "string",
                   "description": "The CSS selector to use to find the element",
                   "title": "Selector",
-                  "examples": [
-                    "#example"
-                  ]
+                  "examples": ["#example"]
                 },
                 "description": {
                   "type": "string",
@@ -3951,10 +3424,7 @@
             },
             {
               "type": "object",
-              "required": [
-                "action",
-                "url"
-              ],
+              "required": ["action", "url"],
               "properties": {
                 "action": {
                   "const": "checkURL"
@@ -3974,10 +3444,7 @@
             },
             {
               "type": "object",
-              "required": [
-                "action",
-                "document"
-              ],
+              "required": ["action", "document"],
               "properties": {
                 "action": {
                   "const": "waitForPdfDownload"
@@ -3986,9 +3453,7 @@
                   "type": "number",
                   "description": "The number of milliseconds to wait for. Defaults to 15s.",
                   "title": "Timeout",
-                  "examples": [
-                    15000
-                  ],
+                  "examples": [15000],
                   "default": 15000
                 },
                 "description": {
@@ -4000,10 +3465,7 @@
                   "anyOf": [
                     {
                       "type": "object",
-                      "required": [
-                        "id",
-                        "date"
-                      ],
+                      "required": ["id", "date"],
                       "properties": {
                         "id": {
                           "type": "string",
@@ -4061,10 +3523,7 @@
             },
             {
               "type": "object",
-              "required": [
-                "action",
-                "url"
-              ],
+              "required": ["action", "url"],
               "properties": {
                 "action": {
                   "const": "waitForURL"
@@ -4078,9 +3537,7 @@
                   "type": "number",
                   "description": "The number of milliseconds to wait for. Defaults to 15s.",
                   "title": "Timeout",
-                  "examples": [
-                    15000
-                  ],
+                  "examples": [15000],
                   "default": 15000
                 },
                 "description": {
@@ -4093,11 +3550,7 @@
             },
             {
               "type": "object",
-              "required": [
-                "action",
-                "selector",
-                "value"
-              ],
+              "required": ["action", "selector", "value"],
               "properties": {
                 "action": {
                   "const": "dropdownSelect"
@@ -4112,9 +3565,7 @@
                   "type": "string",
                   "description": "The CSS selector to use to find the element",
                   "title": "Selector",
-                  "examples": [
-                    "#example"
-                  ]
+                  "examples": ["#example"]
                 },
                 "value": {
                   "type": "string",
@@ -4131,10 +3582,7 @@
             },
             {
               "type": "object",
-              "required": [
-                "action",
-                "document"
-              ],
+              "required": ["action", "document"],
               "properties": {
                 "action": {
                   "const": "printPdf"
@@ -4148,10 +3596,7 @@
                   "anyOf": [
                     {
                       "type": "object",
-                      "required": [
-                        "id",
-                        "date"
-                      ],
+                      "required": ["id", "date"],
                       "properties": {
                         "id": {
                           "type": "string",
@@ -4209,11 +3654,7 @@
             },
             {
               "type": "object",
-              "required": [
-                "action",
-                "variable",
-                "script"
-              ],
+              "required": ["action", "variable", "script"],
               "properties": {
                 "action": {
                   "const": "extract"
@@ -4227,9 +3668,7 @@
                   "type": "string",
                   "description": "A JavaScript script to run in the page context",
                   "title": "Script",
-                  "examples": [
-                    "console.log(\"Hello World\");"
-                  ]
+                  "examples": ["console.log(\"Hello World\");"]
                 },
                 "description": {
                   "type": "string",
@@ -4241,11 +3680,7 @@
             },
             {
               "type": "object",
-              "required": [
-                "action",
-                "variable",
-                "fields"
-              ],
+              "required": ["action", "variable", "fields"],
               "properties": {
                 "action": {
                   "const": "extract"
@@ -4268,17 +3703,13 @@
                     "anyOf": [
                       {
                         "type": "object",
-                        "required": [
-                          "selector"
-                        ],
+                        "required": ["selector"],
                         "properties": {
                           "selector": {
                             "type": "string",
                             "description": "The CSS selector to use to find the element",
                             "title": "Selector",
-                            "examples": [
-                              "#example"
-                            ]
+                            "examples": ["#example"]
                           },
                           "attribute": {
                             "type": "string",
@@ -4289,9 +3720,7 @@
                             "type": "string",
                             "description": "A JavaScript function to transform the value",
                             "title": "Transform",
-                            "examples": [
-                              "(v) => Number(v.replace('$', ''))"
-                            ]
+                            "examples": ["(v) => Number(v.replace('$', ''))"]
                           }
                         },
                         "additionalProperties": false
@@ -4309,10 +3738,7 @@
             },
             {
               "type": "object",
-              "required": [
-                "action",
-                "duration"
-              ],
+              "required": ["action", "duration"],
               "properties": {
                 "action": {
                   "const": "sleep"
@@ -4332,11 +3758,7 @@
             },
             {
               "type": "object",
-              "required": [
-                "action",
-                "url",
-                "document"
-              ],
+              "required": ["action", "url", "document"],
               "properties": {
                 "action": {
                   "const": "downloadPdf"
@@ -4355,10 +3777,7 @@
                   "anyOf": [
                     {
                       "type": "object",
-                      "required": [
-                        "id",
-                        "date"
-                      ],
+                      "required": ["id", "date"],
                       "properties": {
                         "id": {
                           "type": "string",
@@ -4416,11 +3835,7 @@
             },
             {
               "type": "object",
-              "required": [
-                "action",
-                "base64",
-                "document"
-              ],
+              "required": ["action", "base64", "document"],
               "properties": {
                 "action": {
                   "const": "downloadBase64Pdf"
@@ -4439,10 +3854,7 @@
                   "anyOf": [
                     {
                       "type": "object",
-                      "required": [
-                        "id",
-                        "date"
-                      ],
+                      "required": ["id", "date"],
                       "properties": {
                         "id": {
                           "type": "string",
@@ -4504,11 +3916,7 @@
           "anyOf": [
             {
               "type": "object",
-              "required": [
-                "action",
-                "script",
-                "forEach"
-              ],
+              "required": ["action", "script", "forEach"],
               "properties": {
                 "action": {
                   "const": "extractAll"
@@ -4523,18 +3931,13 @@
                   "type": "string",
                   "description": "A JavaScript script to run in the page context",
                   "title": "Script",
-                  "examples": [
-                    "console.log(\"Hello World\");"
-                  ]
+                  "examples": ["console.log(\"Hello World\");"]
                 },
                 "pagination": {
                   "anyOf": [
                     {
                       "type": "object",
-                      "required": [
-                        "type",
-                        "selector"
-                      ],
+                      "required": ["type", "selector"],
                       "properties": {
                         "type": {
                           "const": "next"
@@ -4543,27 +3946,20 @@
                           "type": "string",
                           "description": "The CSS selector to use to find the element",
                           "title": "Selector",
-                          "examples": [
-                            "#example"
-                          ]
+                          "examples": ["#example"]
                         },
                         "waitForSelector": {
                           "type": "string",
                           "description": "The CSS selector to use to find the element",
                           "title": "Selector",
-                          "examples": [
-                            "#example"
-                          ]
+                          "examples": ["#example"]
                         }
                       },
                       "additionalProperties": false
                     },
                     {
                       "type": "object",
-                      "required": [
-                        "type",
-                        "selector"
-                      ],
+                      "required": ["type", "selector"],
                       "properties": {
                         "type": {
                           "const": "loadMore"
@@ -4572,9 +3968,7 @@
                           "type": "string",
                           "description": "The CSS selector to use to find the element",
                           "title": "Selector",
-                          "examples": [
-                            "#example"
-                          ]
+                          "examples": ["#example"]
                         }
                       },
                       "additionalProperties": false
@@ -4594,12 +3988,7 @@
             },
             {
               "type": "object",
-              "required": [
-                "action",
-                "selector",
-                "forEach",
-                "fields"
-              ],
+              "required": ["action", "selector", "forEach", "fields"],
               "properties": {
                 "action": {
                   "const": "extractAll"
@@ -4614,18 +4003,13 @@
                   "type": "string",
                   "description": "The CSS selector to use to find the element",
                   "title": "Selector",
-                  "examples": [
-                    "#example"
-                  ]
+                  "examples": ["#example"]
                 },
                 "pagination": {
                   "anyOf": [
                     {
                       "type": "object",
-                      "required": [
-                        "type",
-                        "selector"
-                      ],
+                      "required": ["type", "selector"],
                       "properties": {
                         "type": {
                           "const": "next"
@@ -4634,27 +4018,20 @@
                           "type": "string",
                           "description": "The CSS selector to use to find the element",
                           "title": "Selector",
-                          "examples": [
-                            "#example"
-                          ]
+                          "examples": ["#example"]
                         },
                         "waitForSelector": {
                           "type": "string",
                           "description": "The CSS selector to use to find the element",
                           "title": "Selector",
-                          "examples": [
-                            "#example"
-                          ]
+                          "examples": ["#example"]
                         }
                       },
                       "additionalProperties": false
                     },
                     {
                       "type": "object",
-                      "required": [
-                        "type",
-                        "selector"
-                      ],
+                      "required": ["type", "selector"],
                       "properties": {
                         "type": {
                           "const": "loadMore"
@@ -4663,9 +4040,7 @@
                           "type": "string",
                           "description": "The CSS selector to use to find the element",
                           "title": "Selector",
-                          "examples": [
-                            "#example"
-                          ]
+                          "examples": ["#example"]
                         }
                       },
                       "additionalProperties": false
@@ -4688,17 +4063,13 @@
                     "anyOf": [
                       {
                         "type": "object",
-                        "required": [
-                          "selector"
-                        ],
+                        "required": ["selector"],
                         "properties": {
                           "selector": {
                             "type": "string",
                             "description": "The CSS selector to use to find the element",
                             "title": "Selector",
-                            "examples": [
-                              "#example"
-                            ]
+                            "examples": ["#example"]
                           },
                           "attribute": {
                             "type": "string",
@@ -4709,9 +4080,7 @@
                             "type": "string",
                             "description": "A JavaScript function to transform the value",
                             "title": "Transform",
-                            "examples": [
-                              "(v) => Number(v.replace('$', ''))"
-                            ]
+                            "examples": ["(v) => Number(v.replace('$', ''))"]
                           }
                         },
                         "additionalProperties": false
@@ -4735,11 +4104,7 @@
           "anyOf": [
             {
               "type": "object",
-              "required": [
-                "action",
-                "script",
-                "then"
-              ],
+              "required": ["action", "script", "then"],
               "properties": {
                 "action": {
                   "const": "if"
@@ -4748,9 +4113,7 @@
                   "type": "string",
                   "description": "A JavaScript script to run in the page context",
                   "title": "Script",
-                  "examples": [
-                    "console.log(\"Hello World\");"
-                  ]
+                  "examples": ["console.log(\"Hello World\");"]
                 },
                 "then": {
                   "type": "array",
@@ -4769,11 +4132,7 @@
             },
             {
               "type": "object",
-              "required": [
-                "action",
-                "selector",
-                "then"
-              ],
+              "required": ["action", "selector", "then"],
               "properties": {
                 "action": {
                   "const": "if"
@@ -4782,9 +4141,7 @@
                   "type": "string",
                   "description": "The CSS selector to use to find the element",
                   "title": "Selector",
-                  "examples": [
-                    "#example"
-                  ]
+                  "examples": ["#example"]
                 },
                 "then": {
                   "type": "array",
@@ -4807,11 +4164,7 @@
         },
         {
           "type": "object",
-          "required": [
-            "action",
-            "snippet",
-            "args"
-          ],
+          "required": ["action", "snippet", "args"],
           "properties": {
             "action": {
               "const": "runSnippet"
@@ -4824,9 +4177,7 @@
             },
             "args": {
               "type": "object",
-              "required": [
-                "url"
-              ],
+              "required": ["url"],
               "properties": {
                 "url": {
                   "type": "string",
