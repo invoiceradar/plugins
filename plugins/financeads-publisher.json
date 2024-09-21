@@ -1,0 +1,68 @@
+{
+	"$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+	"id": "financeads-publisher",
+	"name": "financeAds Publisher",
+	"description": "financeAds is a affiliate plattform. This plugin allows you to download invoices from your financeAds publisher account.",
+	"homepage": "https://www.financeads.net/",
+	"configSchema": {},
+	"checkAuth": [
+		{
+			"action": "navigate",
+			"url": "https://dashboard.financeads.net/publisher/start"
+		},
+		{
+			"action": "checkElementExists",
+			"selector": "fads-affiliate-dashboard"
+		}
+	],
+	"startAuth": [
+		{
+			"action": "navigate",
+			"url": "https://dashboard.financeads.net/login"
+		},
+		{
+			"action": "waitForElement",
+			"selector": ".fads-affiliate-dashboard",
+			"timeout": 120000
+		}
+	],
+	"getDocuments": [
+		{
+			"action": "navigate",
+			"url": "https://dashboard.financeads.net/publisher/meinkonto/auszahlung"
+		},
+		{
+			"action": "extractAll",
+			"selector": "#auszahlung-card > .card-body > div:not(.d-none) > .row",
+			"variable": "invoice",
+			"fields": {
+				"id": {
+					"selector": "a",
+					"attribute": "title"
+				},
+				"date": {
+					"selector": ".row"
+				},
+				"total": {
+					"selector": "div:nth-child(2) > .row > div:last-child"
+				},
+				"url": {
+					"selector": "a",
+					"attribute": "href"
+				}
+			},
+			"forEach": [
+				{
+					"action": "downloadPdf",
+					"url": "{{invoice.url}}",
+					"document": {
+						"type": "outgoing_invoice",
+						"id": "{{invoice.id}}",
+						"date": "{{invoice.date}}",
+						"total": "{{invoice.total}}"
+					}
+				}
+			]
+		}
+	]
+}
