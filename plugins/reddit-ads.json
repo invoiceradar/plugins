@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
   "id": "reddit-ads",
-  "name": "Reddits Ads",
+  "name": "Reddit Ads",
   "description": "Reddit Ads is a self-serve advertising platform that allows you to create ads for your products or services and reach users on Reddit.",
   "homepage": "https://ads.reddit.com",
   "configSchema": {
