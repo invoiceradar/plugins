@@ -1,0 +1,75 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "tiktok-ads",
+  "name": "TikTok Ads",
+  "description": "TikTok Ads is a self-serve advertising platform that allows you to create ads for your products or services and reach users on TikTok.",
+  "homepage": "https://ads.tiktok.com",
+  "configSchema": {
+    "adAccountId": {
+      "type": "string",
+      "title": "Ad Account ID",
+      "required": true
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://ads.tiktok.com/i18n/dashboard?aadvid={{config.adAccountId}}",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkElementExists",
+      "selector": ".biz-menu"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://ads.tiktok.com/i18n/login/?redirect=https%3A%2F%2Fads.tiktok.com%2Fi18n%2Faccount%2Ftransaction%3Faadvid%3D{{config.adAccountId}}"
+    },
+    {
+      "action": "waitForElement",
+      "selector": ".biz-menu",
+      "timeout": 120000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://ads.tiktok.com/i18n/account/transaction?aadvid={{config.adAccountId}}"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "tbody tr"
+    },
+
+    {
+      "action": "extractAll",
+      "selector": "tbody tr",
+      "variable": "invoice",
+      "fields": {
+        "id": {
+          "selector": ".new-transaction-documents-invoice-id",
+          "transform": "(v) => v.replace('Invoice: ', '')"
+        },
+        "date": {
+          "selector": "td:nth-child(1)"
+        },
+        "total": {
+          "selector": "td:nth-child(7)"
+        }
+      },
+      "forEach": [
+        {
+          "action": "click",
+          "selector": "td:nth-child(5) .i-icon-download",
+          "scopeSelector": true
+        },
+        {
+          "action": "waitForPdfDownload",
+          "document": "{{invoice}}"
+        }
+      ]
+    }
+  ]
+}
