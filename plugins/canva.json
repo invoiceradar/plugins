@@ -32,17 +32,16 @@
       "url": "https://www.canva.com/settings/purchase-history",
       "waitForNetworkIdle": true
     },
-
     {
       "action": "extract",
       "description": "Extract Brand ID from document",
       "variable": "brandId",
-      "script": "(() => {\n  try {\n    // Find bootstrapping script\n    const bootstrapScript = Array.from(\n      document.querySelectorAll('script:not([src])'),\n    ).find((script) => script.textContent.includes('bootstrap'))\n\n    if (!bootstrapScript) {\n      throw new Error('Bootstrap script not found')\n    }\n\n    // Re-evaluate script, to ensure data is set\n    eval(bootstrapScript.textContent)\n\n    if (\n      !window.bootstrap ||\n      !window.bootstrap.page ||\n      !window.bootstrap.page.B ||\n      !window.bootstrap.page.B.A ||\n      !window.bootstrap.page.B.A.I\n    ) {\n      throw new Error('Required canva Data object not found')\n    }\n\n    return window.bootstrap.page.B.A.I\n  } catch (err) {\n    throw new Error('Failed to extract User ID')\n  }\n})()"
+      "script": "(() => {\n  try {\n    // Find bootstrapping script\n    const bootstrapScript = Array.from(\n      document.querySelectorAll('script:not([src])'),\n    ).find((script) => script.textContent.includes('bootstrap'))\n\n    if (!bootstrapScript) {\n      throw new Error('Bootstrap script not found')\n    }\n\n    // Re-evaluate script, to ensure data is set\n    eval(bootstrapScript.textContent)\n\n    if (\n      !window.bootstrap ||\n      !window.bootstrap.page ||\n      !window.bootstrap.page.B ||\n      !window.bootstrap.page.B.B ||\n      !window.bootstrap.page.B.B.A ||\n      !window.bootstrap.page.B.B.A.id\n    ) {\n      throw new Error('Required canva data object not found')\n    }\n\n    return window.bootstrap.page.B.B.A.id\n  } catch (err) {\n    throw new Error('Failed to extract User ID: ' + err.toString())\n  }\n})()"
     },
     {
       "action": "extractAll",
       "variable": "invoice",
-      "script": "fetch(\n  'https://www.canva.com/_ajax/billing/v2/invoices?requestType=OWNING_BRAND&brand={{brandId}}&projections=ITEM_DETAILS&includeFreeInvoices=false&minDate=0&limit=25&includeExternalBilled=false',\n)\n  .then((res) => res.text())\n  .then((text) => {\n    const array = text.split('//')\n    return JSON.parse(array[array.length - 1])\n  })\n  .then(({ invoices }) => {\n    return invoices\n      .filter((invoice) => invoice.paymentStatus === 'PAID')\n      .map((invoice) => ({\n        id: invoice.id,\n        date: invoice.chargeDate,\n        total: invoice.total + invoice.currency,\n      }))\n  })",
+      "script": "fetch(\n  'https://www.canva.com/_ajax/billing/v2/invoices?requestType=OWNING_BRAND&brand={{brandId}}&projections=ITEM_DETAILS&includeFreeInvoices=false&minDate=0&limit=100&includeExternalBilled=false',\n)\n  .then((res) => res.text())\n  .then((text) => {\n    const array = text.split('//')\n    return JSON.parse(array[array.length - 1])\n  })\n  .then(({ invoices }) => {\n    return invoices\n      .filter((invoice) => invoice.paymentStatus === 'PAID')\n      .map((invoice) => ({\n        id: invoice.id,\n        date: invoice.chargeDate,\n        total: invoice.total + invoice.currency,\n      }))\n  })",
       "forEach": [
         {
           "action": "navigate",
