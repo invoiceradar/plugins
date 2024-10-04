@@ -1,0 +1,45 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "fly.io",
+  "name": "Fly.io",
+  "description": "Fly.io is a public cloud build for developers who ship.",
+  "homepage": "https://fly.io",
+  "configSchema": {
+    "orgSlug": {
+      "type": "string",
+      "title": "Organization Slug",
+      "required": true
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://fly.io",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkElementExists",
+      "selector": "[href='/dashboard']"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://fly.io/app/sign-in",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[href='/dashboard']"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "runSnippet",
+      "snippet": "getInvoicesFromStripeBillingPortal",
+      "args": {
+        "url": "https://fly.io/organizations/{{config.orgSlug}}/billing_portal"
+      }
+    }
+  ]
+}
