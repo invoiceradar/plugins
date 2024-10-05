@@ -20,7 +20,7 @@
       "waitForNetworkIdle": true
     },
     {
-      "action": "waitForElement",
+      "action": "checkElementExists",
       "selector": "[data-testid='awsc-nav-account-menu-button']"
     }
   ],
