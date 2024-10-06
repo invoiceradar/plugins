@@ -60,5 +60,21 @@
         "url": "{{portalUrl}}"
       }
     }
+  ],
+  "getConfigOptions": [
+    {
+      "action": "navigate",
+      "url": "https://expo.dev"
+    },
+    {
+      "action": "extract",
+      "script": "JSON.parse(\n  document.getElementById('__NEXT_DATA__').innerHTML,\n).props.pageProps.currentUser.accounts.map((a) => ({\n  label: a.name,\n  value: a.name,\n}))",
+      "variable": "options"
+    },
+    {
+      "action": "exposeOptions",
+      "config": "username",
+      "options": "{{options}}"
+    }
   ]
 }
