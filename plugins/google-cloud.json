@@ -1,0 +1,110 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "google-cloud",
+  "name": "Google Cloud",
+  "description": "",
+  "homepage": "https://console.cloud.google.com/welcome",
+  "configSchema": {
+    "accountId": {
+      "type": "string",
+      "title": "Billing Account ID",
+      "description": "The ID of the billing account.",
+      "required": true,
+      "example": "123456-123456-123456"
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://console.cloud.google.com/billing"
+    },
+    {
+      "action": "checkURL",
+      "url": "https://console.cloud.google.com/**"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://console.cloud.google.com/billing"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://console.cloud.google.com/**",
+      "timeout": 12000000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://console.cloud.google.com/billing/{{config.accountId}}/history",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "waitForNetworkIdle",
+      "timeout": 60000
+    },
+    {
+      "action": "runJs",
+      "description": "Navigate to billing iframe content to allow extraction",
+      "script": "(() => {\n  window.location.href = document.querySelector(\n    'iframe[src*=\"https://payments.google.com/payments\"]',\n  ).src\n})()"
+    },
+    {
+      "action": "waitForNetworkIdle"
+    },
+    {
+      "action": "extractAll",
+      "variable": "invoice",
+      "selector": ".b3id-timeline-view-section:has(.jfk-freestanding-menu-button)",
+      "fields": {
+        "id": {
+          "selector": ".b3id-document-zippy-line-item:first-child",
+          "transform": "(id) => id.match(/(\\d+) \\(.*\\)/)[1]"
+        },
+        "total": {
+          "selector": ".b3-widget-table tr:first-child",
+          "transform": "(total) => total.match(/\\d+[,.]\\d+.*/)[0]"
+        },
+        "date": { 
+          "selector": ".b3-card-header-title",
+          "transform": "(date) => date.match(/.*–(.*)/)[1]"
+        }
+      },
+      "forEach": [
+        {
+          "action": "if",
+          "selector": ".b3id-collapsing-card.collapsed",
+          "then": [
+            {
+              "action": "click",
+              "selector": ".b3id-collapsing-card.collapsed"
+            }
+          ]
+        },
+        {
+          "action": "click",
+          "selector": ".b3id-document-zippy-line-item",
+          "scopeSelector": true
+        },
+        {
+          "action": "waitForNetworkIdle"
+        },
+        {
+          "action": "extract",
+          "variable": "pdfUrl",
+          "script": "document.querySelector('.goog-menu-vertical:not([style*=\"display: none\"]) .b3-document-zippy-action').getAttribute('data-download-url')"
+        },
+        {
+          "action": "downloadPdf",
+          "url": "{{pdfUrl}}",
+          "document": {
+            "id": "{{invoice.id}}",
+            "date": "{{invoice.date}}",
+            "total": "{{invoice.total}}",
+            "type": "invoice"
+          }
+        }
+      ]
+    }
+  ]
+}
