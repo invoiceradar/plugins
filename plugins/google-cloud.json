@@ -65,7 +65,7 @@
           "selector": ".b3-widget-table tr:first-child",
           "transform": "(total) => total.match(/\\d+[,.]\\d+.*/)[0]"
         },
-        "date": { 
+        "date": {
           "selector": ".b3-card-header-title",
           "transform": "(date) => date.match(/.*–(.*)/)[1]"
         }
