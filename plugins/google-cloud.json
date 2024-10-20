@@ -53,6 +53,17 @@
       "action": "waitForNetworkIdle"
     },
     {
+      "action": "click",
+      "selector": "[data-name='timelineViewDateRangeFilter']"
+    },
+    {
+      "action": "click",
+      "selector": "[data-value='ALL_TIME']"
+    },
+    {
+      "action": "waitForNetworkIdle"
+    },
+    {
       "action": "extractAll",
       "variable": "invoice",
       "selector": ".b3id-timeline-view-section:has(.jfk-freestanding-menu-button)",
