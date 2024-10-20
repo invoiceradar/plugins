@@ -16,17 +16,17 @@
       "required": true
     }
   },
-"checkAuth": [
-  {
-    "action": "navigate",
-    "url": "https://de.semrush.com/accounts/subscription-info/payments/"
-  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://de.semrush.com/accounts/subscription-info/payments/"
+    },
 
-  {
-    "action": "checkElementExists",
-    "selector": "a[data-test='header-menu__user-profile']"
-  }
-],
+    {
+      "action": "checkElementExists",
+      "selector": "a[data-test='header-menu__user-profile']"
+    }
+  ],
   "startAuth": [
     {
       "action": "navigate",
@@ -52,7 +52,7 @@
       "timeout": 12000000
     }
   ],
-"getDocuments": [
+  "getDocuments": [
     {
       "action": "navigate",
       "url": "https://de.semrush.com/accounts/subscription-info/payments/"
@@ -67,7 +67,7 @@
       "variable": "invoice",
       "fields": {
         "id": {
-          "selector": "div.___SEllipsis_1w58z_gg_[data-qa^='subscription-info-payments-page-table-cell-saleid']"
+          "selector": "div[data-qa^='subscription-info-payments-page-table-cell-saleid']"
         },
         "date": {
           "selector": "div[data-qa^='subscription-info-payments-page-table-cell-date']"
@@ -76,7 +76,7 @@
           "selector": "div[data-qa^='subscription-info-payments-page-table-cell-amount']"
         },
         "url": {
-          "selector": "a.___SLink_1ohi6_gg_[href^='/paysol/receipts/classic']",
+          "selector": "a[href^='/paysol/receipts/classic']",
           "attribute": "href"
         }
       },
