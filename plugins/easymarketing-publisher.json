@@ -48,7 +48,8 @@
 			"variable": "invoice",
 			"fields": {
 				"id": {
-					"selector": "a[href^='user-billings.do']"
+					"selector": "a[href^='user-billings.do']",
+					"transform": "(d) => d.replace('.pdf', '')"
 				},
 				"date": {
 					"selector": "td:nth-child(2) div"
