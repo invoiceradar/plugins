@@ -1,0 +1,67 @@
+{
+	"$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+	"id": "adrecord-publisher",
+	"name": "Adrecord Publisher",
+	"description": "Adrecord is a affiliate plattform. This plugin allows you to download invoices from your Adrecord publisher account.",
+	"homepage": "https://www.adrecord.com",
+	"configSchema": {},
+	"checkAuth": [
+		{
+			"action": "navigate",
+			"url": "https://www.adrecord.com/en/dashboard"
+		},
+		{
+			"action": "checkElementExists",
+			"selector": "a[href$='/logout']"
+		}
+	],
+	"startAuth": [
+		{
+			"action": "navigate",
+			"url": "https://www.adrecord.com/en/login"
+		},
+		{
+			"action": "waitForElement",
+			"selector": "a[href$='/logout']",
+			"timeout": 120000
+		}
+	],
+	"getDocuments": [
+		{
+			"action": "navigate",
+			"url": "https://www.adrecord.com/en/payments"
+		},
+		{
+			"action": "extractAll",
+			"selector": "table#DataTables_Table_0 tbody tr",
+			"variable": "invoice",
+			"fields": {
+				"id": {
+					"selector": "td"
+				},
+				"date": {
+					"selector": "td:nth-child(2)"
+				},
+				"total": {
+					"selector": "td:nth-child(4)"
+				},
+				"url": {
+					"selector": "a[href^='/en/payments/']",
+					"attribute": "href"
+				}
+			},
+			"forEach": [
+				{
+					"action": "downloadPdf",
+					"url": "https://www.adrecord.com{{invoice.url}}",
+					"document": {
+						"type": "outgoing_invoice",
+						"id": "{{invoice.id}}",
+						"date": "{{invoice.date}}",
+						"total": "{{invoice.total}}"
+					}
+				}
+			]
+		}
+	]
+}
