@@ -847,7 +847,7 @@ Extracts available invoices from a Stripe billing portal.
 
 ## Advanced Patterns
 
-### Running a fetch request inside a step
+### Running a fetch request
 
 Sometimes, you might need to run a fetch request inside a step to fetch data from an API. To do this, you can use the `extractAll` action.
 
