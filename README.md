@@ -245,7 +245,6 @@ Let's create a simple plugin to fetch invoices from a hypothetical service.
            "document": {
              "type": "invoice",
              "id": "{{invoice.id}}",
-             "jonas": "{{invoice.date}}",
              "date": "{{invoice.date}}",
              "total": "{{invoice.total}}"
            }
