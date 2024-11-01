@@ -61,12 +61,17 @@
           "description": "Wait for the sidebar to open"
         },
         {
+          "action": "sleep",
+          "duration": 100
+        },
+        {
           "action": "if",
           "selector": "[class*='LayoutSide__'] [class*='ActionButton-rui']",
+          "scopeSelector": false,
           "then": [
             {
               "action": "click",
-              "selector": "[class*='OverlayBase'] button:has([style*='icons/BackButtonArrow'])",
+              "selector": "[class*='OverlayBase'] [aria-label='Close']",
               "scopeSelector": false,
               "optional": true
             },
@@ -75,7 +80,6 @@
               "selector": "[class*='LayoutSide__'] [class*='ActionButton-rui']",
               "scopeSelector": false
             },
-
             {
               "action": "click",
               "selector": "button:has([style*='icons/Download'])",
