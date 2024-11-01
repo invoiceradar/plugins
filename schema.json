@@ -1332,6 +1332,21 @@
                       "if"
                     ]
                   },
+                  "scopeSelector": {
+                    "anyOf": [
+                      {
+                        "type": "boolean",
+                        "description": "Defaults to true. If set, the selector will be scoped to the parent element",
+                        "title": "Scope Selector",
+                        "default": true
+                      },
+                      {
+                        "enum": [
+                          null
+                        ]
+                      }
+                    ]
+                  },
                   "then": {
                     "type": "array",
                     "items": {
@@ -1366,6 +1381,21 @@
                   "action": {
                     "enum": [
                       "if"
+                    ]
+                  },
+                  "scopeSelector": {
+                    "anyOf": [
+                      {
+                        "type": "boolean",
+                        "description": "Defaults to true. If set, the selector will be scoped to the parent element",
+                        "title": "Scope Selector",
+                        "default": true
+                      },
+                      {
+                        "enum": [
+                          null
+                        ]
+                      }
                     ]
                   },
                   "then": {
@@ -2666,6 +2696,21 @@
                       "if"
                     ]
                   },
+                  "scopeSelector": {
+                    "anyOf": [
+                      {
+                        "type": "boolean",
+                        "description": "Defaults to true. If set, the selector will be scoped to the parent element",
+                        "title": "Scope Selector",
+                        "default": true
+                      },
+                      {
+                        "enum": [
+                          null
+                        ]
+                      }
+                    ]
+                  },
                   "then": {
                     "type": "array",
                     "items": {
@@ -2700,6 +2745,21 @@
                   "action": {
                     "enum": [
                       "if"
+                    ]
+                  },
+                  "scopeSelector": {
+                    "anyOf": [
+                      {
+                        "type": "boolean",
+                        "description": "Defaults to true. If set, the selector will be scoped to the parent element",
+                        "title": "Scope Selector",
+                        "default": true
+                      },
+                      {
+                        "enum": [
+                          null
+                        ]
+                      }
                     ]
                   },
                   "then": {
@@ -4000,6 +4060,21 @@
                       "if"
                     ]
                   },
+                  "scopeSelector": {
+                    "anyOf": [
+                      {
+                        "type": "boolean",
+                        "description": "Defaults to true. If set, the selector will be scoped to the parent element",
+                        "title": "Scope Selector",
+                        "default": true
+                      },
+                      {
+                        "enum": [
+                          null
+                        ]
+                      }
+                    ]
+                  },
                   "then": {
                     "type": "array",
                     "items": {
@@ -4034,6 +4109,21 @@
                   "action": {
                     "enum": [
                       "if"
+                    ]
+                  },
+                  "scopeSelector": {
+                    "anyOf": [
+                      {
+                        "type": "boolean",
+                        "description": "Defaults to true. If set, the selector will be scoped to the parent element",
+                        "title": "Scope Selector",
+                        "default": true
+                      },
+                      {
+                        "enum": [
+                          null
+                        ]
+                      }
                     ]
                   },
                   "then": {
@@ -5370,6 +5460,21 @@
                     "if"
                   ]
                 },
+                "scopeSelector": {
+                  "anyOf": [
+                    {
+                      "type": "boolean",
+                      "description": "Defaults to true. If set, the selector will be scoped to the parent element",
+                      "title": "Scope Selector",
+                      "default": true
+                    },
+                    {
+                      "enum": [
+                        null
+                      ]
+                    }
+                  ]
+                },
                 "then": {
                   "type": "array",
                   "items": {
@@ -5404,6 +5509,21 @@
                 "action": {
                   "enum": [
                     "if"
+                  ]
+                },
+                "scopeSelector": {
+                  "anyOf": [
+                    {
+                      "type": "boolean",
+                      "description": "Defaults to true. If set, the selector will be scoped to the parent element",
+                      "title": "Scope Selector",
+                      "default": true
+                    },
+                    {
+                      "enum": [
+                        null
+                      ]
+                    }
                   ]
                 },
                 "then": {
