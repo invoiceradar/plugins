@@ -67,14 +67,20 @@
       "url": "https://expo.dev"
     },
     {
-      "action": "extract",
+      "action": "extractAll",
       "script": "JSON.parse(\n  document.getElementById('__NEXT_DATA__').innerHTML,\n).props.pageProps.currentUser.accounts.map((a) => ({\n  label: a.name,\n  value: a.name,\n}))",
-      "variable": "options"
+      "variable": "option",
+      "forEach": [
+        {
+          "action": "exposeOption",
+          "config": "username",
+          "option": "{{option}}"
+        }
+      ]
     },
     {
-      "action": "exposeOptions",
-      "config": "username",
-      "options": "{{options}}"
+      "action": "promptOptionSelection",
+      "config": "username"
     }
   ]
 }
