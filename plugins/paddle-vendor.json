@@ -1,0 +1,93 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "paddle-vendor",
+  "name": "Paddle Vendor",
+  "description": "Download outgoing invoices from Paddle.",
+  "homepage": "https://paddle.com",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://vendors.paddle.com",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkElementExists",
+      "selector": ".ant-avatar"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://login.paddle.com/login"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://vendors.paddle.com/**"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://vendors.paddle.com/payouts/sent",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "extractAll",
+      "selector": "pui-panel pui-tr",
+      "variable": "invoice",
+      "fields": {
+        "id": {
+          "selector": "pui-td:nth-child(1)"
+        },
+        "date": {
+          "selector": "pui-td:nth-child(2)"
+        },
+        "hasUsInvoice": {
+          "selector": "pui-button[href*='us_invoice']"
+        },
+        "hasWorldInvoice": {
+          "selector": "pui-button[href*='gb_invoice']"
+        }
+      },
+      "forEach": [
+        {
+          "action": "if",
+          "script": "'{{invoice.hasUsInvoice}}' !== ''",
+          "then": [
+            {
+              "action": "downloadPdf",
+              "url": "https://vendors.paddle.com/invoice/pdf/{{invoice.id}}/us_invoice",
+              "document": {
+                "id": "{{invoice.id}}US",
+                "date": "{{invoice.date}}",
+                "type": "outgoing_invoice"
+              },
+              "metadata": {
+                "type": "us_invoice"
+              }
+            }
+          ]
+        },
+        {
+          "action": "if",
+          "script": "'{{invoice.hasWorldInvoice}}' !== ''",
+          "then": [
+            {
+              "action": "downloadPdf",
+              "url": "https://vendors.paddle.com/invoice/pdf/{{invoice.id}}/gb_invoice",
+              "document": {
+                "id": "{{invoice.id}}GB",
+                "date": "{{invoice.date}}",
+                "type": "outgoing_invoice"
+              },
+              "metadata": {
+                "type": "world_invoice"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
