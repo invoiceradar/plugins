@@ -1,0 +1,92 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "semrush",
+  "name": "Semrush",
+  "description": "Tools für alles, was dein Marketer-Herz begehrt – SEO, Content-Marketing, Wettbewerbsforschung, PPC und Social-Media-Marketing.",
+  "homepage": "https://www.semrush.com/",
+  "configSchema": {
+    "username": {
+      "type": "string",
+      "title": "E-Mail",
+      "required": true
+    },
+    "password": {
+      "type": "string",
+      "title": "Password",
+      "required": true
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://de.semrush.com/accounts/subscription-info/payments/"
+    },
+
+    {
+      "action": "checkElementExists",
+      "selector": "a[data-test='header-menu__user-profile']"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.semrush.com/login"
+    },
+    {
+      "action": "type",
+      "selector": "#email",
+      "value": "{{config.username}}"
+    },
+    {
+      "action": "type",
+      "selector": "#password",
+      "value": "{{config.password}}"
+    },
+    {
+      "action": "click",
+      "selector": "button[data-test='login-page__btn-login']"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://de.semrush.com/projects/",
+      "timeout": 12000000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://de.semrush.com/accounts/subscription-info/payments/"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "div.___SRow_xl1dd_gg_"
+    },
+    {
+      "action": "extractAll",
+      "selector": "div.___SRow_xl1dd_gg_",
+      "variable": "invoice",
+      "fields": {
+        "id": {
+          "selector": "div[data-qa^='subscription-info-payments-page-table-cell-saleid']"
+        },
+        "date": {
+          "selector": "div[data-qa^='subscription-info-payments-page-table-cell-date']"
+        },
+        "total": {
+          "selector": "div[data-qa^='subscription-info-payments-page-table-cell-amount']"
+        },
+        "url": {
+          "selector": "a[href^='/paysol/receipts/classic']",
+          "attribute": "href"
+        }
+      },
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "https://de.semrush.com{{invoice.url}}",
+          "document": "{{invoice}}"
+        }
+      ]
+    }
+  ]
+}
