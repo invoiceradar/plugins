@@ -44,14 +44,16 @@
       "url": "https://vercel.com/"
     },
     {
-      "action": "extract",
+      "action": "extractAll",
       "script": "fetch('https://vercel.com/api/teams?flags=false', {\n  headers: {\n    accept: '*/*',\n    'accept-language': 'en-US,en;q=0.9',\n  },\n  referrer: 'https://vercel.com/',\n  referrerPolicy: 'origin-when-cross-origin',\n  body: null,\n  method: 'GET',\n  mode: 'cors',\n  credentials: 'include',\n})\n  .then((r) => r.json())\n  .then((r) =>\n    r.teams.map((t) => ({\n      label: t.name,\n      value: t.id,\n    })),\n  )",
-      "variable": "options"
-    },
-    {
-      "action": "exposeOptions",
-      "config": "teamId",
-      "options": "{{options}}"
+      "variable": "option",
+      "forEach": [
+        {
+          "action": "exposeOption",
+          "config": "teamId",
+          "option": "{{option}}"
+        }
+      ]
     }
   ],
   "getDocuments": [
