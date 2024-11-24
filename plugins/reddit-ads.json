@@ -39,7 +39,7 @@
   "getDocuments": [
     {
       "action": "extract",
-      "script": "'{{config.adAccountId}}'.split('_')[1]",
+      "script": "'{{config.adAccountId}}'.split('_')[1] || '{{config.adAccountId}}'",
       "variable": "advertiserId"
     },
     {
@@ -72,8 +72,7 @@
       "forEach": [
         {
           "action": "click",
-          "selector": "td:nth-child(6) button",
-          "scopeSelector": true
+          "selector": "td:nth-child(6) button"
         },
         {
           "action": "waitForPdfDownload",

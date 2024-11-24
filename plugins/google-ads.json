@@ -73,6 +73,17 @@
       "action": "waitForNetworkIdle"
     },
     {
+      "action": "click",
+      "selector": "[data-name='timelineViewDateRangeFilter']"
+    },
+    {
+      "action": "click",
+      "selector": "[data-value='ALL_TIME']"
+    },
+    {
+      "action": "waitForNetworkIdle"
+    },
+    {
       "action": "extractAll",
       "variable": "invoice",
       "selector": "tbody tr:has(.b3-button-link)",

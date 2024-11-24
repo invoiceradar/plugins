@@ -1,0 +1,99 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "klarmobil",
+  "name": "Klarmobil",
+  "description": "Klarmobil is a German mobile phone provider.",
+  "homepage": "https://www.klarmobil.de/",
+  "configSchema": {
+    "username": {
+      "type": "string",
+      "title": "Username",
+      "required": true
+    },
+    "password": {
+      "type": "password",
+      "title": "Password",
+      "required": true
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.klarmobil.de/online-service/meine-rechnungen",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkElementExists",
+      "selector": "[class*='navigation-icon-label']"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.klarmobil.de/online-service/meine-rechnungen",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "type",
+      "selector": "[name='username']",
+      "value": "{{config.username}}"
+    },
+    {
+      "action": "type",
+      "selector": "[name='password']",
+      "value": "{{config.password}}"
+    },
+    {
+      "action": "click",
+      "selector": "[name='action']"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[class*='navigation-icon-label']"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://www.klarmobil.de/online-service/meine-rechnungen",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "waitForElement",
+      "selector": "ecare-km-my-invoices-invoice-accordion"
+    },
+    {
+      "action": "extractAll",
+      "selector": "ecare-km-my-invoices-invoice-accordion ecare-ui-kit-accordion",
+      "variable": "invoice",
+      "fields": {
+        "id": {
+          "selector": ".title-text .subheading",
+          "transform": "(v) => v.split(' ')[1]"
+        },
+        "date": {
+          "selector": ".title-text .title > span:nth-child(1)"
+        },
+        "total": {
+          "selector": ".title-text .title > span:nth-child(2)"
+        }
+      },
+      "forEach": [
+        {
+          "action": "click",
+          "selector": "button"
+        },
+        { "action": "click", "selector": "[data-qa='invoice-download-pdf']" },
+        {
+          "action": "waitForPdfDownload",
+          "document": {
+            "id": "{{invoice.id}}",
+            "date": "{{invoice.date}}",
+            "total": "{{invoice.total}}",
+            "type": "invoice"
+          }
+        }
+      ]
+    }
+  ]
+}

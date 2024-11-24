@@ -28,7 +28,7 @@
     },
     {
       "action": "waitForURL",
-      "url": "https://business.revolut.com/plan/subscriptions/history",
+      "url": "https://business.revolut.com/**",
       "timeout": 180000
     }
   ],
@@ -38,7 +38,6 @@
       "url": "https://business.revolut.com/plan/subscriptions/history",
       "waitForNetworkIdle": true
     },
-
     {
       "action": "extractAll",
       "variable": "periods",
@@ -61,21 +60,25 @@
           "description": "Wait for the sidebar to open"
         },
         {
+          "action": "sleep",
+          "duration": 100
+        },
+        {
           "action": "if",
-          "selector": "[class*='LayoutSide__'] [class*='ActionButton-rui']",
+          "selector": "[class*='SideWrapper'] [class*='ActionButton-rui']",
+          "scopeSelector": false,
           "then": [
             {
               "action": "click",
-              "selector": "[class*='OverlayBase'] button:has([style*='icons/BackButtonArrow'])",
+              "selector": "[class*='OverlayBase'] [aria-label='Close']",
               "scopeSelector": false,
               "optional": true
             },
             {
               "action": "click",
-              "selector": "[class*='LayoutSide__'] [class*='ActionButton-rui']",
+              "selector": "[class*='SideWrapper'] [class*='ActionButton-rui']",
               "scopeSelector": false
             },
-
             {
               "action": "click",
               "selector": "button:has([style*='icons/Download'])",

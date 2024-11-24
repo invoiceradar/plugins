@@ -1,0 +1,58 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "tesla",
+  "name": "Tesla",
+  "description": "Download Supercharger invoices from your Tesla account.",
+  "homepage": "https://tesla.com/",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://invoiceradar.com/tools/tesla/invoices",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkURL",
+      "url": "https://invoiceradar.com/tools/tesla/invoices"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://invoiceradar.com/tools/tesla/auth",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://invoiceradar.com/tools/tesla/invoices"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://invoiceradar.com/tools/tesla/invoices",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "extractAll",
+      "script": "fetch('https://invoiceradar.com/tools/tesla/invoices/list').then(res => res.json())",
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "{{item.pdfUrl}}",
+          "document": {
+            "id": "{{item.invoiceId}}",
+            "date": "{{item.date}}",
+            "total": "{{item.amount}} {{item.currency}}",
+            "type": "invoice"
+          },
+          "metadata": {
+            "country": "{{item.countryCode}}",
+            "chargerLocation": "{{item.locationName}}",
+            "vin": "{{item.vin}}"
+          }
+        }
+      ]
+    }
+  ]
+}

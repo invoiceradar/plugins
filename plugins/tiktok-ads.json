@@ -73,16 +73,43 @@
     },
     {
       "action": "waitForElement",
+      "selector": ".bc-okee-input-wrapper"
+    },
+    {
+      "action": "click",
+      "selector": ".bc-okee-input-wrapper"
+    },
+    {
+      "action": "click",
+      "selector": "div.bc-okee-date-today"
+    },
+    {
+      "action": "click",
+      "selector": ".bc-okee-date-owner-date.bc-okee-date-owner-date.bc-okee-date-position-start:nth-child(1) .bc-okee-icon-double-left"
+    },
+    {
+      "action": "click",
+      "selector": ".bc-okee-date-grid-in:not(.bc-okee-date-disabled) > div"
+    },
+    {
+      "action": "sleep",
+      "duration": 1000
+    },
+    {
+      "action": "waitForElement",
       "selector": "tbody tr"
     },
-
+    {
+      "action": "runJs",
+      "script": "document.querySelectorAll('table')[1]?.remove()"
+    },
     {
       "action": "runJs",
       "script": "document.querySelectorAll('table')[1]?.remove()"
     },
     {
       "action": "extractAll",
-      "selector": "tbody tr",
+      "selector": "table:first-of-type tbody tr",
       "variable": "invoice",
       "fields": {
         "id": {
@@ -99,8 +126,7 @@
       "forEach": [
         {
           "action": "click",
-          "selector": "td:nth-child(5) .i-icon-download",
-          "scopeSelector": true
+          "selector": "td:nth-child(5) .i-icon-download"
         },
         {
           "action": "waitForPdfDownload",
