@@ -25,12 +25,45 @@
   "startAuth": [
     {
       "action": "navigate",
-      "url": "https://ads.tiktok.com/i18n/login/?redirect=https%3A%2F%2Fads.tiktok.com%2Fi18n%2Faccount%2Ftransaction%3Faadvid%3D{{config.adAccountId}}"
+      "url": "https://ads.tiktok.com/i18n/login/?redirect=https%3A%2F%2Fads.tiktok.com%2Fi18n%2Fdashboard"
     },
     {
       "action": "waitForElement",
       "selector": ".biz-menu",
       "timeout": 120000
+    }
+  ],
+  "getConfigOptions": [
+    {
+      "action": "navigate",
+      "url": "https://ads.tiktok.com/i18n/dashboard",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "click",
+      "selector": ".account-manage-wrap .biz-popover-reference"
+    },
+    { "action": "waitForElement", "selector": ".account-panel-info-item" },
+    {
+      "action": "extractAll",
+      "selector": ".account-panel-info-item",
+      "fields": {
+        "label": {
+          "selector": ".title-info-name span"
+        },
+        "value": {
+          "selector": ".title-info-id",
+          "transform": "(v) => v.replace('ID: ', '')"
+        }
+      },
+      "variable": "option",
+      "forEach": [
+        {
+          "action": "exposeOption",
+          "config": "adAccountId",
+          "option": "{{option}}"
+        }
+      ]
     }
   ],
   "getDocuments": [
@@ -43,6 +76,10 @@
       "selector": "tbody tr"
     },
 
+    {
+      "action": "runJs",
+      "script": "document.querySelectorAll('table')[1]?.remove()"
+    },
     {
       "action": "extractAll",
       "selector": "tbody tr",
