@@ -63,7 +63,7 @@
     },
     {
       "action": "extractAll",
-      "script": "fetch('https://www.figma.com/api/subscriptions/team/{{targetTeamId}}/invoices')\n  .then((res) => res.json())\n  .then((res) => res.meta.map((invoice) => invoice.hosted_invoice_url))",
+      "script": "fetch('https://www.figma.com/api/subscriptions/team/{{targetTeamId}}/invoices')\n  .then((res) => res.json())\n  .then((res) => {\n    if (res.error) {\n      throw new Error(res.message)\n    }\n    return res.meta.map((invoice) => invoice.hosted_invoice_url)\n  })",
       "variable": "stripeUrl",
       "forEach": [
         {
