@@ -32,6 +32,25 @@
       "url": "https://www.figma.com/files/**"
     }
   ],
+  "getConfigOptions": [
+    {
+      "action": "navigate",
+      "url": "https://www.figma.com/",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "extractAll",
+      "script": "fetch('https://www.figma.com/api/user/plans', {\n  headers: {\n    'content-type': 'application/json',\n  },\n  body: null,\n  method: 'GET',\n  mode: 'cors',\n  credentials: 'include',\n})\n  .then((r) => r.json())\n  .then((r) =>\n    r.meta?.teams.map((team) => ({\n      label: team.name,\n      value: team.id,\n    })),\n  )",
+      "variable": "option",
+      "forEach": [
+        {
+          "action": "exposeOption",
+          "config": "teamId",
+          "option": "{{option}}"
+        }
+      ]
+    }
+  ],
   "getDocuments": [
     {
       "action": "navigate",
