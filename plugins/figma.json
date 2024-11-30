@@ -9,7 +9,8 @@
       "type": "string",
       "title": "Team ID",
       "description": "The team ID of the Figma team. If empty the default team will be used.",
-      "example": "123456789122000001"
+      "example": "123456789122000001",
+      "required": true
     }
   },
   "checkAuth": [
