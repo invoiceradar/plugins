@@ -36,6 +36,54 @@
       "timeout": 120000
     }
   ],
+  "getConfigOptions": [
+    {
+      "action": "navigate",
+      "url": "https://ads.reddit.com/accounts",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[data-testid='business-list']"
+    },
+    {
+      "action": "extractAll",
+      "selector": "[data-testid='business-list'] .automation-list-item",
+      "variable": "business",
+      "fields": {
+        "name": ".automation-text-field:first-of-type"
+      },
+      "forEach": [
+        {
+          "action": "click",
+          "selector": "button"
+        },
+        {
+          "action": "waitForElement",
+          "selector": ".automation-ad-account-list"
+        },
+        {
+          "action": "extractAll",
+          "selector": ".automation-ad-account-list .automation-list-item",
+          "variable": "option",
+          "fields": {
+            "label": ".automation-text-field:first-of-type",
+            "value": ".automation-entity-description-body>div:last-of-type"
+          },
+          "forEach": [
+            {
+              "action": "exposeOption",
+              "config": "adAccountId",
+              "option": {
+                "label": "{{option.label}} ({{business.name}})",
+                "value": "{{option.value}}"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
   "getDocuments": [
     {
       "action": "extract",
