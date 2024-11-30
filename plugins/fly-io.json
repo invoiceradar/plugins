@@ -14,7 +14,7 @@
   "checkAuth": [
     {
       "action": "navigate",
-      "url": "https://fly.io/dashboard",
+      "url": "https://fly.io",
       "waitForNetworkIdle": true
     },
     {
