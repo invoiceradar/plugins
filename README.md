@@ -58,6 +58,7 @@ Plugins for Invoice Radar are written in JSON and follow a specific structure. E
 
 - **checkAuth**: Steps to verify if the user is already authenticated.
 - **startAuth**: Steps to initiate the authentication process.
+- **getConfigOptions**: Optional steps to fetch configuration options like Team ID.
 - **getDocuments**: Steps to fetch and download documents.
 
 ### Minimal Plugin Example
@@ -209,7 +210,38 @@ Let's create a simple plugin to fetch invoices from a hypothetical service.
    ]
    ```
 
-5. **Scrape Documents**:
+5. **Expose Configuration Options (optional)**:
+
+   The `getConfigOptions` step is optional and can be used to fetch configuration options like a teamId. This is useful if the plugin requires a teamId to be set in the configuration which is not known at the time of adding the plugin.
+
+   The `config` field is the key of one of the options in the `configSchema`. It will expose the options to the user as a dropdown in the configuration modal.
+
+   ```json
+   "getConfigOptions": [
+      {
+        "action": "navigate",
+        "url": "https://example.com/",
+        "waitForNetworkIdle": true
+      },
+      {
+        "action": "extractAll",
+        "script": "fetch('https://example.com/api/teams').then(r => r.json())",
+        "variable": "option",
+        "forEach": [
+          {
+            "action": "exposeOption",
+            "config": "teamId",
+            "option": {
+              "label": "{{option.name}}",
+              "value": "{{option.id}}"
+            }
+          }
+        ]
+      }
+   ]
+   ```
+
+6. **Scrape Documents**:
 
    `getDocuments` contains steps to fetch and download documents. This can involve navigating to the billing page, extracting invoice details, and downloading the PDFs.
 
@@ -254,7 +286,7 @@ Let's create a simple plugin to fetch invoices from a hypothetical service.
    ]
    ```
 
-6. **You are done!**:
+7. **You are done!**:
 
    Save the file and add it to Invoice Radar. You can now run the plugin to fetch invoices from the service.
 
@@ -807,6 +839,20 @@ This is generally not recommended. In most cases, it's better to use the [waitFo
 {
   "action": "sleep",
   "duration": 1000
+}
+```
+
+#### Expose Option (`exposeOption`)
+
+Exposes a configuration option to the user. The `config` field is the key of one of the options in the `configSchema`.
+
+For example, if the `configSchema` is `{ "teamId": { "type": "string", "label": "Team ID" } }`, the `config` field can be `teamId`.
+
+```json
+{
+  "action": "exposeOption",
+  "config": "teamId",
+  "option": "{{option}}"
 }
 ```
 
