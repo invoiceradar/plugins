@@ -8,7 +8,8 @@
     "accountId": {
       "type": "string",
       "title": "Stripe Account ID",
-      "description": "acct_1234567890",
+      "description": "The ID of the Stripe account to use.",
+      "example": "acct_1234567890",
       "required": true
     }
   },
