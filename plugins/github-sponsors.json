@@ -59,15 +59,16 @@
         }
       },
       "forEach": [
-        { "action": "click", "selector": "#choose-a-payout" },
         {
           "action": "click",
           "selector": "& > div",
           "scopeSelector": true
         },
+
         {
           "action": "click",
-          "selector": ".js-sponsors-generate-receipt-button"
+          "selector": ".js-sponsors-generate-receipt-button",
+          "scopeSelector": false
         },
         {
           "action": "waitForPdfDownload",
