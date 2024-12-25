@@ -33,6 +33,25 @@
       "selector": "[data-testid='world-root']"
     }
   ],
+  "getConfigOptions": [
+    {
+      "action": "navigate",
+      "url": "https://dashboard.stripe.com",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "extractAll",
+      "variable": "option",
+      "script": "fetch(\n  'https://dashboard.stripe.com/ajax/current_user_retrieve?include_only%5B%5D=id%2Cmerchants.token%2Cmerchants.nickname%2Cmerchants.has_atlas%2Cobject',\n  {\n    headers: {\n      accept: 'application/json',\n      'content-type': 'application/x-www-form-urlencoded',\n      'stripe-livemode': 'true',\n      'stripe-version': '2023-08-16',\n      'x-request-source':\n        'service=\"manage-srv\"; project=\"dashboard_default\"; operation=\"SettingsOverviewQuery\"; component=\"<unknown>\"',\n      'x-requested-with': 'XMLHttpRequest',\n      'x-stripe-csrf-token': window.PRELOADED.csrf_token,\n    },\n    referrer: 'https://dashboard.stripe.com/dashboard',\n    referrerPolicy: 'strict-origin-when-cross-origin',\n    body: null,\n    method: 'GET',\n    mode: 'cors',\n    credentials: 'include',\n  },\n)\n  .then((r) => r.json())\n  .then((r) =>\n    r.merchants.map((m) => ({\n      label: m.nickname,\n      value: m.token,\n    })),\n  )",
+      "forEach": [
+        {
+          "action": "exposeOption",
+          "config": "accountId",
+          "option": "{{option}}"
+        }
+      ]
+    }
+  ],
   "getDocuments": [
     {
       "action": "navigate",
