@@ -9,7 +9,8 @@
       "type": "string",
       "title": "Team ID",
       "description": "The team ID of the Figma team. If empty the default team will be used.",
-      "example": "123456789122000001"
+      "example": "123456789122000001",
+      "required": true
     }
   },
   "checkAuth": [
@@ -32,6 +33,25 @@
       "url": "https://www.figma.com/files/**"
     }
   ],
+  "getConfigOptions": [
+    {
+      "action": "navigate",
+      "url": "https://www.figma.com/",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "extractAll",
+      "script": "fetch('https://www.figma.com/api/user/plans', {\n  headers: {\n    'content-type': 'application/json',\n  },\n  body: null,\n  method: 'GET',\n  mode: 'cors',\n  credentials: 'include',\n})\n  .then((r) => r.json())\n  .then((r) =>\n    r.meta?.teams.map((team) => ({\n      label: team.name,\n      value: team.id,\n    })),\n  )",
+      "variable": "option",
+      "forEach": [
+        {
+          "action": "exposeOption",
+          "config": "teamId",
+          "option": "{{option}}"
+        }
+      ]
+    }
+  ],
   "getDocuments": [
     {
       "action": "navigate",
@@ -44,7 +64,7 @@
     },
     {
       "action": "extractAll",
-      "script": "fetch('https://www.figma.com/api/subscriptions/team/{{targetTeamId}}/invoices')\n  .then((res) => res.json())\n  .then((res) => res.meta.map((invoice) => invoice.hosted_invoice_url))",
+      "script": "fetch('https://www.figma.com/api/subscriptions/team/{{targetTeamId}}/invoices')\n  .then((res) => res.json())\n  .then((res) => {\n    if (res.error) {\n      throw new Error(res.message)\n    }\n    return res.meta.map((invoice) => invoice.hosted_invoice_url)\n  })",
       "variable": "stripeUrl",
       "forEach": [
         {

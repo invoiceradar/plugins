@@ -33,6 +33,50 @@
       "selector": "[href='/dashboard']"
     }
   ],
+  "getConfigOptions": [
+    {
+      "action": "navigate",
+      "url": "https://fly.io/dashboard",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "extract",
+      "fields": {
+        "label": "[aria-expanded] > div > div",
+        "value": {
+          "selector": "nav [href^='/dashboard/']",
+          "attribute": "href",
+          "transform": "(v) => v.split('/').pop()"
+        }
+      },
+      "variable": "defaultOption"
+    },
+    {
+      "action": "exposeOption",
+      "config": "orgSlug",
+      "option": "{{defaultOption}}"
+    },
+    {
+      "action": "extractAll",
+      "selector": "ul a[href^='/dashboard/']:not([href*='new-launch'])",
+      "variable": "option",
+      "fields": {
+        "label": "li > div > div",
+        "value": {
+          "selector": "",
+          "attribute": "href",
+          "transform": "(v) => v.split('/').pop()"
+        }
+      },
+      "forEach": [
+        {
+          "action": "exposeOption",
+          "config": "orgSlug",
+          "option": "{{option}}"
+        }
+      ]
+    }
+  ],
   "getDocuments": [
     {
       "action": "runSnippet",
