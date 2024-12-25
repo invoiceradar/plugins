@@ -10,7 +10,17 @@
       "title": "Profile Type",
       "description": "Select the Uber rides you want to collect. Either PERSONAL, BUSINESS or FAMILY.",
       "example": "BUSINESS",
-      "default": "BUSINESS"
+      "required": true,
+      "options": [
+        {
+          "label": "Personal",
+          "value": "PERSONAL"
+        },
+        {
+          "label": "Business",
+          "value": "BUSINESS"
+        }
+      ]
     }
   },
   "checkAuth": [
