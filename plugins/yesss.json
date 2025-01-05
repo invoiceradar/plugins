@@ -1,0 +1,79 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "yesss.at",
+  "homepage": "https://www.yesss.at",
+  "name": "Yesss",
+  "description": "Yesss is a Austrian Mobile Carrier",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.yesss.at/kontomanager.at/app/rechnungen.php"
+    },
+    {
+      "action": "runJs",
+      "script": "document.cookie = 'CookieSettings=%7B%22categories%22%3A%5B%22necessary%22%5D%7D; max-age=86400; path=/;'"
+    },
+    {
+      "action": "navigate",
+      "url": "https://www.yesss.at/kontomanager.at/app/rechnungen.php"
+    },
+    {
+      "action": "checkURL",
+      "url": "https://www.yesss.at/kontomanager.at/app/rechnungen.php"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.yesss.at/kontomanager.at/app/index.php"
+    },
+    {
+      "action": "runJs",
+      "script": "document.cookie = 'CookieSettings=%7B%22categories%22%3A%5B%22necessary%22%5D%7D; max-age=86400; path=/;'"
+    },
+    {
+      "action": "navigate",
+      "url": "https://www.yesss.at/kontomanager.at/app/index.php"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[href*='dologout']",
+      "timeout": 180000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://www.yesss.at/kontomanager.at/app/rechnungen.php",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "extractAll",
+      "selector": ".list-group",
+      "variable": "invoice",
+      "fields": {
+        "date": {
+          "selector": "li:nth-child(1) > div > div:nth-child(2)"
+        },
+        "id": {
+          "selector": "li:nth-child(3) > div > div:nth-child(2)"
+        },
+        "total": {
+          "selector": "li:nth-child(2) > div > div:nth-child(2)"
+        },
+        "pdf": {
+          "selector": "a[href*='rechnungen_detail']",
+          "attribute": "href"
+        }
+      },
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "{{invoice.pdf}}",
+          "document": "{{invoice}}"
+        }
+      ]
+    }
+  ]
+}
