@@ -1,0 +1,95 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "magenta-privat",
+  "homepage": "https://magenta.at",
+  "name": "Magenta",
+  "description": "Magenta is a Austrian ISP",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.magenta.at/mein-magenta-kabel/dashboard"
+    },
+    {
+      "action": "waitForElement",
+      "selector": ".search-icon"
+    },
+    {
+      "action": "checkURL",
+      "url": "https://www.magenta.at/mein-magenta-kabel/dashboard"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.magenta.at/mein-magenta-login/"
+    },
+    {
+      "action": "waitForElement",
+      "selector": ".logout-button",
+      "timeout": 180000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+
+      "url": "https://www.magenta.at/mein-magenta-kabel/invoices",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "waitForElement",
+      "selector": ".ng-paid-invoices"
+    },
+    {
+      "action": "extractAll",
+      "selector": ".ng-paid-invoices a[href*='/mein-magenta-kabel/invoices/']",
+      "variable": "inv",
+      "fields": {
+        "id": {
+          "selector": "",
+          "attribute": "href",
+          "transform": "(v) => v.match(/\\.(\\d+)$/)[1]"
+        },
+        "url": {
+          "selector": "",
+          "attribute": "href"
+        }
+      },
+      "forEach": [
+        {
+          "action": "navigate",
+          "url": "https://www.magenta.at{{inv.url}}"
+        },
+        {
+          "action": "waitForElement",
+          "selector": "[ng-unit-test-locator='download-document-button']"
+        },
+        {
+          "action": "click",
+          "selector": "[ng-unit-test-locator='download-document-button']",
+          "scopeSelector": false
+        },
+        {
+          "action": "extract",
+          "variable": "invoice",
+          "fields": {
+            "id": {
+              "selector": "[ng-unit-test-locator='invoice-further-details-bill-no']"
+            },
+            "date": {
+              "selector": "[ng-unit-test-locator='invoice-details-bill-date']"
+            },
+            "total": {
+              "selector": "[ng-unit-test-locator='invoice-further-details-amount-due']"
+            }
+          }
+        },
+        {
+          "action": "waitForPdfDownload",
+          "document": "{{invoice}}"
+        }
+      ]
+    }
+  ]
+}
