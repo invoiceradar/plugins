@@ -1,0 +1,77 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "spusu-at",
+  "name": "spusu",
+  "description": "spusu is an budget mobile provider",
+  "homepage": "https://spusu.at",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.spusu.at/meinspusu"
+    },
+    {
+      "action": "checkURL",
+      "url": "https://www.spusu.at/meinspusu**"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.spusu.at/login"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "a[href*='/logout']"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://www.spusu.at/rechnungen"
+    },
+    {
+      "action": "extractAll",
+      "script": "Array.from(\n  document.querySelectorAll(\n    'select[name=year] option',\n  ),\n)\n  .map((e) => e.value)\n  .filter((y) => !!y && Number(y) >= Number('{{startDate.year}}'))",
+      "variable": "year",
+      "forEach": [
+        {
+          "action": "dropdownSelect",
+          "selector": "select[name=year]",
+          "value": "{{year}}"
+        },
+
+        {
+          "action": "waitForNavigation"
+        },
+        {
+          "action": "extractAll",
+          "selector": ".invoicetable tbody tr",
+          "variable": "invoice",
+          "fields": {
+            "id": {
+              "selector": "td:nth-child(2)"
+            },
+            "date": {
+              "selector": "td:nth-child(3)"
+            },
+            "total": {
+              "selector": "td:nth-child(4)"
+            }
+          },
+          "forEach": [
+            {
+              "action": "click",
+              "selector": "[src*=download]",
+              "scopeSelector": true
+            },
+            {
+              "action": "waitForPdfDownload",
+              "document": "{{invoice}}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
