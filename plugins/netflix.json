@@ -1,0 +1,64 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "netflix",
+  "name": "Netflix",
+  "description": "Script to download Netflix invoices",
+  "homepage": "https://www.netflix.com",
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.netflix.com/account/membership/billing-activity"
+    },
+    {
+      "action": "checkElementExists",
+      "selector": "[data-uia='account+header+menu+trigger']"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.netflix.com/account/membership/billing-activity"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[data-uia='account+header+menu+trigger']",
+      "timeout": 120000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://www.netflix.com/account/membership/billing-activity",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[data-uia='billing-details-body+container']"
+    },
+    {
+      "action": "extractAll",
+      "script": "(() => {\n  const graphqlData = window.netflix?.reactContext?.models?.graphql?.data\n\n  if (!graphqlData) {\n    console.log('Could not find graphql data')\n    return { invoiceIds: [] }\n  }\n\n  // Convert just this subset to string which should be safe from circular refs\n  const graphqlStr = JSON.stringify(graphqlData)\n\n  // Use regex to find all invoiceId patterns\n  const invoiceIdRegex = /\"invoiceId\"\\s*:\\s*\"([^\"]+)\"/g\n\n  // Find all matches\n  const matches = [...graphqlStr.matchAll(invoiceIdRegex)]\n\n  // Extract just the IDs from the matches\n  return matches.map((match) => ({\n    invoiceId: match[1],\n  }))\n})()",
+      "variable": "invoice",
+      "forEach": [
+        {
+          "action": "navigate",
+          "url": "https://www.netflix.com/invoice/print/{{invoice.invoiceId}}"
+        },
+        {
+          "action": "extract",
+          "variable": "invoiceData",
+          "fields": {
+            "id": "[data-uia='invoice-id']",
+            "date": "[data-uia='invoice-date-0']",
+            "total": ".invoiceFooterTotal .rowValue",
+            "type": "receipt"
+          }
+        },
+        {
+          "action": "printPdf",
+          "document": "{{invoiceData}}"
+        }
+      ]
+    }
+  ]
+}
