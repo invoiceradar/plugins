@@ -78,7 +78,7 @@
         },
         "date": {
           "selector": ".b3-card-header-title",
-          "transform": "(date) => date.match(/.*–(.*)/)[1]"
+          "transform": "(d) => d.replace(/\\d+\\s*[-–—]\\s*/, '')"
         }
       },
       "forEach": [
