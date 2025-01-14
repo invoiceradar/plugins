@@ -1,0 +1,68 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "fal",
+  "name": "Fal",
+  "description": "The fastest way to run diffusion models",
+  "homepage": "https://www.fal.ai",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://fal.ai/login",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkURL",
+      "url": "https://fal.ai/dashboard"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://fal.ai/login"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://fal.ai/dashboard"
+    }
+  ],
+
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://fal.ai/dashboard/billing"
+    },
+    {
+      "action": "waitForElement",
+      "selector": ".grid.grid-cols-1.gap-6 > div:nth-child(4) table"
+    },
+    {
+      "action": "extractAll",
+      "selector": ".grid.grid-cols-1.gap-6 > div:nth-child(4) table tbody tr",
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "{{item.url}}",
+          "document": {
+            "id": "{{item.id}}",
+            "date": "{{item.date}}",
+            "total": "{{item.amount}}"
+          }
+        }
+      ],
+      "fields": {
+        "date": "td:nth-child(1)",
+        "amount": "td:nth-child(2)",
+        "url": {
+          "selector": "td:nth-child(3) a",
+          "attribute": "href"
+        },
+        "id": {
+          "selector": "td:nth-child(3) a",
+          "attribute": "href",
+          "transform": "(url) => url.split('/').slice(-1)[0].split('?')[0]"
+        }
+      }
+    }
+  ]
+}
