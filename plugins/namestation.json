@@ -7,27 +7,17 @@
   "checkAuth": [
     {
       "action": "navigate",
-      "url": "https://www.namestation.com/login"
+      "url": "https://app.namestation.com/login"
     },
     {
       "action": "checkURL",
-      "url": "https://www.namestation.com/login"
+      "url": "https://app.namestation.com/login"
     }
   ],
   "startAuth": [
     {
       "action": "navigate",
-      "url": "https://www.namestation.com/login"
-    },
-    {
-      "action": "type",
-      "selector": "[name='email']",
-      "value": "{{config.username}}"
-    },
-    {
-      "action": "type",
-      "selector": "[name='password']",
-      "value": "{{config.password}}"
+      "url": "https://app.namestation.com/login"
     },
     {
       "action": "waitForElement",
@@ -38,7 +28,7 @@
   "getDocuments": [
     {
       "action": "navigate",
-      "url": "https://www.namestation.com/account/billing"
+      "url": "https://app.namestation.com/account/billing"
     },
     {
       "action": "waitForElement",

@@ -1,0 +1,73 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "dataimpulse",
+  "name": "DataImpulse",
+  "description": "Proxy Provider",
+  "homepage": "https://dataimpulse.com/",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://app.dataimpulse.com/sign-in",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkURL",
+      "url": "https://app.dataimpulse.com/dashboard"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://app.dataimpulse.com/sign-in"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://app.dataimpulse.com/dashboard"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://app.dataimpulse.com/account/payments"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "table"
+    },
+    {
+      "action": "extractAll",
+      "selector": "tr.payout-row",
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "{{item.url}}",
+          "document": {
+            "id": "{{item.id}}",
+            "date": "{{item.date}}",
+            "total": "{{item.amount}}"
+          }
+        }
+      ],
+      "fields": {
+        "id": {
+          "selector": "td.cdk-column-invoice_id a"
+        },
+        "date": {
+          "selector": "td.cdk-column-datetime div"
+        },
+        "amount": {
+          "selector": "td.cdk-column-price strong"
+        },
+        "url": {
+          "selector": "td.cdk-column-invoice_id a",
+          "attribute": "href"
+        }
+      },
+      "pagination": {
+        "type": "next",
+        "selector": "button.mat-paginator-navigation-next:not(.mat-button-disabled)"
+      }
+    }
+  ]
+}
