@@ -50,13 +50,13 @@
       "forEach": [
         {
           "action": "if",
-          "selector": "[role='dialog'][aria-label*='Download complete']",
+          "selector": "[role='dialog'][aria-label*='Download']",
           "then": [
             {
               "action": "click",
               "description": "Close dialog",
               "optional": true,
-              "selector": "[aria-label*='Download complete'] button"
+              "selector": "[role='dialog'][aria-label*='Download'] button"
             },
             {
               "action": "sleep",
