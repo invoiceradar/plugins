@@ -41,9 +41,13 @@
     },
     {
       "action": "click",
-      "selector": ".account-manage-wrap .biz-popover-reference"
+      "selector": ".account-manage-wrap .biz-popover-reference",
+      "scopeSelector": true
     },
-    { "action": "waitForElement", "selector": ".account-panel-info-item" },
+    {
+      "action": "waitForElement",
+      "selector": ".account-panel-info-item"
+    },
     {
       "action": "extractAll",
       "selector": ".account-panel-info-item",
@@ -73,23 +77,32 @@
     },
     {
       "action": "waitForElement",
-      "selector": ".bc-okee-input-wrapper"
+      "selector": "[placeholder='Start date']"
     },
     {
       "action": "click",
-      "selector": ".bc-okee-input-wrapper"
+      "selector": "[placeholder='Start date']",
+      "scopeSelector": true
+    },
+    {
+      "action": "extract",
+      "variable": "fromDate",
+      "script": "new Date(Date.now() - 364 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]"
+    },
+    {
+      "action": "type",
+      "selector": "[placeholder='Start date']",
+      "value": "{{fromDate}}",
+      "scopeSelector": true
+    },
+    {
+      "action": "runJs",
+      "script": "(() => {\n  const ke = new KeyboardEvent('keydown', {\n    bubbles: true,\n    cancelable: true,\n    keyCode: 13,\n  })\n  document.querySelector(\"[placeholder='Start date']\").dispatchEvent(ke)\n})()"
     },
     {
       "action": "click",
-      "selector": "div.bc-okee-date-today"
-    },
-    {
-      "action": "click",
-      "selector": ".bc-okee-date-owner-date.bc-okee-date-owner-date.bc-okee-date-position-start:nth-child(1) .bc-okee-icon-double-left"
-    },
-    {
-      "action": "click",
-      "selector": ".bc-okee-date-grid-in:not(.bc-okee-date-disabled) > div"
+      "selector": ".notranslate",
+      "scopeSelector": true
     },
     {
       "action": "sleep",
@@ -101,11 +114,13 @@
     },
     {
       "action": "runJs",
-      "script": "document.querySelectorAll('table')[1]?.remove()"
+      "script": "document.querySelectorAll('table')[1]?.remove()",
+      "optional": true
     },
     {
       "action": "runJs",
-      "script": "document.querySelectorAll('table')[1]?.remove()"
+      "script": "document.querySelectorAll('table')[1]?.remove()",
+      "optional": true
     },
     {
       "action": "extractAll",
@@ -113,20 +128,21 @@
       "variable": "invoice",
       "fields": {
         "id": {
-          "selector": ".new-transaction-documents-invoice-id",
+          "selector": "td:nth-child(6) span",
           "transform": "(v) => v.replace('Invoice: ', '')"
         },
         "date": {
           "selector": "td:nth-child(1)"
         },
         "total": {
-          "selector": "td:nth-child(7)"
+          "selector": "td:nth-child(8)"
         }
       },
       "forEach": [
         {
           "action": "click",
-          "selector": "td:nth-child(5) .i-icon-download"
+          "selector": "td .i-icon-download",
+          "scopeSelector": true
         },
         {
           "action": "waitForPdfDownload",
