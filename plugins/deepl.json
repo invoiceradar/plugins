@@ -19,11 +19,12 @@
   "checkAuth": [
     {
       "action": "navigate",
-      "url": "https://www.deepl.com/login"
+      "url": "https://www.deepl.com/login",
+      "waitForNetworkIdle": true
     },
     {
-      "action": "waitForURL",
-      "url": "https://www.deepl.com/en/translator#login_successful"
+      "action": "checkElementExists",
+      "selector": "[data-testid='menu-account-in-btn']"
     }
   ],
   "startAuth": [
@@ -43,7 +44,7 @@
     },
     {
       "action": "waitForURL",
-      "url": "https://www.deepl.com/en/translator#login_successful",
+      "url": "https://www.deepl.com/en/translator",
       "timeout": 120000
     }
   ],

@@ -1,0 +1,48 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "cursor",
+  "name": "Cursor",
+  "description": "Cursor is an AI code editor.",
+  "homepage": "https://www.cursor.com",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.cursor.com/settings",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkElementExists",
+      "selector": "a[href*='/api/auth/logout']"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://authenticator.cursor.sh/"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "a[href*='/api/auth/logout']"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://www.cursor.com/settings"
+    },
+    {
+      "action": "extract",
+      "description": "Get Stripe Session",
+      "variable": "stripeSessionUrl",
+      "script": "fetch('https://www.cursor.com/api/stripeSession').then((res) => res.json())"
+    },
+    {
+      "action": "runSnippet",
+      "snippet": "getInvoicesFromStripeBillingPortal",
+      "args": {
+        "url": "{{stripeSessionUrl}}"
+      }
+    }
+  ]
+}

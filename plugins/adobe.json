@@ -1,0 +1,75 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "adobe",
+  "name": "Adobe",
+  "description": "Creative Tools",
+  "homepage": "https://adobe.com",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://account.adobe.com/orders/billing-history",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkURL",
+      "url": "https://account.adobe.com/orders/billing-history"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://auth.services.adobe.com/en_US/deeplink.html?deeplink=ssofirst&callback=https%3A%2F%2Fims-na1.adobelogin.com%2Fims%2Fadobeid%2FSunbreakWebUI1%2FAdobeID%2Ftoken&client_id=SunbreakWebUI1&redirect_uri=https%3A%2F%2Faccount.adobe.com%2Forders%2Fbilling-history&response_type=token"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://account.adobe.com/**"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://account.adobe.com/orders/billing-history"
+    },
+    {
+      "action": "waitForElement",
+      "selector": ".invoices-and-billing-history-table tr"
+    },
+    {
+      "action": "extractAll",
+      "selector": "table.invoices-and-billing-history-table tbody tr",
+      "fields": {
+        "orderId": {
+          "selector": "td:nth-child(3)"
+        },
+        "date": {
+          "selector": "td:nth-child(1)"
+        },
+        "dateString": {
+          "selector": "td:nth-child(1)",
+          "transform": "(d) => new Date(d).toISOString().split('T')[0].slice(2)"
+        },
+        "total": {
+          "selector": "td:nth-child(5)"
+        }
+      },
+      "forEach": [
+        {
+          "action": "click",
+          "selector": "[data-e2e='download-invoices']"
+        },
+        {
+          "action": "waitForPdfDownload",
+          "document": {
+            "id": "{{item.orderId}}-{{item.dateString}}",
+            "date": "{{item.date}}",
+            "total": "{{item.total}}"
+          },
+          "metadata": {
+            "Order": "{{item.orderId}}"
+          }
+        }
+      ]
+    }
+  ]
+}

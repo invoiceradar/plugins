@@ -25,15 +25,19 @@
   "startAuth": [
     {
       "action": "navigate",
-      "url": "https://chatgpt.com/auth/login"
+      "url": "https://chatgpt.com/"
     },
     {
       "action": "waitForElement",
       "selector": "[data-testid=login-button]"
     },
     {
+      "action": "click",
+      "selector": "[data-testid=login-button]"
+    },
+    {
       "action": "waitForElement",
-      "selector": "#prompt-textarea",
+      "selector": "[data-testid=profile-button]",
       "timeout": 120000
     }
   ],

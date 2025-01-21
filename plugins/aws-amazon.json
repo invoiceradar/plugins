@@ -1,0 +1,109 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "aws-amazon",
+  "name": "Amazon Web Services",
+  "description": "AWS is a secure cloud services platform, offering compute power, database storage, content delivery and other functionality to help businesses scale and grow.",
+  "homepage": "https://aws.amazon.com",
+  "configSchema": {
+    "vatInvoices": {
+      "type": "boolean",
+      "title": "VAT Invoices",
+      "description": "Whether to download VAT invoices instead of default invoices.",
+      "default": true,
+      "required": false
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://eu-north-1.console.aws.amazon.com/console/home?region=eu-north-1",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkElementExists",
+      "selector": "[data-testid='awsc-nav-account-menu-button']"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://eu-north-1.signin.aws.amazon.com"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[data-testid='awsc-nav-account-menu-button']"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://us-east-1.console.aws.amazon.com/billing/home#/bills"
+    },
+    {
+      "action": "extract",
+      "script": "document.querySelector('#xsrfToken').value",
+      "variable": "xsrfToken"
+    },
+    {
+      "action": "extract",
+      "script": "fetch(\n  'https://us-east-1.console.aws.amazon.com/billing/rest/api-proxy/p2s?debugOnlyOperation=GetTransactionsHistory',\n  {\n    headers: {\n      accept: 'application/json, text/plain, */*',\n      'content-type': 'application/json',\n      'sec-fetch-mode': 'cors',\n      'sec-fetch-site': 'same-origin',\n      'x-awsbc-xsrf-token': '{{xsrfToken}}',\n    },\n    referrer: 'https://us-east-1.console.aws.amazon.com/billing/home',\n    referrerPolicy: 'strict-origin-when-cross-origin',\n    body: '{\"contentString\":\"{\\\\\"dashboardDataSource\\\\\":\\\\\"Live\\\\\",\\\\\"entityTypes\\\\\":[\\\\\"Payment\\\\\",\\\\\"CreditMemo\\\\\"],\\\\\"fields\\\\\":[\\\\\"transactionDate\\\\\",\\\\\"invoiceId\\\\\",\\\\\"paymentMethod\\\\\",\\\\\"type\\\\\",\\\\\"currency\\\\\",\\\\\"amount\\\\\",\\\\\"billingPeriod\\\\\",\\\\\"issuer\\\\\",\\\\\"systemIdentifier\\\\\",\\\\\"chargeType\\\\\",\\\\\"purchaseOrderId\\\\\",\\\\\"payerAccountId\\\\\"],\\\\\"filters\\\\\":[{\\\\\"__type\\\\\":\\\\\"com.amazonaws.awspaymentportalservice#ByDate\\\\\",\\\\\"type\\\\\":\\\\\"ByDate\\\\\",\\\\\"startDate\\\\\":\\\\\"2010-07-06T00:00:00.000Z\\\\\",\\\\\"endDate\\\\\":\\\\\"2030-10-04T23:59:59.999Z\\\\\"}],\\\\\"locale\\\\\":\\\\\"en-US\\\\\"}\",\"headers\":{\"Content-Encoding\":\"amz-1.0\",\"Content-Type\":\"application/json\",\"X-Amz-Target\":\"AWSPaymentPortalService.GetTransactionsHistory\"},\"method\":\"POST\",\"path\":\"/\",\"region\":\"us-east-1\"}',\n    method: 'POST',\n    mode: 'cors',\n    credentials: 'include',\n  },\n)\n  .then((res) => res.json())\n  .then((d) => {\n    return d.entities.map((i) => ({\n      id: i.fields.invoiceId.value,\n      date: new Date(i.fields.transactionDate.value).toISOString(),\n      total: i.fields.amount.renderedValue,\n      currency: i.fields.currency.value,\n      groupId: i.fields.systemIdentifier?.value?.groupId,\n    }))\n  })\n  .then(JSON.stringify)",
+      "variable": "allInvoices"
+    },
+    {
+      "action": "if",
+      "script": "{{config.vatInvoices}}",
+      "then": [
+        {
+          "action": "extractAll",
+          "script": "(function (transactions) {\n  function generateMonthsFromTransactions(transactions) {\n    const uniqueYearMonths = new Set()\n\n    transactions.forEach((transaction) => {\n      const date = new Date(transaction.date)\n      const yearMonth = `${date.getFullYear()}-${date.getMonth() + 1}`\n      uniqueYearMonths.add(yearMonth)\n    })\n\n    return Array.from(uniqueYearMonths).map((yearMonth) => {\n      const [year, month] = yearMonth.split('-')\n      return { year: parseInt(year), month: parseInt(month) }\n    })\n  }\n\n  return generateMonthsFromTransactions(transactions)\n})(JSON.parse('{{allInvoices}}'))",
+          "variable": "months",
+          "forEach": [
+            {
+              "action": "extractAll",
+              "script": "fetch(\n  'https://us-east-1.console.aws.amazon.com/billing/rest/v1.0/taxinvoice/newmetadatav2?year={{months.year}}&month={{months.month}}',\n  {\n    headers: {\n      'content-type': 'application/json',\n      'x-awsbc-xsrf-token': '{{xsrfToken}}',\n    },\n    referrer: 'https://us-east-1.console.aws.amazon.com/billing/home',\n    referrerPolicy: 'strict-origin-when-cross-origin',\n    body: null,\n    method: 'GET',\n    mode: 'cors',\n    credentials: 'include',\n  },\n)\n  .then((res) => res.json())\n  .then((a) => {\n    return a.timsTaxInvoiceMetadatas.map((da) => ({\n      id: da.taxInvoiceId,\n      filePath: da.s3FileKey,\n      invoiceId: da.commercialInvoiceId,\n      externalInvoiceId: da.externalInvoiceId,\n    }))\n  })\n  .then((x) => x.flatMap((a) => a))",
+              "variable": "invoiceData",
+              "forEach": [
+                {
+                  "action": "extract",
+                  "variable": "realInvoiceData",
+                  "script": "JSON.parse('{{allInvoices}}').find((i) => i.id === '{{invoiceData.invoiceId}}')"
+                },
+                {
+                  "action": "downloadPdf",
+                  "url": "https://us-east-1.console.aws.amazon.com/billing/rest/v1.0/taxinvoice/tims/download?taxInvoiceId={{invoiceData.externalInvoiceId}}&s3FileKey={{invoiceData.filePath}}&externalInvoiceId={{invoiceData.externalInvoiceId}}&isAdditionalDocument=false",
+                  "document": {
+                    "id": "{{invoiceData.invoiceId}}",
+                    "date": "{{realInvoiceData.date}}",
+                    "total": "{{realInvoiceData.total}} {{realInvoiceData.currency}}"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "else": [
+        {
+          "action": "extractAll",
+          "script": "{{allInvoices}}",
+          "variable": "item",
+          "forEach": [
+            {
+              "action": "runJs",
+              "script": "fetch(\n  'https://us-east-1.console.aws.amazon.com/billing/rest/v1.0/bill/invoice/generate?invoicenumber={{item.id}}&invoiceGroupId={{item.groupId}}&generatenew=true',\n  {\n    headers: {\n      accept: 'application/json, text/plain, */*',\n    },\n    referrer: 'https://us-east-1.console.aws.amazon.com/billing/home',\n    referrerPolicy: 'strict-origin-when-cross-origin',\n    body: null,\n    method: 'GET',\n    mode: 'cors',\n    credentials: 'include',\n  },\n)"
+            },
+            {
+              "action": "downloadPdf",
+              "url": "https://us-east-1.console.aws.amazon.com/billing/rest/v1.0/bill/invoice/download?invoicenumber={{item.id}}&invoiceGroupId={{item.groupId}}",
+              "document": {
+                "date": "{{item.date}}",
+                "total": "{{item.total}}",
+                "id": "{{item.id}}"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

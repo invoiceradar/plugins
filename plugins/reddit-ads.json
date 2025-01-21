@@ -1,0 +1,132 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "reddit-ads",
+  "name": "Reddit Ads",
+  "description": "Reddit Ads is a self-serve advertising platform that allows you to create ads for your products or services and reach users on Reddit.",
+  "homepage": "https://ads.reddit.com",
+  "configSchema": {
+    "adAccountId": {
+      "type": "string",
+      "title": "Ad Account ID",
+      "required": true
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://ads.reddit.com/"
+    },
+    {
+      "action": "waitForElement",
+      "selector": ".HeaderContainer"
+    },
+    {
+      "action": "checkElementExists",
+      "selector": "[data-testid='user-dropdown-trigger']"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.reddit.com/login/?dest=https%3A%2F%2Fads.reddit.com%2F&referrer=https%3A%2F%2Fads.reddit.com%2F"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[data-testid='user-dropdown-trigger']",
+      "timeout": 120000
+    }
+  ],
+  "getConfigOptions": [
+    {
+      "action": "navigate",
+      "url": "https://ads.reddit.com/accounts",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[data-testid='business-list']"
+    },
+    {
+      "action": "extractAll",
+      "selector": "[data-testid='business-list'] .automation-list-item",
+      "variable": "business",
+      "fields": {
+        "name": ".automation-text-field:first-of-type"
+      },
+      "forEach": [
+        {
+          "action": "click",
+          "selector": "button"
+        },
+        {
+          "action": "waitForElement",
+          "selector": ".automation-ad-account-list"
+        },
+        {
+          "action": "extractAll",
+          "selector": ".automation-ad-account-list .automation-list-item",
+          "variable": "option",
+          "fields": {
+            "label": ".automation-text-field:first-of-type",
+            "value": ".automation-entity-description-body>div:last-of-type"
+          },
+          "forEach": [
+            {
+              "action": "exposeOption",
+              "config": "adAccountId",
+              "option": {
+                "label": "{{option.label}} ({{business.name}})",
+                "value": "{{option.value}}"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "extract",
+      "script": "'{{config.adAccountId}}'.split('_')[1] || '{{config.adAccountId}}'",
+      "variable": "advertiserId"
+    },
+    {
+      "action": "navigate",
+      "url": "https://ads.reddit.com/account/{{advertiserId}}/billing/transactions"
+    },
+    {
+      "action": "waitForElement",
+      "selector": ".automation-table-body"
+    },
+    {
+      "action": "sleep",
+      "duration": 1000
+    },
+    {
+      "action": "extractAll",
+      "selector": ".automation-body-row",
+      "variable": "invoice",
+      "fields": {
+        "id": {
+          "selector": "td:nth-child(3)"
+        },
+        "date": {
+          "selector": "td:nth-child(1)"
+        },
+        "total": {
+          "selector": "td:nth-child(5)"
+        }
+      },
+      "forEach": [
+        {
+          "action": "click",
+          "selector": "td:nth-child(6) button"
+        },
+        {
+          "action": "waitForPdfDownload",
+          "document": "{{invoice}}"
+        }
+      ]
+    }
+  ]
+}

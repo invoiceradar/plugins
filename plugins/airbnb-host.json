@@ -1,0 +1,103 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "airbnb-host",
+  "name": "Airbnb Host",
+  "description": "Get your VAT invoices for your Airbnb listings",
+  "homepage": "https://www.airbnb.com",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.airbnb.com/login"
+    },
+    {
+      "action": "checkURL",
+      "url": "https://www.airbnb.com/"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.airbnb.com/login"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://www.airbnb.com/"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://www.airbnb.com/hosting/reservations",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "runJs",
+      "script": "Array.from(document.querySelectorAll('button'))\n  .find((button) => button.textContent.includes('Export'))\n  .click()"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "#bulk-vat-invoice button"
+    },
+    {
+      "action": "click",
+      "selector": "#bulk-vat-invoice button"
+    },
+    {
+      "action": "extractAll",
+      "script": "Array.from(document.querySelectorAll('select#date-range-select option'))\n  .map((e) => ({\n    value: e.value,\n    label: e.label,\n    id: e.label.split(' ').reverse().join('-'),\n    date: new Date(Number(e.value) * 1000),\n  }))\n  .filter(({ date }) => {\n    const startDate = new Date('{{startDate.iso}}')\n    return date >= startDate\n  })",
+      "variable": "monthEntry",
+      "forEach": [
+        {
+          "action": "if",
+          "selector": "[role='dialog'][aria-label*='Download']",
+          "then": [
+            {
+              "action": "click",
+              "description": "Close dialog",
+              "optional": true,
+              "selector": "[role='dialog'][aria-label*='Download'] button"
+            },
+            {
+              "action": "sleep",
+              "duration": 200
+            },
+            {
+              "action": "click",
+              "selector": "#bulk-vat-invoice button"
+            }
+          ]
+        },
+        {
+          "action": "waitForElement",
+          "selector": "#file-type-pdf"
+        },
+        {
+          "action": "click",
+          "selector": "#file-type-pdf"
+        },
+        {
+          "action": "dropdownSelect",
+          "selector": "#date-range-select",
+          "value": "{{monthEntry.value}}"
+        },
+        {
+          "action": "click",
+          "selector": "[role='dialog'] footer button:last-of-type"
+        },
+        {
+          "action": "waitForPdfDownload",
+          "timeout": 30000,
+          "document": {
+            "id": "{{monthEntry.label}}",
+            "date": "{{monthEntry.label}}"
+          }
+        },
+        {
+          "action": "waitForElement",
+          "selector": "#bulk-vat-invoice button"
+        }
+      ]
+    }
+  ]
+}

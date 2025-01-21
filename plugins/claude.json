@@ -1,0 +1,59 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "claude",
+  "name": "Claude",
+  "description": "Privacy-first AI that helps you create in confidence.",
+  "homepage": "https://www.claude.ai",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://claude.ai/login",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkURL",
+      "url": "https://claude.ai/new"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://claude.ai/login"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://claude.ai/new"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://claude.ai/settings/billing"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[data-testid='invoice-list']"
+    },
+    {
+      "action": "extractAll",
+      "variable": "receipt",
+      "selector": "[data-testid='invoice-list'] .grid.gap-3 .text-sm",
+      "fields": {
+        "url": {
+          "selector": "a[href*='invoice.stripe.com']",
+          "attribute": "href"
+        }
+      },
+      "forEach": [
+        {
+          "action": "runSnippet",
+          "snippet": "getInvoiceFromStripeUrl",
+          "args": {
+            "url": "{{receipt.url}}"
+          }
+        }
+      ]
+    }
+  ]
+}

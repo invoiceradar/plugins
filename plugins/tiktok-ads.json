@@ -1,0 +1,154 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "tiktok-ads",
+  "name": "TikTok Ads",
+  "description": "TikTok Ads is a self-serve advertising platform that allows you to create ads for your products or services and reach users on TikTok.",
+  "homepage": "https://ads.tiktok.com",
+  "configSchema": {
+    "adAccountId": {
+      "type": "string",
+      "title": "Ad Account ID",
+      "required": true
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://ads.tiktok.com/i18n/dashboard?aadvid={{config.adAccountId}}",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkElementExists",
+      "selector": ".biz-menu"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://ads.tiktok.com/i18n/login/?redirect=https%3A%2F%2Fads.tiktok.com%2Fi18n%2Fdashboard"
+    },
+    {
+      "action": "waitForElement",
+      "selector": ".biz-menu",
+      "timeout": 120000
+    }
+  ],
+  "getConfigOptions": [
+    {
+      "action": "navigate",
+      "url": "https://ads.tiktok.com/i18n/dashboard",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "click",
+      "selector": ".account-manage-wrap .biz-popover-reference",
+      "scopeSelector": true
+    },
+    {
+      "action": "waitForElement",
+      "selector": ".account-panel-info-item"
+    },
+    {
+      "action": "extractAll",
+      "selector": ".account-panel-info-item",
+      "fields": {
+        "label": {
+          "selector": ".title-info-name span"
+        },
+        "value": {
+          "selector": ".title-info-id",
+          "transform": "(v) => v.replace('ID: ', '')"
+        }
+      },
+      "variable": "option",
+      "forEach": [
+        {
+          "action": "exposeOption",
+          "config": "adAccountId",
+          "option": "{{option}}"
+        }
+      ]
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://ads.tiktok.com/i18n/account/transaction?aadvid={{config.adAccountId}}"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[placeholder='Start date']"
+    },
+    {
+      "action": "click",
+      "selector": "[placeholder='Start date']",
+      "scopeSelector": true
+    },
+    {
+      "action": "extract",
+      "variable": "fromDate",
+      "script": "new Date(Date.now() - 364 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]"
+    },
+    {
+      "action": "type",
+      "selector": "[placeholder='Start date']",
+      "value": "{{fromDate}}",
+      "scopeSelector": true
+    },
+    {
+      "action": "runJs",
+      "script": "(() => {\n  const ke = new KeyboardEvent('keydown', {\n    bubbles: true,\n    cancelable: true,\n    keyCode: 13,\n  })\n  document.querySelector(\"[placeholder='Start date']\").dispatchEvent(ke)\n})()"
+    },
+    {
+      "action": "click",
+      "selector": ".notranslate",
+      "scopeSelector": true
+    },
+    {
+      "action": "sleep",
+      "duration": 1000
+    },
+    {
+      "action": "waitForElement",
+      "selector": "tbody tr"
+    },
+    {
+      "action": "runJs",
+      "script": "document.querySelectorAll('table')[1]?.remove()",
+      "optional": true
+    },
+    {
+      "action": "runJs",
+      "script": "document.querySelectorAll('table')[1]?.remove()",
+      "optional": true
+    },
+    {
+      "action": "extractAll",
+      "selector": "table:first-of-type tbody tr",
+      "variable": "invoice",
+      "fields": {
+        "id": {
+          "selector": "td:nth-child(6) span",
+          "transform": "(v) => v.replace('Invoice: ', '')"
+        },
+        "date": {
+          "selector": "td:nth-child(1)"
+        },
+        "total": {
+          "selector": "td:nth-child(8)"
+        }
+      },
+      "forEach": [
+        {
+          "action": "click",
+          "selector": "td .i-icon-download",
+          "scopeSelector": true
+        },
+        {
+          "action": "waitForPdfDownload",
+          "document": "{{invoice}}"
+        }
+      ]
+    }
+  ]
+}

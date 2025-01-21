@@ -4,14 +4,22 @@
   "name": "Expo",
   "description": "Expo is an open-source platform for making universal native apps for Android, iOS, and the web with JavaScript and React.",
   "homepage": "https://www.expo.dev",
+  "configSchema": {
+    "username": {
+      "type": "string",
+      "title": "Username",
+      "required": true
+    }
+  },
   "checkAuth": [
     {
       "action": "navigate",
-      "url": "https://expo.dev/login"
+      "url": "https://expo.dev/accounts/{{config.username}}/settings/billing",
+      "waitForNetworkIdle": true
     },
     {
-      "action": "checkURL",
-      "url": "https://expo.dev/"
+      "action": "checkElementExists",
+      "selector": "[data-testid='nav-bar-account-selector']"
     }
   ],
   "startAuth": [
@@ -27,7 +35,7 @@
   "getDocuments": [
     {
       "action": "navigate",
-      "url": "https://expo.dev/accounts/upo/settings/billing"
+      "url": "https://expo.dev/accounts/{{config.username}}/settings/billing"
     },
     {
       "action": "waitForElement",
@@ -51,6 +59,28 @@
       "args": {
         "url": "{{portalUrl}}"
       }
+    }
+  ],
+  "getConfigOptions": [
+    {
+      "action": "navigate",
+      "url": "https://expo.dev"
+    },
+    {
+      "action": "extractAll",
+      "script": "JSON.parse(\n  document.getElementById('__NEXT_DATA__').innerHTML,\n).props.pageProps.currentUser.accounts.map((a) => ({\n  label: a.name,\n  value: a.name,\n}))",
+      "variable": "option",
+      "forEach": [
+        {
+          "action": "exposeOption",
+          "config": "username",
+          "option": "{{option}}"
+        }
+      ]
+    },
+    {
+      "action": "promptOptionSelection",
+      "config": "username"
     }
   ]
 }

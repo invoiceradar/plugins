@@ -10,7 +10,7 @@
       "title": "Organization",
       "example": "my-github-org",
       "description": "The ID of your organization. Leave blank to download invoices for your personal account.",
-      "required": false
+      "required": true
     }
   },
   "checkAuth": [
@@ -34,10 +34,55 @@
       "timeout": 180000
     }
   ],
+  "getConfigOptions": [
+    {
+      "action": "navigate",
+      "url": "https://github.com/settings/organizations",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "extract",
+      "variable": "personal",
+      "fields": {
+        "label": {
+          "selector": "#settings-header a"
+        },
+        "value": {
+          "selector": "#settings-header a",
+          "transform": "() => '-'"
+        }
+      }
+    },
+    {
+      "action": "exposeOption",
+      "config": "organization",
+      "option": "{{personal}}"
+    },
+    {
+      "action": "extractAll",
+      "selector": "#settings-frame .Box > div strong",
+      "variable": "option",
+      "fields": {
+        "label": "a",
+        "value": {
+          "selector": "a",
+          "attribute": "href",
+          "transform": "(v) => v.split('/').pop()"
+        }
+      },
+      "forEach": [
+        {
+          "action": "exposeOption",
+          "config": "organization",
+          "option": "{{option}}"
+        }
+      ]
+    }
+  ],
   "getDocuments": [
     {
       "action": "if",
-      "script": "'{{config.organization}}' === ''",
+      "script": "'{{config.organization}}' === '-' || '{{config.organization}}' === ''",
       "then": [
         {
           "action": "navigate",

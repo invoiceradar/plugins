@@ -1,0 +1,69 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "ovh",
+  "name": "OVH",
+  "description": "OVHcloud offers more than 80 open and reversible services with the best price-performance ratio, including domain names, VPS, dedicated servers, IaaS",
+  "homepage": "https://www.ovh.com/",
+  "configSchema": {
+    "username": {
+      "type": "string",
+      "title": "Username",
+      "required": false
+    },
+    "password": {
+      "type": "password",
+      "title": "Password",
+      "required": false
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.ovh.com/manager/#/dedicated/billing/history",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkElementExists",
+      "selector": "[aria-label='Main menu']"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.ovh.com/auth/",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "type",
+      "selector": "#account",
+      "value": "{{config.username}}"
+    },
+    {
+      "action": "type",
+      "selector": "#password",
+      "value": "{{config.password}}"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[name='fm-login-password']"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://www.ovh.com/manager/#/dedicated/billing/history",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "extractAll",
+      "script": "fetch('https://www.ovh.com/engine/apiv6/me/bill', {\n  headers: {\n    accept: 'application/json, text/plain, */*',\n    'x-pagination-number': '1',\n    'x-pagination-size': '100',\n    'x-pagination-sort': 'date',\n    'x-pagination-sort-order': 'DESC',\n    'x-pagination-mode': 'CachedObjectList-Pages',\n  },\n  referrer: 'https://www.ovh.com/manager/dedicated/',\n  referrerPolicy: 'strict-origin-when-cross-origin',\n  body: null,\n  method: 'GET',\n  mode: 'cors',\n  credentials: 'include',\n})\n  .then((res) => res.json())\n  .then((d) => {\n    console.log(d)\n    return d.map((i) => ({\n      id: i.billId,\n      date: new Date(i.date).toISOString(),\n      total: i.priceWithTax.text,\n      pdfUrl: i.pdfUrl,\n    }))\n  })",
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "document": "{{item}}",
+          "url": "{{item.pdfUrl}}"
+        }
+      ]
+    }
+  ]
+}
