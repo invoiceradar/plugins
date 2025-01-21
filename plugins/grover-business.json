@@ -1,0 +1,75 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "grover-business",
+  "homepage": "https://grover.com",
+  "name": "Grover Business",
+  "description": "Grover Business is a Hardware Rental Company",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.grover.com/business/dashboard/payments",
+      "waitForNetworkIdle": true
+    },
+
+    {
+      "action": "checkURL",
+      "url": "https://www.grover.com/business/dashboard/payments"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.grover.com/business-en/auth/login?callback=%2Fbusiness%2Fdashboard",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "sleep",
+      "duration": 100
+    },
+    {
+      "action": "click",
+      "selector": "[data-testid='country_redirection_close_button']",
+      "description": "Dismiss language selection",
+      "optional": true
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://www.grover.com/business/dashboard"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://www.grover.com/business/dashboard/payments",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "extractAll",
+      "selector": "table tbody tr:has(a[href*='invoicing.grover.com'])",
+      "variable": "invoice",
+      "fields": {
+        "date": {
+          "selector": "td:nth-child(4)"
+        },
+        "id": {
+          "selector": "td:first-child div:nth-child(2) p"
+        },
+        "total": {
+          "selector": "td:nth-child(6)"
+        },
+        "pdf": {
+          "selector": "a[href*='invoicing.grover.com']",
+          "attribute": "href"
+        }
+      },
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "{{invoice.pdf}}",
+          "document": "{{invoice}}"
+        }
+      ]
+    }
+  ]
+}
