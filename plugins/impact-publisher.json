@@ -1,84 +1,84 @@
 {
-	"$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
-	"id": "impact-publisher",
-	"name": "Impact Publisher",
-	"description": "Impact is a global affiliate plattform. This plugin allows you to download invoices from your Impact publisher account.",
-	"homepage": "https://impact.com/",
-	"configSchema": {},
-	"checkAuth": [
-		{
-			"action": "navigate",
-			"url": "https://app.impact.com/secure/mediapartner/home/pview.ihtml"
-		},
-		{
-			"action": "checkElementExists",
-			"selector": "#partnerFinanceSnapshot"
-		}
-	],
-	"startAuth": [
-		{
-			"action": "navigate",
-			"url": "https://app.impact.com/login.user"
-		},
-		{
-			"action": "waitForElement",
-			"selector": "#partnerFinanceSnapshot",
-			"timeout": 120000
-		}
-	],
-	"getDocuments": [
-		{
-			"action": "navigate",
-			"url": "https://app.impact.com/secure/mediapartner/PUB_FINANCE_Report/r3/report/viewReport.report?handle=mp_invoice_history"
-		},
-		{
-			"action": "waitForElement",
-			"selector": "div[class^='partitionFree']:not(.header-partition) .tr",
-			"timeout": 3000
-		},
-		{
-			"action": "extractAll",
-			"selector": "div[class^='partitionFree']:not(.header-partition) .tr",
-			"variable": "invoice",
-			"fields": {
-				"id": {
-					"selector": "[data-key='PDF'] a",
-					"attribute": "href",
-					"transform": "(url) => url.split('invoiceNumber=')[1]"
-				},
-				"date": {
-					"selector": "[data-key='Date']"
-				},
-				"total": {
-					"selector": "[data-key='Invoice_Amount']"
-				},
-				"url": {
-					"selector": "[data-key='PDF'] a",
-					"attribute": "href"
-				},
-				"billedto": {
-					"selector": "[data-key='Invoiced_entity']"
-				},
-				"tax": {
-					"selector": "[data-key='Tax']"
-				}
-			},
-			"forEach": [
-				{
-					"action": "downloadPdf",
-					"url": "https://app.impact.com{{invoice.url}}",
-					"document": {
-						"type": "outgoing_invoice",
-						"id": "{{invoice.id}}",
-						"date": "{{invoice.date}}",
-						"total": "{{invoice.total}}"
-					},
-					"metadata": {
-						"billedto": "{{invoice.billedto}}",
-						"tax": "{{invoice.tax}}"
-					}
-				}
-			]
-		}
-	]
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "impact-publisher",
+  "name": "Impact Publisher",
+  "description": "Impact is a global affiliate plattform. This plugin allows you to download invoices from your Impact publisher account.",
+  "homepage": "https://impact.com/",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://app.impact.com/secure/mediapartner/home/pview.ihtml"
+    },
+    {
+      "action": "checkElementExists",
+      "selector": "#partnerFinanceSnapshot"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://app.impact.com/login.user"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "#partnerFinanceSnapshot",
+      "timeout": 120000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://app.impact.com/secure/mediapartner/PUB_FINANCE_Report/r3/report/viewReport.report?handle=mp_invoice_history"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "div[class^='partitionFree']:not(.header-partition) .tr",
+      "timeout": 3000
+    },
+    {
+      "action": "extractAll",
+      "selector": "div[class^='partitionFree']:not(.header-partition) .tr",
+      "variable": "invoice",
+      "fields": {
+        "id": {
+          "selector": "[data-key='PDF'] a",
+          "attribute": "href",
+          "transform": "(url) => url.split('invoiceNumber=')[1]"
+        },
+        "date": {
+          "selector": "[data-key='Date']"
+        },
+        "total": {
+          "selector": "[data-key='Invoice_Amount']"
+        },
+        "url": {
+          "selector": "[data-key='PDF'] a",
+          "attribute": "href"
+        },
+        "billedto": {
+          "selector": "[data-key='Invoiced_entity']"
+        },
+        "tax": {
+          "selector": "[data-key='Tax']"
+        }
+      },
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "https://app.impact.com{{invoice.url}}",
+          "document": {
+            "type": "outgoing_invoice",
+            "id": "{{invoice.id}}",
+            "date": "{{invoice.date}}",
+            "total": "{{invoice.total}}"
+          },
+          "metadata": {
+            "billedto": "{{invoice.billedto}}",
+            "tax": "{{invoice.tax}}"
+          }
+        }
+      ]
+    }
+  ]
 }

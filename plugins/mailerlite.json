@@ -61,17 +61,19 @@
       "selector": "tbody tr",
       "fields": {
         "id": {
-          "selector": "td:nth-child(2) a"
+          "selector": "td:nth-child(2) a",
+          "attribute": "href",
+          "transform": "(url) => url.split('/').slice(-1)[0].split('?')[0]"
         },
         "date": {
           "selector": "td:nth-child(1)"
         },
         "url": {
-          "selector": "td:nth-child(6) a",
+          "selector": "td:nth-child(5) a",
           "attribute": "href"
         },
         "total": {
-          "selector": "td:nth-child(3)"
+          "selector": "td:nth-child(5)"
         }
       },
       "forEach": [

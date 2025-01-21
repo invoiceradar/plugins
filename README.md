@@ -58,6 +58,7 @@ Plugins for Invoice Radar are written in JSON and follow a specific structure. E
 
 - **checkAuth**: Steps to verify if the user is already authenticated.
 - **startAuth**: Steps to initiate the authentication process.
+- **getConfigOptions**: Optional steps to fetch configuration options like Team ID.
 - **getDocuments**: Steps to fetch and download documents.
 
 ### Minimal Plugin Example
@@ -209,7 +210,38 @@ Let's create a simple plugin to fetch invoices from a hypothetical service.
    ]
    ```
 
-5. **Scrape Documents**:
+5. **Expose Configuration Options (optional)**:
+
+   The `getConfigOptions` step is optional and can be used to fetch configuration options like a teamId. This is useful if the plugin requires a teamId to be set in the configuration which is not known at the time of adding the plugin.
+
+   The `config` field is the key of one of the options in the `configSchema`. It will expose the options to the user as a dropdown in the configuration modal.
+
+   ```json
+   "getConfigOptions": [
+      {
+        "action": "navigate",
+        "url": "https://example.com/",
+        "waitForNetworkIdle": true
+      },
+      {
+        "action": "extractAll",
+        "script": "fetch('https://example.com/api/teams').then(r => r.json())",
+        "variable": "option",
+        "forEach": [
+          {
+            "action": "exposeOption",
+            "config": "teamId",
+            "option": {
+              "label": "{{option.name}}",
+              "value": "{{option.id}}"
+            }
+          }
+        ]
+      }
+   ]
+   ```
+
+6. **Scrape Documents**:
 
    `getDocuments` contains steps to fetch and download documents. This can involve navigating to the billing page, extracting invoice details, and downloading the PDFs.
 
@@ -245,7 +277,6 @@ Let's create a simple plugin to fetch invoices from a hypothetical service.
            "document": {
              "type": "invoice",
              "id": "{{invoice.id}}",
-             "jonas": "{{invoice.date}}",
              "date": "{{invoice.date}}",
              "total": "{{invoice.total}}"
            }
@@ -255,7 +286,7 @@ Let's create a simple plugin to fetch invoices from a hypothetical service.
    ]
    ```
 
-6. **You are done!**:
+7. **You are done!**:
 
    Save the file and add it to Invoice Radar. You can now run the plugin to fetch invoices from the service.
 
@@ -274,11 +305,11 @@ Many services automatically redirect to the login page if the user is not authen
 },
 {
   "action": "checkURL",
-  "url": "https://example.com/dashboard",
+  "url": "https://example.com/account",
 }
 ```
 
-Depending on the service, you might do it the other way around.
+Depending on the service, they may redirect you from the dashboard to the login page if you are not authenticated. In this case, you can use the `checkURL` step to check if the URL still matches after visiting the dashboard.
 
 ```json
 {
@@ -291,6 +322,8 @@ Depending on the service, you might do it the other way around.
 }
 ```
 
+Note that you can use glob patterns to match dynamic URLs: `https://example.com/dashboard/**`.
+
 #### Pattern 2: Check for Logout Button
 
 You can use a selector that is unique to the authenticated state to check if the user is authenticated, e.g. a logout button or profile link.
@@ -298,7 +331,7 @@ You can use a selector that is unique to the authenticated state to check if the
 ```json
 {
   "action": "navigate",
-  "url": "https://example.com/login"
+  "url": "https://example.com/home"
 },
 {
   "action": "waitForElement",
@@ -308,24 +341,19 @@ You can use a selector that is unique to the authenticated state to check if the
 
 #### Tip: Make sure the website is fully loaded
 
-In some cases, the website has not fully loaded when the `checkElementExists` step is executed. To avoid this, you can use the `waitForElement` step to wait for a specific element to appear on the page.
+In some cases, the website has not fully loaded when the `checkElementExists` step is executed. To avoid this, you can use the `waitForNetworkIdle` attribute to wait for the page to be fully loaded.
 
 ```json
 {
   "action": "navigate",
-  "url": "https://example.com/dashboard"
-},
-{
-  "action": "waitForElement",
-  "selector": "#main-app"
+  "url": "https://example.com/home",
+  "waitForNetworkIdle": true
 },
 {
   "action": "checkElementExists",
   "selector": "#logout-button"
 }
 ```
-
-Note that the selector `#main-app` has to be available in both states (logged in and logged out). Otherwise, the step will timeout.
 
 ### Common patterns for start authentication (`startAuth`)
 
@@ -543,7 +571,7 @@ Checks if the given selector exists on the page. Typically used for authenticati
 
 #### Check URL (`checkURL`)
 
-Checks if the current URL matches the given URL. Supports wildcards.
+Checks if the current URL matches the given URL. Supports wildcards patterns like `https://example.com/dashboard/**`.
 
 ```json
 {
@@ -814,6 +842,20 @@ This is generally not recommended. In most cases, it's better to use the [waitFo
 }
 ```
 
+#### Expose Option (`exposeOption`)
+
+Exposes a configuration option to the user. The `config` field is the key of one of the options in the `configSchema`.
+
+For example, if the `configSchema` is `{ "teamId": { "type": "string", "label": "Team ID" } }`, the `config` field can be `teamId`.
+
+```json
+{
+  "action": "exposeOption",
+  "config": "teamId",
+  "option": "{{option}}"
+}
+```
+
 ### ✂️ Snippets
 
 Snippets are pre-built sets of steps that simplify common tasks. The steps for a specific snippet are visible inside the developer tools
@@ -846,4 +888,55 @@ Extracts available invoices from a Stripe billing portal.
     "url": "https://stripe-portal.example.com/billing"
   }
 }
+```
+
+## Advanced Patterns
+
+### Running a fetch request
+
+Sometimes, you might need to run a fetch request inside a step to fetch data from an API. To do this, you can use the `extractAll` action.
+
+```json
+{
+  "action": "extractAll",
+  "variable": "invoice",
+  "script": "fetch('https://example.com/api/invoices').then(res => res.json())"
+  "forEach": [
+    {
+      "action": "downloadPdf",
+      "url": "{{invoice.url}}",
+      "document": {
+        "id": "{{invoice.id}}",
+        "date": "{{invoice.date}}",
+        "total": "{{invoice.total}}"
+      }
+    }
+  ]
+}
+```
+
+This will run the fetch request and return the result as a JavaScript object.
+
+### Run steps inside an `<iframe/>`
+
+In some scenarios, you might need to run a step inside an `<iframe/>` element. To do this, you can use the `iframe` attribute on the step.
+
+```json
+{
+  "action": "click",
+  "selector": "#button-inside-iframe",
+  "iframe": true
+},
+```
+
+By setting `iframe` to `true`, Invoice Radar will find the first `<iframe/>` element on the page and run the step inside it.
+
+You can also use a string that is contained inside the iframe's `src` attribute to target a specific iframe.
+
+```json
+{
+  "action": "click",
+  "selector": "#button-inside-iframe",
+  "iframe": "iframe.example.com"
+},
 ```
