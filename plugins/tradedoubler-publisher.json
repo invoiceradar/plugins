@@ -1,67 +1,67 @@
 {
-	"$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
-	"id": "tradedoubler-publisher",
-	"name": "Tradedoubler Publisher",
-	"description": "Tradedoubler is a global affiliate plattform. This plugin allows you to download invoices from your Tradedoubler publisher account.",
-	"homepage": "https://www.tradedoubler.com",
-	"configSchema": {},
-	"checkAuth": [
-		{
-			"action": "navigate",
-			"url": "https://publishers.tradedoubler.com/en/publisher/dashboard/"
-		},
-		{
-			"action": "checkElementExists",
-			"selector": ".earning-item-title"
-		}
-	],
-	"startAuth": [
-		{
-			"action": "navigate",
-			"url": "https://publishers.tradedoubler.com/en/login"
-		},
-		{
-			"action": "waitForElement",
-			"selector": ".earning-item-title",
-			"timeout": 120000
-		}
-	],
-	"getDocuments": [
-		{
-			"action": "navigate",
-			"url": "https://publishers.tradedoubler.com/en/publisher/payments/?limit=100"
-		},
-		{
-			"action": "extractAll",
-			"selector": "table.payment_index tbody tr",
-			"variable": "invoice",
-			"fields": {
-				"id": {
-					"selector": "td:nth-child(2)"
-				},
-				"date": {
-					"selector": "td:nth-child(3)"
-				},
-				"total": {
-					"selector": "td:nth-child(4)"
-				},
-				"url": {
-					"selector": "a[title='Download']",
-					"attribute": "href"
-				}
-			},
-			"forEach": [
-				{
-					"action": "downloadPdf",
-					"url": "https://publishers.tradedoubler.com{{invoice.url}}",
-					"document": {
-						"type": "outgoing_invoice",
-						"id": "{{invoice.id}}",
-						"date": "{{invoice.date}}",
-						"total": "{{invoice.total}}"
-					}
-				}
-			]
-		}
-	]
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "tradedoubler-publisher",
+  "name": "Tradedoubler Publisher",
+  "description": "Tradedoubler is a global affiliate plattform. This plugin allows you to download invoices from your Tradedoubler publisher account.",
+  "homepage": "https://www.tradedoubler.com",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://publishers.tradedoubler.com/en/publisher/dashboard/"
+    },
+    {
+      "action": "checkElementExists",
+      "selector": ".earning-item-title"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://publishers.tradedoubler.com/en/login"
+    },
+    {
+      "action": "waitForElement",
+      "selector": ".earning-item-title",
+      "timeout": 120000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://publishers.tradedoubler.com/en/publisher/payments/?limit=100"
+    },
+    {
+      "action": "extractAll",
+      "selector": "table.payment_index tbody tr",
+      "variable": "invoice",
+      "fields": {
+        "id": {
+          "selector": "td:nth-child(2)"
+        },
+        "date": {
+          "selector": "td:nth-child(3)"
+        },
+        "total": {
+          "selector": "td:nth-child(4)"
+        },
+        "url": {
+          "selector": "a[title='Download']",
+          "attribute": "href"
+        }
+      },
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "https://publishers.tradedoubler.com{{invoice.url}}",
+          "document": {
+            "type": "outgoing_invoice",
+            "id": "{{invoice.id}}",
+            "date": "{{invoice.date}}",
+            "total": "{{invoice.total}}"
+          }
+        }
+      ]
+    }
+  ]
 }
