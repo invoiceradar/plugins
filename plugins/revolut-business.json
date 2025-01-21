@@ -13,7 +13,7 @@
     },
     {
       "action": "checkElementExists",
-      "selector": "[aria-label='Accounts widget']"
+      "selector": "[data-rui='avatar']"
     }
   ],
   "startAuth": [
@@ -39,71 +39,49 @@
       "waitForNetworkIdle": true
     },
     {
-      "action": "extractAll",
-      "variable": "periods",
-      "selector": "div:has(> button[class*='Box-rui'])",
-      "fields": {
-        "date": {
-          "selector": "button > span",
-          "transform": "(dateRange) => dateRange.split(' - ')[0].replace(/(\\d+\\s+\\w+)(?:\\s+\\d{4})?/, '$1 ' + dateRange.match(/\\d{4}/)[0])"
-        }
-      },
-      "forEach": [
+      "action": "if",
+      "selector": "[aria-label*='Continue as']",
+      "then": [
         {
           "action": "click",
-          "selector": "button",
-          "scopeSelector": true
+          "selector": "[aria-label*='Continue as']"
         },
         {
-          "action": "waitForElement",
-          "selector": "[class*='SideWrapper'] [class*='HeaderStickyWrapper']",
-          "description": "Wait for the sidebar to open"
-        },
+          "action": "waitForURL",
+          "url": "https://business.revolut.com/**",
+          "timeout": 180000
+        }
+      ]
+    },
+    {
+      "action": "extract",
+      "variable": "revoDeviceId",
+      "script": "document.cookie.match(new RegExp('(^| )revo_device_id=([^;]+)'))?.[2]"
+    },
+    {
+      "action": "extractAll",
+      "variable": "billingHistory",
+      "script": "fetch('https://business.revolut.com/api/subscriptions/history/periods', {\n  headers: {\n    accept: 'application/json, text/plain, */*',\n    'x-device-id': '{{revoDeviceId}}',\n    'x-timezone': 'Europe/Vienna',\n  },\n  referrer: 'https://business.revolut.com/',\n  referrerPolicy: 'origin',\n  body: null,\n  method: 'GET',\n  mode: 'cors',\n  credentials: 'include',\n})\n  .then((r) => r.json())\n  .then((r) => r.filter((i) => i.fee && i.fee.amount > 0))\n  .then((r) =>\n    r.map((item) => ({\n      amount: item.fee.amount / 100 + ' ' + item.fee.currency,\n      date: new Date(item.from),\n      from: item.from,\n    })),\n  )",
+      "forEach": [
         {
-          "action": "sleep",
-          "duration": 100
+          "action": "extract",
+          "script": "fetch(\n  'https://business.revolut.com/api/subscriptions/invoice?from={{billingHistory.from}}',\n  {\n    headers: {\n      accept: 'application/json, text/plain, */*',\n      'x-device-id': '{{revoDeviceId}}',\n      'x-timezone': 'Europe/Vienna',\n    },\n    referrer: 'https://business.revolut.com/',\n    referrerPolicy: 'origin',\n    body: null,\n    method: 'GET',\n    mode: 'cors',\n    credentials: 'include',\n  },\n)\n  .then((r) => r.text())\n  .then((r) => r.match(/<span>#(\\d+)<\\/span>/)?.[1]) // extract invoiceId",
+          "variable": "invoiceId"
         },
         {
           "action": "if",
-          "selector": "[class*='SideWrapper'] [class*='ActionButton-rui']",
-          "scopeSelector": false,
+          "script": "'{{invoiceId}}' !== ''",
           "then": [
             {
-              "action": "click",
-              "selector": "[class*='OverlayBase'] [aria-label='Close']",
-              "scopeSelector": false,
-              "optional": true
-            },
-            {
-              "action": "click",
-              "selector": "[class*='SideWrapper'] [class*='ActionButton-rui']",
-              "scopeSelector": false
-            },
-            {
-              "action": "click",
-              "selector": "button:has([style*='icons/Download'])",
-              "scopeSelector": false
-            },
-            {
-              "action": "waitForElement",
-              "selector": "#header > div > div.title > span:nth-child(2)"
-            },
-            {
-              "action": "extract",
-              "variable": "invoice",
-              "fields": {
-                "id": "#header > div > div.title > span:nth-child(2)",
-                "date": "#dates > div > div > span:nth-child(2)",
-                "total": ".section:last-child .transactions tr:last-child td:last-child"
-              }
+              "action": "runJs",
+              "script": "fetch(\n  'https://business.revolut.com/api/subscriptions/invoice?from={{billingHistory.from}}&format=pdf',\n  {\n    headers: {\n      'x-device-id': '{{revoDeviceId}}',\n    },\n  },\n)\n  .then((response) => response.blob())\n  .then((blob) => {\n    const url = window.URL.createObjectURL(blob)\n    const a = document.createElement('a')\n    a.href = url\n    a.download = '{{revoDeviceId}}.pdf' // or get filename from Content-Disposition header\n    document.body.appendChild(a)\n    a.click()\n    window.URL.revokeObjectURL(url)\n    document.body.removeChild(a)\n  })"
             },
             {
               "action": "waitForPdfDownload",
               "document": {
-                "id": "{{invoice.id}}",
-                "date": "{{invoice.date}}",
-                "total": "{{invoice.total}}",
-                "type": "invoice"
+                "id": "{{invoiceId}}",
+                "date": "{{billingHistory.date}}",
+                "total": "{{billingHistory.amount}}"
               }
             }
           ]

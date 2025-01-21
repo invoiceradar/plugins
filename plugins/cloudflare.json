@@ -33,7 +33,7 @@
     },
     {
       "action": "checkElementExists",
-      "selector": "[data-testid='user-selector-dropdown-button']"
+      "selector": "[aria-label='User profile']"
     }
   ],
   "startAuth": [
@@ -53,36 +53,68 @@
     },
     {
       "action": "waitForElement",
-      "selector": "[data-testid='page-account-selector']",
+      "selector": "[aria-label='User profile']",
       "timeout": 120000
     }
   ],
   "getConfigOptions": [
     {
       "action": "navigate",
-      "url": "https://dash.cloudflare.com/"
+      "url": "https://dash.cloudflare.com/",
+      "waitForNetworkIdle": true
     },
     {
       "action": "waitForElement",
-      "selector": "[data-testid='page-account-selector'] ul li"
+      "selector": "[aria-label='User profile']"
     },
     {
-      "action": "extractAll",
-      "selector": "[data-testid='page-account-selector'] ul li",
-      "variable": "option",
-      "fields": {
-        "label": "div",
-        "value": {
-          "selector": "a",
-          "attribute": "href",
-          "transform": "(v) => v.split('/').pop()"
+      "action": "if",
+      "selector": "[data-testid='page-account-selector']",
+      "then": [
+        {
+          "action": "waitForElement",
+          "selector": "[data-testid='page-account-selector'] ul li"
+        },
+        {
+          "action": "extractAll",
+          "selector": "[data-testid='page-account-selector'] ul li",
+          "variable": "option",
+          "fields": {
+            "label": "div",
+            "value": {
+              "selector": "a",
+              "attribute": "href",
+              "transform": "(v) => v.split('/').pop()"
+            }
+          },
+          "forEach": [
+            {
+              "action": "exposeOption",
+              "config": "accountId",
+              "option": "{{option}}"
+            }
+          ]
         }
-      },
-      "forEach": [
+      ],
+      "else": [
+        {
+          "action": "extract",
+          "variable": "acc",
+          "fields": {
+            "label": {
+              "selector": "[currentitem='false']"
+            },
+            "value": {
+              "selector": "[href*='/discover']",
+              "attribute": "href",
+              "transform": "(v) => v.split('/')[1]"
+            }
+          }
+        },
         {
           "action": "exposeOption",
           "config": "accountId",
-          "option": "{{option}}"
+          "option": "{{acc}}"
         }
       ]
     }
