@@ -1,0 +1,67 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "retailads-publisher",
+  "name": "retailAds Publisher",
+  "description": "retailAds is a affiliate plattform. This plugin allows you to download invoices from your financeAds publisher account.",
+  "homepage": "https://retailads.net/",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://dashboard.financeads.net/publisher/start"
+    },
+    {
+      "action": "checkElementExists",
+      "selector": "fads-affiliate-dashboard"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://login.retailads.net/partner/partner.php"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "#logout",
+      "timeout": 120000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://login.retailads.net/partner/partner.php?module=konto&site=auszahlungen"
+    },
+    {
+      "action": "extractAll",
+      "selector": "table#auszahlungen tbody tr",
+      "variable": "invoice",
+      "fields": {
+        "id": {
+          "selector": "td:nth-child(2)"
+        },
+        "date": {
+          "selector": "td:nth-child(1)"
+        },
+        "total": {
+          "selector": "td:nth-child(6)"
+        },
+        "url": {
+          "selector": "a",
+          "attribute": "href"
+        }
+      },
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "{{invoice.url}}",
+          "document": {
+            "type": "outgoing_invoice",
+            "id": "{{invoice.id}}",
+            "date": "{{invoice.date}}",
+            "total": "{{invoice.total}}"
+          }
+        }
+      ]
+    }
+  ]
+}

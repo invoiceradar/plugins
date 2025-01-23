@@ -1,0 +1,78 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "financequality-publisher",
+  "name": "FinanceQuality Publisher",
+  "description": "FinanceQuality is a affiliate plattform. This plugin allows you to download invoices from your FinanceQuality publisher account.",
+  "homepage": "https://www.financequality.net/",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://network.financequality.net/overview.do"
+    },
+    {
+      "action": "checkElementExists",
+      "selector": "#side-menu"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://network.financequality.net/index.do"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "#side-menu",
+      "timeout": 120000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://network.financequality.net/user-billings.do"
+    },
+    {
+      "action": "waitForNetworkIdle",
+      "timeout": 10000
+    },
+    {
+      "action": "extractAll",
+      "selector": "table tbody tr",
+      "variable": "invoice",
+      "fields": {
+        "id": {
+          "selector": "td a",
+          "transform": "(name) => name.split('.pdf')[0]"
+        },
+        "date": {
+          "selector": "td:nth-child(2)"
+        },
+        "total": {
+          "selector": "td:nth-child(6)"
+        },
+        "netto": {
+          "selector": "td.text-right"
+        },
+        "url": {
+          "selector": "td a",
+          "attribute": "href"
+        }
+      },
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "https://network.financequality.net/{{invoice.url}}",
+          "document": {
+            "type": "outgoing_invoice",
+            "id": "{{invoice.id}}",
+            "date": "{{invoice.date}}",
+            "total": "{{invoice.total}}"
+          },
+          "metadata": {
+            "netto": "{{invoice.total}}"
+          }
+        }
+      ]
+    }
+  ]
+}

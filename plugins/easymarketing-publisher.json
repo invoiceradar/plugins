@@ -1,0 +1,79 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "easymarketing-publisher",
+  "name": "Easy Marketing Publisher",
+  "description": "Easy Marketing offers a affiliate plattform. This plugin allows you to download invoices from your Easy Marketing publisher account.",
+  "homepage": "https://www.easy-m.de/",
+  "configSchema": {
+    "domain": {
+      "type": "string",
+      "title": "Domain",
+      "description": "Easy Marketing Domain",
+      "required": true
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://{{config.domain}}/overview.do"
+    },
+    {
+      "action": "checkElementExists",
+      "selector": "a[href='/logout.do']"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://{{config.domain}}/overview.do"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "a[href='/logout.do']",
+      "timeout": 120000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://{{config.domain}}/user-billings.do"
+    },
+    {
+      "action": "waitForNetworkIdle",
+      "timeout": 1000
+    },
+    {
+      "action": "extractAll",
+      "selector": "#content table tbody tr",
+      "variable": "invoice",
+      "fields": {
+        "id": {
+          "selector": "a[href^='user-billings.do']",
+          "transform": "(d) => d.replace('.pdf', '')"
+        },
+        "date": {
+          "selector": "td:nth-child(2) div"
+        },
+        "total": {
+          "selector": "td:nth-child(5)"
+        },
+        "url": {
+          "selector": "a[href^='user-billings.do']",
+          "attribute": "href"
+        }
+      },
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "https://{{config.domain}}/{{invoice.url}}",
+          "document": {
+            "type": "outgoing_invoice",
+            "id": "{{invoice.id}}",
+            "date": "{{invoice.date}}",
+            "total": "{{invoice.total}}"
+          }
+        }
+      ]
+    }
+  ]
+}
