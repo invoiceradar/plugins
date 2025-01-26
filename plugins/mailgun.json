@@ -1,0 +1,80 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "mailgun",
+  "name": "Mailgun",
+  "description": "Mailgun is an email sending service.",
+  "homepage": "https://mailgun.com",
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://app.mailgun.com/app/account/billing/payments_and_invoices",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://app.mailgun.com/**"
+    },
+    {
+      "action": "checkElementExists",
+      "selector": "#AppGrid"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://login.mailgun.com/login/"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://app.mailgun.com/**"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://app.mailgun.com/app/account/billing/payments_and_invoices"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "#invoices-table tbody tr"
+    },
+    { "action": "waitForNetworkIdle" },
+    {
+      "action": "click",
+      "selector": "[class*='PaginationToggle'] button:last-child"
+    },
+    {
+      "action": "extractAll",
+      "selector": "#invoices-table tbody tr",
+      "fields": {
+        "id": {
+          "selector": "td:nth-child(1)",
+          "attribute": "id"
+        },
+        "url": {
+          "selector": "td:nth-child(1) a",
+          "attribute": "href",
+          "transform": "(url) => url.split('?')[0] + '.pdf?' + url.split('?')[1]"
+        },
+        "date": {
+          "selector": "td:nth-child(2)"
+        },
+        "total": {
+          "selector": "td:nth-child(3)"
+        }
+      },
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "{{item.url}}",
+          "document": {
+            "id": "{{item.id}}",
+            "date": "{{item.date}}",
+            "total": "{{item.total}}",
+            "type": "outgoing_invoice"
+          }
+        }
+      ]
+    }
+  ]
+}
