@@ -1,0 +1,55 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "raycast",
+  "name": "Raycast",
+  "description": "Raycast is a productivity tool for macOS.",
+  "homepage": "https://www.raycast.com",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.raycast.com/settings/account",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkURL",
+      "url": "https://www.raycast.com/settings/account"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.raycast.com/users/sign_in"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[class*=signedIn]"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://www.raycast.com/settings/account"
+    },
+
+    {
+      "action": "click",
+      "selector": "//button[contains(text(), 'View Billing')]"
+    },
+    {
+      "action": "waitForNavigation"
+    },
+    {
+      "action": "extract",
+      "variable": "portalUrl",
+      "script": "window.location.href"
+    },
+    {
+      "action": "runSnippet",
+      "snippet": "getInvoicesFromStripeBillingPortal",
+      "args": {
+        "url": "{{portalUrl}}"
+      }
+    }
+  ]
+}
