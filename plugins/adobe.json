@@ -103,7 +103,7 @@
           "forEach": [
             {
               "action": "click",
-              "selector": "[aria-label='Download PDF']"
+              "selector": "[data-testid='tooltip-button-action']:nth-child(2)"
             },
             {
               "action": "waitForPdfDownload",
