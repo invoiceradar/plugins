@@ -1,0 +1,98 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "filestage",
+  "homepage": "https://filestage.io",
+  "name": "Filestage",
+  "description": "Filestage is a file storage platform",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://app.filestage.io",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkElementExists",
+      "selector": "[data-testid='user-avatar-menu-button']"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://app.filestage.io/login"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[data-testid='user-avatar-menu-button']",
+      "timeout": 180000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://app.filestage.io",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[href='/teams']"
+    },
+    {
+      "action": "click",
+      "selector": "[href='/teams']"
+    },
+    {
+      "action": "click",
+      "selector": "[href*='/billing']"
+    },
+    {
+      "action": "click",
+      "selector": "//button[contains(text(), 'Rechnungen anzeigen')]"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[data-href*='quadernoapp']",
+      "iframe": "billing.quaderno.io"
+    },
+    {
+      "action": "click",
+      "selector": "[data-href*='quadernoapp']",
+      "iframe": "billing.quaderno.io"
+    },
+    {
+      "action": "waitForNetworkIdle"
+    },
+    {
+      "action": "click",
+      "selector": "#actions ul li:nth-child(2) a"
+    },
+    {
+      "action": "extractAll",
+      "selector": "ol li",
+      "variable": "invoice",
+      "fields": {
+        "id": {
+          "selector": "div:nth-child(1)"
+        },
+        "date": {
+          "selector": "div:nth-child(2)"
+        },
+        "total": {
+          "selector": "div:nth-child(4)"
+        },
+        "pdf": {
+          "selector": "div:nth-child(1) a",
+          "attribute": "href",
+          "transform": "(v) => v + '.pdf'"
+        }
+      },
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "{{invoice.pdf}}",
+          "document": "{{invoice}}"
+        }
+      ]
+    }
+  ]
+}
