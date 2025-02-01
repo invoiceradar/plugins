@@ -52,7 +52,7 @@
             },
             "dateString": {
               "selector": "td:nth-child(1)",
-              "transform": "(d) => new Date(d).toISOString().split('T')[0].slice(2)"
+              "transform": "(str) => (str.includes('.') ? new Date(str.split('.').reverse().join('-')) : new Date(str.replace(/\\\"/g, ''))).toISOString().split('T')[0].slice(2)"
             },
             "total": {
               "selector": "td:nth-child(5)"
@@ -94,7 +94,7 @@
             },
             "dateString": {
               "selector": "div:nth-child(1)",
-              "transform": "(d) => new Date(d).toISOString().split('T')[0].slice(2)"
+              "transform": "(str) => (str.includes('.') ? new Date(str.split('.').reverse().join('-')) : new Date(str.replace(/\\\"/g, ''))).toISOString().split('T')[0].slice(2)"
             },
             "total": {
               "selector": "div:nth-child(5)"
