@@ -4,7 +4,13 @@
   "homepage": "https://magenta.at",
   "name": "Magenta",
   "description": "Magenta is a Austrian ISP",
-  "configSchema": {},
+  "configSchema": {
+    "contractId": {
+      "type": "string",
+      "title": "Vertragsnummer",
+      "description": "Die Vertragsnummer, die die Rechnungen zuordnet"
+    }
+  },
   "checkAuth": [
     {
       "action": "navigate",
@@ -38,7 +44,6 @@
   "getDocuments": [
     {
       "action": "navigate",
-
       "url": "https://www.magenta.at/mein-magenta-kabel/invoices",
       "waitForNetworkIdle": true
     },
@@ -47,52 +52,58 @@
       "selector": ".ng-paid-invoices"
     },
     {
+      "action": "extractNetworkResponse",
+      "url": "onewebbff.svc.magenta.at/v2/customer-bills",
+      "variable": "invoices",
+      "transform": "(v) => v.customerBills.map((v) => ({id: v.billNo, date: v.billDate, total: `${v.amountDue.amount} ${v.amountDue.units}`, url: v.downloadLinks[0]?.url, kundennummer: v.billingAccount.id, kundenname: v.relatedPartyName })).filter((v) => v.kundennummer === '{{config.contractId}}')"
+    },
+    {
       "action": "extractAll",
-      "selector": ".ng-paid-invoices a[href*='/mein-magenta-kabel/invoices/']",
-      "variable": "inv",
-      "fields": {
-        "id": {
-          "selector": "",
-          "attribute": "href",
-          "transform": "(v) => v.match(/\\.(\\d+)$/)[1]"
-        },
-        "url": {
-          "selector": "",
-          "attribute": "href"
-        }
-      },
+      "script": "{{invoices}}",
+      "variable": "invoice",
       "forEach": [
         {
-          "action": "navigate",
-          "url": "https://www.magenta.at{{inv.url}}"
-        },
-        {
-          "action": "waitForElement",
-          "selector": "[ng-unit-test-locator='download-document-button']"
-        },
-        {
-          "action": "click",
-          "selector": "[ng-unit-test-locator='download-document-button']",
-          "scopeSelector": false
-        },
-        {
-          "action": "extract",
-          "variable": "invoice",
-          "fields": {
-            "id": {
-              "selector": "[ng-unit-test-locator='invoice-further-details-bill-no']"
-            },
-            "date": {
-              "selector": "[ng-unit-test-locator='invoice-details-bill-date']"
-            },
-            "total": {
-              "selector": "[ng-unit-test-locator='invoice-further-details-amount-due']"
-            }
-          }
+          "action": "runJs",
+          "script": "fetch('https://onewebbff.svc.magenta.at/v1{{invoice.url}}', {\n  headers: {\n    accept: 'application/json, text/plain, */*',\n    'accept-language': 'en-US',\n    authorization:\n      'Bearer ' + JSON.parse(localStorage.bff_auth_tokens).accessToken,\n    'cache-control': 'no-cache',\n    'content-type': 'application/json',\n    pragma: 'no-cache',\n    'sec-fetch-dest': 'empty',\n    'sec-fetch-mode': 'cors',\n    'sec-fetch-site': 'same-site',\n    'x-b3-spanid': 'bb9c11ab20480475',\n    'x-b3-traceid': 'bb9c11ab20480475',\n    'x-request-session-id': '6598977c-f64c-49fe-8a3c-aedd9545b561',\n    'x-request-tracking-id': '067995f7-7af3-4d21-8165-ae7a20597d34',\n  },\n  referrer: 'https://www.magenta.at/',\n  referrerPolicy: 'strict-origin-when-cross-origin',\n  body: null,\n  method: 'GET',\n  mode: 'cors',\n})\n  .then((response) => response.blob())\n  .then((blob) => {\n    const url = window.URL.createObjectURL(blob)\n    const a = document.createElement('a')\n    a.href = url\n    a.download = '{{invoice.id}}.pdf' // or get filename from Content-Disposition header\n    document.body.appendChild(a)\n    a.click()\n    window.URL.revokeObjectURL(url)\n    document.body.removeChild(a)\n  })"
         },
         {
           "action": "waitForPdfDownload",
-          "document": "{{invoice}}"
+          "document": "{{invoice}}",
+          "metadata": {
+            "kundennummer": "{{invoice.kundennummer}}",
+            "kundenname": "{{invoice.kundenname}}"
+          }
+        }
+      ]
+    }
+  ],
+  "getConfigOptions": [
+    {
+      "action": "navigate",
+      "url": "https://www.magenta.at/mein-magenta-kabel/invoices"
+    },
+    {
+      "action": "waitForElement",
+      "selector": ".ng-paid-invoices"
+    },
+    {
+      "action": "extractNetworkResponse",
+      "url": "onewebbff.svc.magenta.at/v2/customer-bills",
+      "variable": "accountOptions",
+      "transform": "(v) => Array.from(new Map(v.customerBills.map(v => [v.billingAccount.id, { id: v.billingAccount.id, name: v.relatedPartyName }])).values())"
+    },
+    {
+      "action": "extractAll",
+      "script": "{{accountOptions}}",
+      "variable": "option",
+      "forEach": [
+        {
+          "action": "exposeOption",
+          "config": "contractId",
+          "option": {
+            "label": "{{option.name}}",
+            "value": "{{option.id}}"
+          }
         }
       ]
     }
