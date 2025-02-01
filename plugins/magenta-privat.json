@@ -8,11 +8,16 @@
   "checkAuth": [
     {
       "action": "navigate",
-      "url": "https://www.magenta.at/mein-magenta-kabel/dashboard"
+      "url": "https://www.magenta.at/mein-magenta-kabel/dashboard",
+      "waitForNetworkIdle": true
     },
     {
       "action": "waitForElement",
       "selector": ".search-icon"
+    },
+    {
+      "action": "sleep",
+      "duration": 1000
     },
     {
       "action": "checkURL",
