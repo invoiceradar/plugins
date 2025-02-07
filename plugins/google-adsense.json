@@ -1,0 +1,100 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "google-adsense",
+  "name": "Google Adsense",
+  "description": "Google AdSense makes it easy to earn money. Get your payout history.",
+  "homepage": "https://adsense.google.com/",
+  "configSchema": {
+    "pubId": {
+      "type": "string",
+      "title": "Publisher ID",
+      "description": "You can find your Pub-ID in the URL google.com/adsense/new/u/0/pub-1234561234561234",
+      "required": true,
+      "example": "pub-1234561234561234"
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.google.com/adsense/new/u/0/{{config.pubId}}/payments/?place=TRANSACTIONS_SERVICE"
+    },
+    {
+      "action": "checkURL",
+      "url": "https://www.google.com/adsense/**"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.google.com/adsense/new/u/0/{{config.pubId}}/payments/?place=TRANSACTIONS_SERVICE"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://www.google.com/adsense/**",
+      "timeout": 12000000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://www.google.com/adsense/new/u/0/{{config.pubId}}/payments/?place=TRANSACTIONS_SERVICE",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "waitForNetworkIdle",
+      "timeout": 60000
+    },
+    {
+      "action": "waitForElement",
+      "selector": "iframe[src*='https://payments.google.com/payments']",
+      "timeout": 20000
+    },
+    {
+      "action": "runJs",
+      "description": "Navigate to billing iframe content to allow extraction",
+      "script": "(() => {\n  window.location.href = document.querySelector(\n    'iframe[src*=\"https://payments.google.com/payments\"]',\n  ).src\n})()"
+    },
+    {
+      "action": "extractAll",
+      "variable": "item",
+      "selector": "tbody tr:has(.b3-button-link)",
+      "fields": {
+        "id": {
+          "selector": "td:nth-child(2) a",
+          "transform": "(id) => id.match(/GG\\w+/)[0]"
+        }
+      },
+      "forEach": [
+        {
+          "action": "click",
+          "selector": "td:nth-child(2) a",
+          "scopeSelector": true
+        },
+        {
+          "action": "waitForNetworkIdle"
+        },
+        {
+          "action": "extract",
+          "variable": "invoice",
+          "fields": {
+            "id": ".payment-receipt-value:nth-child(8)",
+            "date": {
+              "selector": ".payment-receipt-value",
+              "transform": "(d) => d.replace(/(\\d\\d)\\.(\\d\\d)\\.(20\\d\\d)/, '$3-$2-$1')"
+            },
+            "total": ".payment-receipt-amount"
+          }
+        },
+        {
+          "action": "printPdf",
+          "document": {
+            "id": "{{invoice.id}}",
+            "date": "{{invoice.date}}",
+            "total": "{{invoice.total}}",
+            "type": "receipt"
+          }
+        }
+      ]
+    }
+  ]
+}
