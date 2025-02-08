@@ -8,15 +8,15 @@
     "pubId": {
       "type": "string",
       "title": "Publisher ID",
-      "description": "You can find your Pub-ID in the URL google.com/adsense/new/u/0/pub-1234561234561234",
-      "required": true,
+      "description": "You can find your Pub-ID in the google URL, if not set, it automatically takes the first one",
+      "required": false,
       "example": "pub-1234561234561234"
     }
   },
   "checkAuth": [
     {
       "action": "navigate",
-      "url": "https://www.google.com/adsense/new/u/0/{{config.pubId}}/payments/?place=TRANSACTIONS_SERVICE"
+      "url": "https://www.google.com/adsense/new/login?authuser=0"
     },
     {
       "action": "checkURL",
@@ -26,19 +26,37 @@
   "startAuth": [
     {
       "action": "navigate",
-      "url": "https://www.google.com/adsense/new/u/0/{{config.pubId}}/payments/?place=TRANSACTIONS_SERVICE"
+      "url": "https://www.google.com/adsense/new/login?authuser=0"
     },
     {
       "action": "waitForURL",
-      "url": "https://www.google.com/adsense/**",
+      "url": "https://www.google.com/adsense/new/u/0/**",
       "timeout": 12000000
     }
   ],
   "getDocuments": [
     {
-      "action": "navigate",
-      "url": "https://www.google.com/adsense/new/u/0/{{config.pubId}}/payments/?place=TRANSACTIONS_SERVICE",
-      "waitForNetworkIdle": true
+      "action": "extract",
+      "script": "(function() { const url = window.location.href; const match = url.match(/pub-\\d+/); return match ? match[0] : null; })();",
+      "variable": "pubId"
+    },
+    {
+      "action": "if",
+      "script": "'{{config.pubId}}' !== ''",
+      "then": [
+        {
+          "action": "navigate",
+          "url": "https://www.google.com/adsense/new/u/0/{{config.pubId}}/payments/?place=TRANSACTIONS_SERVICE",
+          "waitForNetworkIdle": true
+        }
+      ],
+      "else": [
+        {
+          "action": "navigate",
+          "url": "https://www.google.com/adsense/new/u/0/{{pubId}}/payments/?place=TRANSACTIONS_SERVICE",
+          "waitForNetworkIdle": true
+        }
+      ]
     },
     {
       "action": "waitForNetworkIdle",
@@ -74,10 +92,14 @@
           "action": "waitForNetworkIdle"
         },
         {
+          "action": "waitForElement",
+          "selector": ".payment-receipt-payment-number"
+        },
+        {
           "action": "extract",
           "variable": "invoice",
           "fields": {
-            "id": ".payment-receipt-value:nth-child(8)",
+            "id": ".payment-receipt-payment-number",
             "date": {
               "selector": ".payment-receipt-value",
               "transform": "(d) => d.replace(/(\\d\\d)\\.(\\d\\d)\\.(20\\d\\d)/, '$3-$2-$1')"
