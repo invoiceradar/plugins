@@ -100,10 +100,7 @@
           "variable": "invoice",
           "fields": {
             "id": ".payment-receipt-payment-number",
-            "date": {
-              "selector": ".payment-receipt-value",
-              "transform": "(d) => d.replace(/(\\d\\d)\\.(\\d\\d)\\.(20\\d\\d)/, '$3-$2-$1')"
-            },
+            "date": ".payment-receipt-value",
             "total": ".payment-receipt-amount"
           }
         },
