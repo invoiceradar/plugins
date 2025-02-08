@@ -91,7 +91,7 @@
             "id": "{{invoice.id}}",
             "date": "{{invoice.date}}",
             "total": "{{invoice.total}}",
-            "type": "receipt"
+            "type": "outgoing_invoice"
           }
         }
       ]
