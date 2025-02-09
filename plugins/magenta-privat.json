@@ -33,11 +33,12 @@
   "startAuth": [
     {
       "action": "navigate",
-      "url": "https://www.magenta.at/mein-magenta-login/"
+      "url": "https://www.magenta.at/mein-magenta-login/",
+      "waitForNetworkIdle": true
     },
     {
-      "action": "waitForElement",
-      "selector": ".logout-button",
+      "action": "waitForURL",
+      "url": "https://www.magenta.at/mein-magenta-kabel**",
       "timeout": 180000
     }
   ],
