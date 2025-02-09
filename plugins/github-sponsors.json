@@ -45,6 +45,11 @@
       "selector": "tab-container [role='menu'] .js-sponsors-stripe-payout-container"
     },
     {
+      "action": "extract",
+      "variable": "firstTotal",
+      "script": "(function() { const match = document.querySelector('p.f2').textContent.trim().match(/^.\\d+\\.\\d+/); return match ? match[0] : null; })();"
+    },
+    {
       "action": "extractAll",
       "selector": ".SelectMenu-list[role='tabpanel']:not([hidden]) .js-sponsors-stripe-payout-container",
       "fields": {
@@ -55,28 +60,44 @@
         "date": {
           "selector": "[name='payout_id']",
           "attribute": "data-payout-start-date-unix",
-          "transform": "(v) => new Date(v * 1000).toLocaleDateString()"
+          "transform": "(v) => (d => new Date(d.setMonth(d.getMonth() + 1)).toLocaleDateString())(new Date(v * 1000))"
         }
       },
       "forEach": [
         {
           "action": "click",
-          "selector": "& > div",
+          "selector": "[name='payout_id']",
           "scopeSelector": true
         },
-
         {
           "action": "click",
           "selector": ".js-sponsors-generate-receipt-button",
           "scopeSelector": false
         },
         {
-          "action": "waitForPdfDownload",
-          "document": {
-            "id": "{{item.id}}",
-            "date": "{{item.date}}",
-            "type": "outgoing_invoice"
-          }
+          "action": "if",
+          "script": "'{{index}}' === '0'",
+          "then": [
+            {
+              "action": "waitForPdfDownload",
+              "document": {
+                "id": "{{item.id}}",
+                "date": "{{item.date}}",
+                "total": "{{firstTotal}}",
+                "type": "outgoing_invoice"
+              }
+            }
+          ],
+          "else": [
+            {
+              "action": "waitForPdfDownload",
+              "document": {
+                "id": "{{item.id}}",
+                "date": "{{item.date}}",
+                "type": "outgoing_invoice"
+              }
+            }
+          ]
         }
       ]
     }
