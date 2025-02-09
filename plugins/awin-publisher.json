@@ -47,7 +47,7 @@
         },
         {
           "action": "extractAll",
-          "selector": "#payments ul li",
+          "selector": "#payments ul.nav-tabs li",
           "variable": "currency",
           "fields": {
             "code": {
@@ -61,7 +61,8 @@
           "forEach": [
             {
               "action": "navigate",
-              "url": "{{currency.url}}"
+              "url": "{{currency.url}}",
+              "waitForNetworkIdle": true
             },
             {
               "action": "waitForElement",
@@ -75,14 +76,10 @@
                 "id": {
                   "selector": "td:nth-child(1) a",
                   "attribute": "href",
-                  "transform": "(url) => url.split('/')[5]"
+                  "transform": "(url) => url?.split('/')[5]"
                 },
-                "date": {
-                  "selector": "td:nth-child(1)"
-                },
-                "total": {
-                  "selector": ".total"
-                },
+                "date": "td:nth-child(1)",
+                "total": ".total",
                 "url": {
                   "selector": ".csvIcon a:nth-child(3)",
                   "attribute": "href"
@@ -90,14 +87,20 @@
               },
               "forEach": [
                 {
-                  "action": "downloadPdf",
-                  "url": "https://ui.awin.com{{invoice.url}}",
-                  "document": {
-                    "type": "outgoing_invoice",
-                    "id": "{{invoice.id}}",
-                    "date": "{{invoice.date}}",
-                    "total": "{{invoice.total}} {{currency.code}}"
-                  }
+                  "action": "if",
+                  "script": "'{{invoice.id}}' !== ''",
+                  "then": [
+                    {
+                      "action": "downloadPdf",
+                      "url": "https://ui.awin.com{{invoice.url}}",
+                      "document": {
+                        "type": "outgoing_invoice",
+                        "id": "{{invoice.id}}",
+                        "date": "{{invoice.date}}",
+                        "total": "{{invoice.total}} {{currency.code}}"
+                      }
+                    }
+                  ]
                 }
               ]
             }
