@@ -36,6 +36,10 @@
   ],
   "getDocuments": [
     {
+      "action": "navigate",
+      "url": "https://www.google.com/adsense/"
+    },
+    {
       "action": "extract",
       "script": "(function() { const url = window.location.href; const match = url.match(/pub-\\d+/); return match ? match[0] : null; })();",
       "variable": "pubId"
