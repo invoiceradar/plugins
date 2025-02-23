@@ -1,0 +1,131 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "flatex",
+  "homepage": "https://www.flatex.de",
+  "name": "flatex",
+  "description": "flatex is a European online broker and banking platform.",
+  "configSchema": {
+    "hostname": {
+      "type": "string",
+      "title": "flatex Region",
+      "description": "The website you use to login to your flatex account",
+      "example": "flatex.de",
+      "options": [
+        {
+          "value": "flatex.de",
+          "label": "Flatex DE"
+        },
+        {
+          "value": "flatex.at",
+          "label": "Flatex AT"
+        }
+      ],
+      "default": "flatex.de"
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://konto.{{config.hostname}}",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkURL",
+      "url": "https://konto.{{config.hostname}}/**"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.{{config.hostname}}/#login"
+    },
+    {
+      "action": "waitForElement",
+      "selector": ".ApplicationMainArea"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://konto.{{config.hostname}}"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[id*='settingsButton']"
+    },
+    {
+      "action": "if",
+      "selector": "body:not(:has(.DocumentArchiveListEntries))",
+      "then": [
+        {
+          "action": "click",
+          "description": "Only open the document archive if it is not already open",
+          "selector": "[id*='settingsButton']",
+          "scopeSelector": true
+        },
+        {
+          "action": "click",
+          "selector": ".OpenDocumentArchive",
+          "scopeSelector": true
+        },
+        {
+          "action": "waitForElement",
+          "selector": ".DocumentArchiveListEntryWidget"
+        }
+      ],
+      "scopeSelector": true
+    },
+    {
+      "action": "runJs",
+      "script": "(() => {\n  window.currentDocument = undefined\n\n  window.open = (url) => {\n    if (url.includes('.pdf')) {\n      try {\n        const urlParts = url.split('/')\n        const filename = urlParts.pop().replace('.pdf', '')\n        const [dateString, docType, , uniqueId] = filename.split('_')\n\n        // Format ISO date (YYYY-MM-DD)\n        const isoDate = `${dateString.slice(0, 4)}-${dateString.slice(4, 6)}-${dateString.slice(6, 8)}`\n\n        window.currentDocument = {\n          date: isoDate,\n          id: uniqueId,\n          url,\n        }\n      } catch (error) {\n        console.error('Error processing PDF URL:', error)\n      }\n    }\n  }\n})()"
+    },
+    {
+      "action": "extractAll",
+      "selector": ".DocumentArchiveListEntryWidget[data-widgettype='link']",
+      "variable": "element",
+      "fields": {
+        "id": {
+          "attribute": "id",
+          "selector": ""
+        }
+      },
+      "forEach": [
+        {
+          "action": "sleep",
+          "duration": 500
+        },
+        {
+          "action": "click",
+          "selector": "",
+          "scopeSelector": true
+        },
+        {
+          "action": "extract",
+          "variable": "additionalInfo",
+          "fields": {
+            "description": ".Description"
+          },
+          "scopeSelector": true
+        },
+        {
+          "action": "extract",
+          "variable": "document",
+          "script": "(() => {\n  return new Promise((resolve, reject) => {\n    let attempts = 0\n    const maxAttempts = 20 // 10 seconds total (20 * 500ms)\n\n    const checkInterval = setInterval(() => {\n      if (window.currentDocument) {\n        clearInterval(checkInterval)\n        resolve({ ...window.currentDocument })\n        window.currentDocument = undefined\n      } else if (attempts >= maxAttempts) {\n        clearInterval(checkInterval)\n        reject(new Error('Timeout waiting for currentDocument'))\n      }\n      attempts++\n    }, 100)\n  })\n})()",
+          "scopeSelector": true
+        },
+        {
+          "action": "downloadPdf",
+          "url": "{{document.url}}",
+          "document": {
+            "date": "{{document.date}}",
+            "id": "{{additionalInfo.description}} {{document.id}}",
+            "type": "other"
+          },
+          "metadata": {
+            "type": "{{additionalInfo.description}}"
+          }
+        }
+      ]
+    }
+  ]
+}
