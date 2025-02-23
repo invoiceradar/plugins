@@ -1,0 +1,56 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "world4you.com",
+  "homepage": "https://www.world4you.com",
+  "name": "World4you",
+  "description": "world4you is a Austrian Webhosting and Domain Registrar",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://my.world4you.com/en/dashboard/rechnungen"
+    },
+    {
+      "action": "checkURL",
+      "url": "https://my.world4you.com/en/dashboard/rechnungen"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://my.world4you.com/en/login"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[title='My Account']",
+      "timeout": 180000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://my.world4you.com/en/dashboard/rechnungen"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "#openInvoicesTable"
+    },
+    {
+      "action": "extractAll",
+      "selector": "#openInvoicesTable tbody tr",
+      "variable": "invoice",
+      "fields": {
+        "id": "td:nth-child(1)",
+        "date": "td:nth-child(2)",
+        "total": "td:nth-child(4)"
+      },
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "https://my.world4you.com/en/dashboard/rechnungen/{{invoice.id}}/download",
+          "document": "{{invoice}}"
+        }
+      ]
+    }
+  ]
+}

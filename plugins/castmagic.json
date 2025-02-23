@@ -1,0 +1,62 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "castmagic-io",
+  "homepage": "https://www.castmagic.io",
+  "name": "Castmagic",
+  "description": "The fastest way to automate your content workflow with AI",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://app.castmagic.io/",
+      "waitForNetworkIdle": true
+    },
+
+    {
+      "action": "checkElementExists",
+      "selector": "[href='/users/sign-out']"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://app.castmagic.io/users/sign-in"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[href='/users/sign-out']",
+      "timeout": 180000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://app.castmagic.io/users/billing",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[phx-click='manage_subscription']"
+    },
+    {
+      "action": "click",
+      "selector": "[phx-click='manage_subscription']"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://billing.stripe.com/**"
+    },
+    {
+      "action": "extract",
+      "script": "window.location.href",
+      "variable": "url"
+    },
+    {
+      "action": "runSnippet",
+      "snippet": "getInvoicesFromStripeBillingPortal",
+      "args": {
+        "url": "{{url}}"
+      }
+    }
+  ]
+}

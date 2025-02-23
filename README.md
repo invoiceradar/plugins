@@ -717,7 +717,8 @@ _Recommended_
 _Optional_
 
 - `type`: The type of the document _(Optional. Defaults to `auto`)_
-  - Can be set to `auto`, `invoice`, `receipt`, `refund` or `other`.
+  - Can be set to `auto`, `invoice`, `outgoing_invoice`, `receipt`, `refund` or `other`.
+  - `auto` will try to detect the type based on the document.
 - `metadata`: Additional metadata for the document _(Optional)_
   - E.g. `{ "orderNumber": "12345" }`
 

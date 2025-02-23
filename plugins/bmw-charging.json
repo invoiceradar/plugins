@@ -1,0 +1,107 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "bmw-charging",
+  "name": "BMW Charging",
+  "description": "BMW Charging / Digital Charging Solutions provides charging cards for EVs.",
+  "homepage": "https://bmw-public-charging.com/",
+  "configSchema": {
+    "mail": {
+      "type": "string",
+      "title": "E-Mail",
+      "required": false
+    },
+    "password": {
+      "type": "password",
+      "title": "Password",
+      "required": false
+    }
+  },
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://bmw-public-charging.com/c/portal/login?rel=/web/de/bmw-de/dashboard&locale=de_DE"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "input[id='email']"
+    },
+    {
+      "action": "type",
+      "selector": "input[id='email']",
+      "value": "{{config.mail}}"
+    },
+    {
+      "action": "click",
+      "selector": ".custom-button.__b.primary"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "input[id='password']"
+    },
+    {
+      "action": "type",
+      "selector": "input[id='password']",
+      "value": "{{config.password}}"
+    },
+    {
+      "action": "click",
+      "selector": ".custom-button.__b.primary"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://bmw-public-charging.com/web/de/bmw-de/dashboard/start",
+      "timeout": 1200000
+    }
+  ],
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://bmw-public-charging.com/web/de/bmw-de/dashboard/invoices"
+    },
+    {
+      "action": "waitForNetworkIdle",
+      "timeout": 15000
+    },
+    {
+      "action": "checkElementExists",
+      "selector": ".dcs-invoice-panel"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://bmw-public-charging.com/web/de/bmw-de/dashboard/invoices"
+    },
+    {
+      "action": "waitForNetworkIdle",
+      "timeout": 15000
+    },
+    {
+      "action": "extractAll",
+      "selector": "dcs-invoice-period",
+      "fields": {
+        "id": ".dcs-invoice-panel__number",
+        "date": {
+          "selector": ".dcs-invoice-panel__header",
+          "transform": "(date) => date.split(' - ')[1]"
+        },
+        "total": ".dcs-invoice-panel__price"
+      },
+      "forEach": [
+        {
+          "action": "click",
+          "selector": "a",
+          "scopeSelector": true
+        },
+        {
+          "action": "waitForPdfDownload",
+          "document": {
+            "id": "{{item.id}}",
+            "date": "{{item.date}}",
+            "total": "{{item.total}}"
+          }
+        }
+      ]
+    }
+  ]
+}

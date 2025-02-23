@@ -29,45 +29,94 @@
   "getDocuments": [
     {
       "action": "navigate",
-      "url": "https://account.adobe.com/orders/billing-history"
+      "url": "https://account.adobe.com/orders/billing-history",
+      "waitForNetworkIdle": true
     },
     {
-      "action": "waitForElement",
-      "selector": ".invoices-and-billing-history-table tr"
-    },
-    {
-      "action": "extractAll",
-      "selector": "table.invoices-and-billing-history-table tbody tr",
-      "fields": {
-        "orderId": {
-          "selector": "td:nth-child(3)"
-        },
-        "date": {
-          "selector": "td:nth-child(1)"
-        },
-        "dateString": {
-          "selector": "td:nth-child(1)",
-          "transform": "(d) => new Date(d).toISOString().split('T')[0].slice(2)"
-        },
-        "total": {
-          "selector": "td:nth-child(5)"
-        }
-      },
-      "forEach": [
+      "action": "if",
+      "selector": ".invoices-and-billing-history-table",
+      "then": [
         {
-          "action": "click",
-          "selector": "[data-e2e='download-invoices']"
+          "action": "waitForElement",
+          "selector": ".invoices-and-billing-history-table tr"
         },
         {
-          "action": "waitForPdfDownload",
-          "document": {
-            "id": "{{item.orderId}}-{{item.dateString}}",
-            "date": "{{item.date}}",
-            "total": "{{item.total}}"
+          "action": "extractAll",
+          "selector": "table.invoices-and-billing-history-table tbody tr",
+          "fields": {
+            "orderId": {
+              "selector": "td:nth-child(3)"
+            },
+            "date": {
+              "selector": "td:nth-child(1)"
+            },
+            "dateString": {
+              "selector": "td:nth-child(1)",
+              "transform": "(str) => (str.includes('.') ? new Date(str.split('.').reverse().join('-')) : new Date(str.replace(/\\\"/g, ''))).toISOString().split('T')[0].slice(2)"
+            },
+            "total": {
+              "selector": "td:nth-child(5)"
+            }
           },
-          "metadata": {
-            "Order": "{{item.orderId}}"
-          }
+          "forEach": [
+            {
+              "action": "click",
+              "selector": "[data-e2e='download-invoices']"
+            },
+            {
+              "action": "waitForPdfDownload",
+              "document": {
+                "id": "{{item.orderId}}-{{item.dateString}}",
+                "date": "{{item.date}}",
+                "total": "{{item.total}}"
+              },
+              "metadata": {
+                "Order": "{{item.orderId}}"
+              }
+            }
+          ]
+        }
+      ],
+      "else": [
+        {
+          "action": "waitForElement",
+          "selector": "[data-testid='table-view']"
+        },
+        {
+          "action": "extractAll",
+          "selector": "[data-testid='table-view'] div:nth-child(2) [role='row']",
+          "fields": {
+            "orderId": {
+              "selector": "div:nth-child(3)"
+            },
+            "date": {
+              "selector": "div:nth-child(1)"
+            },
+            "dateString": {
+              "selector": "div:nth-child(1)",
+              "transform": "(str) => (str.includes('.') ? new Date(str.split('.').reverse().join('-')) : new Date(str.replace(/\\\"/g, ''))).toISOString().split('T')[0].slice(2)"
+            },
+            "total": {
+              "selector": "div:nth-child(5)"
+            }
+          },
+          "forEach": [
+            {
+              "action": "click",
+              "selector": "[data-testid='tooltip-button-action']:nth-child(2)"
+            },
+            {
+              "action": "waitForPdfDownload",
+              "document": {
+                "id": "{{item.orderId}}-{{item.dateString}}",
+                "date": "{{item.date}}",
+                "total": "{{item.total}}"
+              },
+              "metadata": {
+                "Order": "{{item.orderId}}"
+              }
+            }
+          ]
         }
       ]
     }

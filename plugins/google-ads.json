@@ -74,11 +74,13 @@
     },
     {
       "action": "click",
-      "selector": "[data-name='timelineViewDateRangeFilter']"
+      "selector": "[data-name='timelineViewDateRangeFilter']",
+      "optional": true
     },
     {
       "action": "click",
-      "selector": "[data-value='ALL_TIME']"
+      "selector": "[data-value='ALL_TIME']",
+      "optional": true
     },
     {
       "action": "waitForNetworkIdle"

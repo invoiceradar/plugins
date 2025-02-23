@@ -60,7 +60,7 @@
     {
       "action": "extract",
       "variable": "targetTeamId",
-      "script": "'{{teamId}}' || window.location.href.match(/team\\/(\\d+)/)[1]"
+      "script": "'{{config.teamId}}' || window.location.href.match(/team\\/(\\d+)/)[1]"
     },
     {
       "action": "extractAll",

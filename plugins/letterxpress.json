@@ -1,0 +1,66 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "letterxpress",
+  "name": "LetterXpress",
+  "description": "LetterXpress is a German provider for sending letters online",
+  "homepage": "https://www.letterxpress.de",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.letterxpress.de/account/invoices"
+    },
+    {
+      "action": "checkURL",
+      "url": "https://www.letterxpress.de/account/invoices"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.letterxpress.de/anmelden"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "#logout-form",
+      "timeout": 120000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://www.letterxpress.de/account/invoices"
+    },
+    {
+      "action": "waitForElement",
+      "selector": ".table-responsive",
+      "timeout": 30000
+    },
+    {
+      "action": "extractAll",
+      "selector": ".table-responsive table tbody tr",
+      "fields": {
+        "id": {
+          "selector": "td:nth-child(1)"
+        },
+        "date": {
+          "selector": "td:nth-child(2)"
+        },
+        "total": {
+          "selector": "td:nth-child(3)"
+        },
+        "pdfLink": {
+          "selector": "td:nth-child(6) a",
+          "attribute": "href"
+        }
+      },
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "{{item.pdfLink}}",
+          "document": "{{item}}"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "riverside-fm",
+  "homepage": "https://riverside.fm",
+  "name": "Riverside.fm",
+  "description": "Riverside is your online studio for high-quality podcast and video recording and editing.",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://riverside.fm/dashboard/productions",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkElementExists",
+      "selector": "[data-testid='studio-navigator']"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://riverside.fm/login?redirect=/dashboard/productions"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[data-testid='studio-navigator']",
+      "timeout": 180000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://riverside.fm/dashboard/account/subscription",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "click",
+      "selector": "form[action*='create_customer_portal_session'] button"
+    },
+    { "action": "waitForNetworkIdle" },
+    {
+      "action": "extract",
+      "script": "window.location.href",
+      "variable": "url"
+    },
+    {
+      "action": "runSnippet",
+      "snippet": "getInvoicesFromStripeBillingPortal",
+      "args": {
+        "url": "{{url}}"
+      }
+    }
+  ]
+}

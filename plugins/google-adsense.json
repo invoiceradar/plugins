@@ -1,0 +1,123 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "google-adsense",
+  "name": "Google Adsense",
+  "description": "Google AdSense makes it easy to earn money. Get your payout history.",
+  "homepage": "https://adsense.google.com/",
+  "configSchema": {
+    "pubId": {
+      "type": "string",
+      "title": "Publisher ID",
+      "description": "You can find your Pub-ID in the google URL, if not set, it automatically takes the first one",
+      "required": false,
+      "example": "pub-1234561234561234"
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.google.com/adsense/new/login?authuser=0"
+    },
+    {
+      "action": "checkURL",
+      "url": "https://www.google.com/adsense/**"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.google.com/adsense/new/login?authuser=0"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://www.google.com/adsense/new/u/0/**",
+      "timeout": 12000000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://www.google.com/adsense/"
+    },
+    {
+      "action": "extract",
+      "script": "(function() { const url = window.location.href; const match = url.match(/pub-\\d+/); return match ? match[0] : null; })();",
+      "variable": "pubId"
+    },
+    {
+      "action": "if",
+      "script": "'{{config.pubId}}' !== ''",
+      "then": [
+        {
+          "action": "navigate",
+          "url": "https://www.google.com/adsense/new/u/0/{{config.pubId}}/payments/?place=TRANSACTIONS_SERVICE",
+          "waitForNetworkIdle": true
+        }
+      ],
+      "else": [
+        {
+          "action": "navigate",
+          "url": "https://www.google.com/adsense/new/u/0/{{pubId}}/payments/?place=TRANSACTIONS_SERVICE",
+          "waitForNetworkIdle": true
+        }
+      ]
+    },
+    {
+      "action": "waitForNetworkIdle",
+      "timeout": 60000
+    },
+    {
+      "action": "waitForElement",
+      "selector": "iframe[src*='https://payments.google.com/payments']",
+      "timeout": 20000
+    },
+    {
+      "action": "runJs",
+      "description": "Navigate to billing iframe content to allow extraction",
+      "script": "(() => {\n  window.location.href = document.querySelector(\n    'iframe[src*=\"https://payments.google.com/payments\"]',\n  ).src\n})()"
+    },
+    {
+      "action": "extractAll",
+      "variable": "item",
+      "selector": "tbody tr:has(.b3-button-link)",
+      "fields": {
+        "id": {
+          "selector": "td:nth-child(2) a",
+          "transform": "(id) => id.match(/GG\\w+/)[0]"
+        }
+      },
+      "forEach": [
+        {
+          "action": "click",
+          "selector": "td:nth-child(2) a",
+          "scopeSelector": true
+        },
+        {
+          "action": "waitForNetworkIdle"
+        },
+        {
+          "action": "waitForElement",
+          "selector": ".payment-receipt-payment-number"
+        },
+        {
+          "action": "extract",
+          "variable": "invoice",
+          "fields": {
+            "id": ".payment-receipt-payment-number",
+            "date": ".payment-receipt-value",
+            "total": ".payment-receipt-amount"
+          }
+        },
+        {
+          "action": "printPdf",
+          "document": {
+            "id": "{{invoice.id}}",
+            "date": "{{invoice.date}}",
+            "total": "{{invoice.total}}",
+            "type": "outgoing_invoice"
+          }
+        }
+      ]
+    }
+  ]
+}
