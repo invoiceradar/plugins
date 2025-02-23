@@ -30,8 +30,8 @@
       "waitForNetworkIdle": true
     },
     {
-      "action": "checkURL",
-      "url": "https://konto.{{config.hostname}}/**"
+      "action": "runJs",
+      "script": "!window.location.href.includes('login')"
     }
   ],
   "startAuth": [
