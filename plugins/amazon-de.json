@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
-  "id": "amazon",
+  "id": "amazon-de",
   "name": "Amazon",
   "description": "Get invoices from Amazon.",
   "homepage": "https://amazon.com",
