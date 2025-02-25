@@ -10,6 +10,40 @@
       "title": "Amazon Domain",
       "description": "The Amazon domain to use (e.g. amazon.de, amazon.com, amazon.co.uk)",
       "default": "amazon.de",
+      "options": [{
+        "label": "Amazon.de",
+        "value": "amazon.de"
+      }, {
+        "label": "Amazon.com",
+        "value": "amazon.com"
+      }, {
+        "label": "Amazon.co.uk",
+        "value": "amazon.co.uk"
+      }, {
+        "label": "Amazon.fr",
+        "value": "amazon.fr"
+      }, {
+        "label": "Amazon.it",
+        "value": "amazon.it"
+      }, {
+        "label": "Amazon.es",
+        "value": "amazon.es"
+      }, {
+        "label": "Amazon.nl",
+        "value": "amazon.nl"
+      }, {
+        "label": "Amazon.pl",
+        "value": "amazon.pl"
+      }, {
+        "label": "Amazon.se",
+        "value": "amazon.se"
+      },{
+        "label": "Amazon.ca",
+        "value": "amazon.ca"
+      },{
+        "label": "Amazon.in",
+        "value": "amazon.in"
+      }],
       "required": true
     }
   },
