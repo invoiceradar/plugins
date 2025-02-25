@@ -1,14 +1,22 @@
 {
   "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
-  "id": "amazon-de",
-  "name": "Amazon DE",
-  "description": "Get invoices from Amazon.de.",
-  "homepage": "https://amazon.de",
-  "configSchema": {},
+  "id": "amazon",
+  "name": "Amazon",
+  "description": "Get invoices from Amazon.",
+  "homepage": "https://amazon.com",
+  "configSchema": {
+    "domain": {
+      "type": "string",
+      "title": "Amazon Domain",
+      "description": "The Amazon domain to use (e.g. amazon.de, amazon.com, amazon.co.uk)",
+      "default": "amazon.de",
+      "required": true
+    }
+  },
   "checkAuth": [
     {
       "action": "navigate",
-      "url": "https://www.amazon.de/gp/css/order-history"
+      "url": "https://www.{{config.domain}}/gp/css/order-history"
     },
     {
       "action": "checkURL",
@@ -18,7 +26,7 @@
   "startAuth": [
     {
       "action": "navigate",
-      "url": "https://www.amazon.de/ap/signin?openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.return_to=https%3A%2F%2Fwww.amazon.de&openid.assoc_handle=deflex&openid.pape.max_auth_age=0"
+      "url": "https://www.{{config.domain}}/ap/signin?openid.pape.max_auth_age=0&openid.return_to=https%3A%2F%2Fwww.{{config.domain}}%2F&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.assoc_handle=caflex&openid.mode=checkid_setup&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0"
     },
     {
       "action": "waitForURL",
@@ -29,7 +37,7 @@
   "getDocuments": [
     {
       "action": "navigate",
-      "url": "https://www.amazon.de/gp/css/order-history?timeFilter=year-{{currentDate.year}}&orderFilter=year-{{currentDate.year}}"
+      "url": "https://www.{{config.domain}}/gp/css/order-history?timeFilter=year-{{currentDate.year}}&orderFilter=year-{{currentDate.year}}"
     },
     {
       "action": "extractAll",
@@ -38,7 +46,7 @@
       "forEach": [
         {
           "action": "navigate",
-          "url": "https://www.amazon.de/gp/css/order-history?timeFilter=year-{{year}}&orderFilter=year-{{year}}"
+          "url": "https://www.{{config.domain}}/gp/css/order-history?timeFilter=year-{{year}}&orderFilter=year-{{year}}"
         },
         {
           "action": "extractAll",
