@@ -60,20 +60,17 @@
                     "transform": "(text) => text.match(/\\d+$/)?.[0] || ''"
                 },
                 "date": {
-                    "selector": "span[data-test-id^='billing-period-']",
-                    "transform": "(text) => text"
+                    "selector": "span[data-test-id^='billing-period-']"
                 },
                 "invoiceLink": {
                     "selector": "a[href*='external']",
                     "attribute": "href"
                 },
                 "amount": {
-                    "selector": "span[data-test-id='invoiced-amount']",
-                    "transform": "(text) => text.replace('$', '')"
+                    "selector": "span[data-test-id='invoiced-amount']"
                 },
                 "status": {
-                    "selector": "span.euiBadge__text",
-                    "transform": "(text) => text.trim()"
+                    "selector": "span.euiBadge__text"
                 }
             }
         }
