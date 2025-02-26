@@ -1,76 +1,76 @@
 {
-    "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
-    "id": "docker",
-    "name": "Docker Hub",
-    "description": "Container platform for building, sharing and running applications",
-    "homepage": "https://www.docker.com",
-    "configSchema": {
-        "username": {
-            "type": "string",
-            "title": "Username",
-            "description": "The username of the Docker account"
-        }
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "docker",
+  "name": "Docker Hub",
+  "description": "Container platform for building, sharing and running applications",
+  "homepage": "https://www.docker.com",
+  "configSchema": {
+    "username": {
+      "type": "string",
+      "title": "Username",
+      "description": "The username of the Docker account"
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://hub.docker.com/"
     },
-    "checkAuth": [
+    {
+      "action": "checkURL",
+      "url": "https://hub.docker.com/"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://login.docker.com/u/login/identifier"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://hub.docker.com/"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://hub.docker.com/billing",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "waitForElement",
+      "selector": "button"
+    },
+    {
+      "action": "click",
+      "selector": "div[role='tablist'] button:nth-child(3)"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "table"
+    },
+    {
+      "action": "extractNetworkResponse",
+      "url": "hub.docker.com/api/billing/v5/accounts/{{config.username}}/invoices?page_size=10",
+      "variable": "invoices",
+      "transform": "(v) => v.results.map(invoice => ({ id: invoice.number, date: new Date(invoice.created_date).toISOString().split('T')[0], total: `$${(invoice.amount_due / 100).toFixed(2)}`, url: invoice.invoice_pdf_url }))",
+      "timeout": 20000
+    },
+    {
+      "action": "extractAll",
+      "script": "{{invoices}}",
+      "variable": "invoice",
+      "forEach": [
         {
-            "action": "navigate",
-            "url": "https://hub.docker.com/"
-        },
-        {
-            "action": "checkURL",
-            "url": "https://hub.docker.com/"
+          "action": "downloadPdf",
+          "url": "{{invoice.url}}",
+          "document": {
+            "id": "{{invoice.id}}",
+            "date": "{{invoice.date}}",
+            "total": "{{invoice.total}}"
+          }
         }
-    ],
-    "startAuth": [
-        {
-            "action": "navigate",
-            "url": "https://login.docker.com/u/login/identifier"
-        },
-        {
-            "action": "waitForURL",
-            "url": "https://hub.docker.com/"
-        }
-    ],
-    "getDocuments": [
-        {
-            "action": "navigate",
-            "url": "https://hub.docker.com/billing",
-            "waitForNetworkIdle": true
-        },
-        {
-            "action": "waitForElement",
-            "selector": "button"
-        },
-        {
-            "action": "click",
-            "selector": "div[role='tablist'] button:nth-child(3)"
-        },
-        {
-            "action": "waitForElement",
-            "selector": "table"
-        },
-        {
-            "action": "extractNetworkResponse",
-            "url": "hub.docker.com/api/billing/v5/accounts/{{config.username}}/invoices?page_size=10",
-            "variable": "invoices",
-            "transform": "(v) => v.results.map(invoice => ({ id: invoice.number, date: new Date(invoice.created_date).toISOString().split('T')[0], total: `$${(invoice.amount_due / 100).toFixed(2)}`, url: invoice.invoice_pdf_url }))",
-            "timeout": 20000
-        },
-        {
-            "action": "extractAll",
-            "script": "{{invoices}}",
-            "variable": "invoice",
-            "forEach": [
-                {
-                    "action": "downloadPdf",
-                    "url": "{{invoice.url}}",
-                    "document": {
-                        "id": "{{invoice.id}}",
-                        "date": "{{invoice.date}}",
-                        "total": "{{invoice.total}}"
-                    }
-                }
-            ]
-        }
-    ]
+      ]
+    }
+  ]
 }

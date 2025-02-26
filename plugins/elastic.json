@@ -1,81 +1,81 @@
 {
-    "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
-    "id": "elastic",
-    "name": "Elastic",
-    "description": "Cloud-based search and analytics platform",
-    "homepage": "https://www.elastic.co/",
-    "configSchema": {},
-    "checkAuth": [
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "elastic",
+  "name": "Elastic",
+  "description": "Cloud-based search and analytics platform",
+  "homepage": "https://www.elastic.co/",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://cloud.elastic.co/billing/history"
+    },
+    {
+      "action": "checkURL",
+      "url": "https://cloud.elastic.co/billing/history"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://cloud.elastic.co/login"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://cloud.elastic.co/home"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://cloud.elastic.co/billing/history"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "table.euiTable"
+    },
+    {
+      "action": "extractAll",
+      "selector": "table.euiTable tbody tr",
+      "forEach": [
         {
-            "action": "navigate",
-            "url": "https://cloud.elastic.co/billing/history"
-        },
-        {
-            "action": "checkURL",
-            "url": "https://cloud.elastic.co/billing/history"
-        }
-    ],
-    "startAuth": [
-        {
-            "action": "navigate",
-            "url": "https://cloud.elastic.co/login"
-        },
-        {
-            "action": "waitForURL",
-            "url": "https://cloud.elastic.co/home"
-        }
-    ],
-    "getDocuments": [
-        {
-            "action": "navigate",
-            "url": "https://cloud.elastic.co/billing/history"
-        },
-        {
-            "action": "waitForElement",
-            "selector": "table.euiTable"
-        },
-        {
-            "action": "extractAll",
-            "selector": "table.euiTable tbody tr",
-            "forEach": [
-                {
-                    "action": "if",
-                    "script": "'{{item.status}}' === 'Paid'",
-                    "then": [
-                        {
-                            "action": "downloadPdf",
-                            "url": "{{item.invoiceLink}}",
-                            "document": {
-                                "id": "{{item.id}}",
-                                "date": "{{item.date}}",
-                                "total": "{{item.amount}}"
-                            }
-                        }
-                    ]
-                }
-            ],
-            "fields": {
-                "id": {
-                    "selector": "span[data-test-id^='billing-period-']",
-                    "transform": "(text) => text.match(/\\d+$/)?.[0] || ''"
-                },
-                "date": {
-                    "selector": "span[data-test-id^='billing-period-']",
-                    "transform": "(text) => text"
-                },
-                "invoiceLink": {
-                    "selector": "a[href*='external']",
-                    "attribute": "href"
-                },
-                "amount": {
-                    "selector": "span[data-test-id='invoiced-amount']",
-                    "transform": "(text) => text.replace('$', '')"
-                },
-                "status": {
-                    "selector": "span.euiBadge__text",
-                    "transform": "(text) => text.trim()"
-                }
+          "action": "if",
+          "script": "'{{item.status}}' === 'Paid'",
+          "then": [
+            {
+              "action": "downloadPdf",
+              "url": "{{item.invoiceLink}}",
+              "document": {
+                "id": "{{item.id}}",
+                "date": "{{item.date}}",
+                "total": "{{item.amount}}"
+              }
             }
+          ]
         }
-    ]
+      ],
+      "fields": {
+        "id": {
+          "selector": "span[data-test-id^='billing-period-']",
+          "transform": "(text) => text.match(/\\d+$/)?.[0] || ''"
+        },
+        "date": {
+          "selector": "span[data-test-id^='billing-period-']",
+          "transform": "(text) => text"
+        },
+        "invoiceLink": {
+          "selector": "a[href*='external']",
+          "attribute": "href"
+        },
+        "amount": {
+          "selector": "span[data-test-id='invoiced-amount']",
+          "transform": "(text) => text.replace('$', '')"
+        },
+        "status": {
+          "selector": "span.euiBadge__text",
+          "transform": "(text) => text.trim()"
+        }
+      }
+    }
+  ]
 }

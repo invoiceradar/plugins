@@ -1,64 +1,64 @@
 {
-    "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
-    "id": "fastbill",
-    "name": "Fastbill",
-    "description": "Online invoicing and billing software for businesses",
-    "homepage": "https://www.fastbill.com",
-    "configSchema": {},
-    "checkAuth": [
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "fastbill",
+  "name": "Fastbill",
+  "description": "Online invoicing and billing software for businesses",
+  "homepage": "https://www.fastbill.com",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://my.fastbill.com/"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://app.fastbill.com/#/login"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://my.fastbill.com/index.php?s=2yINQeU7d2Vf5xO2tHd_h6WcEiDeU6bfAos6mZK_VRc"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://my.fastbill.com/index.php?s=hteETP4i6c_3hfXW40owyUgyNVhGbHMMWS1C-3uI96w"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "table.main"
+    },
+    {
+      "action": "extractAll",
+      "selector": "table.main tbody tr",
+      "forEach": [
         {
-            "action": "navigate",
-            "url": "https://my.fastbill.com/"
+          "action": "downloadPdf",
+          "url": "{{item.url}}",
+          "document": {
+            "id": "{{item.id}}",
+            "date": "{{item.date}}",
+            "total": "{{item.amount}}"
+          }
         }
-    ],
-    "startAuth": [
-        {
-            "action": "navigate",
-            "url": "https://app.fastbill.com/#/login"
+      ],
+      "fields": {
+        "date": "td:nth-child(1)",
+        "amount": {
+          "selector": "td:nth-child(3)",
+          "transform": "(text) => text.replace('€', '').trim()"
         },
-        {
-            "action": "waitForURL",
-            "url": "https://my.fastbill.com/index.php?s=2yINQeU7d2Vf5xO2tHd_h6WcEiDeU6bfAos6mZK_VRc"
+        "url": {
+          "selector": "td:nth-child(2) a:nth-child(2)",
+          "attribute": "href"
+        },
+        "id": {
+          "selector": "td:nth-child(2) a:nth-child(2)",
+          "transform": "(text) => text.match(/Nr\\. (\\d+)/)[1]"
         }
-    ],
-    "getDocuments": [
-        {
-            "action": "navigate",
-            "url": "https://my.fastbill.com/index.php?s=hteETP4i6c_3hfXW40owyUgyNVhGbHMMWS1C-3uI96w"
-        },
-        {
-            "action": "waitForElement",
-            "selector": "table.main"
-        },
-        {
-            "action": "extractAll", 
-            "selector": "table.main tbody tr",
-            "forEach": [
-                {
-                    "action": "downloadPdf",
-                    "url": "{{item.url}}",
-                    "document": {
-                        "id": "{{item.id}}",
-                        "date": "{{item.date}}",
-                        "total": "{{item.amount}}"
-                    }
-                }
-            ],
-            "fields": {
-                "date": "td:nth-child(1)",
-                "amount": {
-                    "selector": "td:nth-child(3)",
-                    "transform": "(text) => text.replace('€', '').trim()"
-                },
-                "url": {
-                    "selector": "td:nth-child(2) a:nth-child(2)",
-                    "attribute": "href"
-                },
-                "id": {
-                    "selector": "td:nth-child(2) a:nth-child(2)",
-                    "transform": "(text) => text.match(/Nr\\. (\\d+)/)[1]"
-                }
-            }
-        }
-    ]
+      }
+    }
+  ]
 }

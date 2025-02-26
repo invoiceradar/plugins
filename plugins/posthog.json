@@ -1,41 +1,40 @@
 {
-    "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
-    "id": "posthog",
-    "name": "PostHog",
-    "description": "Product analytics platform",
-    "homepage": "https://posthog.com",
-    "configSchema": {
-        "region": {
-            "type": "string",
-            "title": "Region",
-            "description": "Select your PostHog region (EU or US)",
-            "default": "eu"
-        }
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "posthog",
+  "name": "PostHog",
+  "description": "Product analytics platform",
+  "homepage": "https://posthog.com",
+  "configSchema": {
+    "region": {
+      "type": "string",
+      "title": "Region",
+      "description": "Select your PostHog region (EU or US)",
+      "default": "eu"
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://{{config.region}}.posthog.com/project/settings"
     },
-    "checkAuth": [
-        {
-            "action": "navigate",
-            "url": "https://{{config.region}}.posthog.com/project/settings"
-        },
-        {
-            "action": "checkURL",
-            "url": "https://{{config.region}}.posthog.com/project/settings"
-        }
-    ],
-    "startAuth": [
-        {
-            "action": "navigate",
-            "url": "https://{{config.region}}.posthog.com/login"
-        }
-    ],
-    "getDocuments": [
-        {
-            "action": "runSnippet",
-            "snippet": "getInvoicesFromStripeBillingPortal",
-            "args": {
-                "url": "https://{{config.region}}.posthog.com/api/billing/portal"
-            }
-        }
-    ]
+    {
+      "action": "checkURL",
+      "url": "https://{{config.region}}.posthog.com/project/settings"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://{{config.region}}.posthog.com/login"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "runSnippet",
+      "snippet": "getInvoicesFromStripeBillingPortal",
+      "args": {
+        "url": "https://{{config.region}}.posthog.com/api/billing/portal"
+      }
+    }
+  ]
 }
-
