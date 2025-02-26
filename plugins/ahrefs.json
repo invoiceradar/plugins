@@ -1,0 +1,66 @@
+{
+    "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+    "id": "ahrefs",
+    "name": "Ahrefs",
+    "description": "SEO tools and resources to grow your search traffic",
+    "homepage": "https://www.ahrefs.com",
+    "configSchema": {
+        "verifiedLink": {
+            "type": "string",
+            "description": "The verified link to your Ahrefs account",
+            "title": "Verified Link",
+            "default": "https://app.ahrefs.com/user/login"
+        }
+    },
+    "checkAuth": [
+        {
+            "action": "navigate", 
+            "url": "https://app.ahrefs.com/dashboard"
+        },
+        {
+            "action": "checkURL",
+            "url": "https://app.ahrefs.com/dashboard"
+        }
+    ],
+    "startAuth": [
+        {
+            "action": "navigate",
+            "url": "{{config.verifiedLink}}"
+        },
+        {
+            "action": "waitForURL",
+            "url": "https://app.ahrefs.com/dashboard"
+        }
+    ],
+    "getDocuments": [
+        {
+            "action": "navigate",
+            "url": "https://app.ahrefs.com/account/billing/invoices",
+            "waitForNetworkIdle": true
+        },
+        {
+            "action": "click",
+            "selector": "button[name='billing']:nth-child(2)"
+        },
+        {
+            "action": "waitForElement",
+            "selector": "table"
+        },
+        {
+            "action": "extractAll",
+            "script": "Array.from(document.querySelectorAll('table tbody tr')).map((e) => { try { return { id: e.querySelector('td:nth-child(2) div')?.textContent || '', date: e.querySelector('td:nth-child(4) span')?.textContent || '', amount: e.querySelector('td:nth-child(5) div')?.textContent || '', url: e.querySelector('td:nth-child(6) a')?.href || '' }; } catch (error) { console.error('Error processing table row:', error); return { id: '', date: '', amount: '', url: '' }; } })",
+            "variable": "item",
+            "forEach": [
+                {
+                    "action": "downloadPdf",
+                    "url": "{{item.url}}",
+                    "document": {
+                        "id": "{{item.id}}",
+                        "date": "{{item.date}}",
+                        "total": "{{item.amount}}"
+                    }
+                }
+            ]
+        }
+    ]
+}
