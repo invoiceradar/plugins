@@ -1,70 +1,78 @@
 {
-    "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
-    "id": "backlinked",
-    "name": "Backlinked",
-    "description": "Backlink monitoring and management platform",
-    "homepage": "https://backlinked.com",
-    "configSchema": {},
-    "checkAuth": [
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "backlinked",
+  "name": "Backlinked",
+  "description": "Backlink monitoring and management platform",
+  "homepage": "https://backlinked.com",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://app.backlinked.com/dashboard"
+    },
+    {
+      "action": "checkURL",
+      "url": "https://app.backlinked.com/dashboard"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://app.backlinked.com/login"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://app.backlinked.com/dashboard"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://app.backlinked.com/account/payments",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "extractAll",
+      "selector": "a[href^='/payments/']",
+      "forEach": [
         {
-            "action": "navigate",
-            "url": "https://app.backlinked.com/dashboard"
-        },
-        {
-            "action": "checkURL",
-            "url": "https://app.backlinked.com/dashboard"
-        }
-    ],
-    "startAuth": [
-        {
-            "action": "navigate",
-            "url": "https://app.backlinked.com/login"
-        },
-        {
-            "action": "waitForURL",
-            "url": "https://app.backlinked.com/dashboard"
-        }
-    ],
-    "getDocuments": [
-        {
-            "action": "navigate",
-            "url": "https://app.backlinked.com/account/payments",
-            "waitForNetworkIdle": true
-        },
-        {
-            "action": "extractAll",
-            "selector": "a[href^='/payments/']",
-            "forEach": [
-                {
-                    "action": "if",
-                    "script": "'{{item.status}}' === 'Abgeschlossen'",
-                    "then": [
-                        {
-                            "action": "downloadPdf",
-                            "url": "https://app.backlinked.com/api/payments/{{item.id}}/confirmation",
-                            "document": {
-                                "id": "{{item.id}}",
-                                "date": "{{item.date}}",
-                                "total": "{{item.amount}}"
-                            }
-                        }
-                    ]
-                }
-            ],
-            "fields": {
-                "id": {
-                    "selector": "div:first-child"
-                },
-                "date": {
-                    "selector": "div:nth-child(2)"
-                },
-                "amount": {
-                    "selector": "div:nth-child(6)"
-                },
-                "status": {
-                    "selector": "div:nth-child(3) > div"
-                }
+          "action": "if",
+          "script": "'{{item.status}}' === 'Succeeded'",
+          "then": [
+            {
+              "action": "click",
+              "selector": "a[href*='{{item.id}}/confirmation']"
+            },
+            {
+              "action": "downloadPdf",
+              "url": "{{item.url}}",
+              "document": {
+                "id": "{{item.id}}",
+                "date": "{{item.date}}",
+                "total": "{{item.amount}}"
+              }
             }
+          ]
         }
-    ]
+      ],
+      "fields": {
+        "id": {
+          "selector": "div:first-child"
+        },
+        "url": {
+          "selector": "a[href*='{{item.id}}/confirmation']",
+          "attribute": "href"
+        },
+        "date": {
+          "selector": "div:nth-child(2)"
+        },
+        "amount": {
+          "selector": "div:nth-child(6)"
+        },
+        "status": {
+          "selector": "div:nth-child(3) > div"
+        }
+      }
+    }
+  ]
 }
