@@ -9,6 +9,10 @@
     {
       "action": "navigate",
       "url": "https://my.fastbill.com/"
+    },
+    {
+      "action": "checkURL",
+      "url": "https://my.fastbill.com/*"
     }
   ],
   "startAuth": [
