@@ -1,0 +1,75 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "salesviewer",
+  "name": "SalesViewer",
+  "description": "B2B lead generation and analytics platform",
+  "homepage": "https://salesviewer.com",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://app.salesviewer.com/dashboard",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkURL",
+      "url": "https://app.salesviewer.com/dashboard*"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://app.salesviewer.com/login"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://app.salesviewer.com/dashboard"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://account.salesviewer.com/de/mein-konto/orders/",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "waitForElement",
+      "selector": "table.woocommerce-orders-table tbody tr",
+      "timeout": 30000
+    },
+    {
+      "action": "extractAll",
+      "selector": "table.woocommerce-orders-table tbody tr",
+      "forEach": [
+        {
+          "action": "if",
+          "script": "'{{item.status}}' === 'Abgeschlossen'",
+          "then": [
+            {
+              "action": "downloadPdf",
+              "url": "{{item.invoiceUrl}}",
+              "document": {
+                "id": "{{item.invoiceNumber}}",
+                "date": "{{item.date}}",
+                "total": "{{item.total}}"
+              }
+            }
+          ]
+        }
+      ],
+      "fields": {
+        "date": {
+          "selector": "td.woocommerce-orders-table__cell-order-date time",
+          "attribute": "datetime"
+        },
+        "total": "td.woocommerce-orders-table__cell-order-total span.woocommerce-Price-amount",
+        "status": "td.woocommerce-orders-table__cell-order-status",
+        "invoiceNumber": "td.woocommerce-orders-table__cell-invoice-number",
+        "invoiceUrl": {
+          "selector": "td.woocommerce-orders-table__cell-order-actions a.invoice",
+          "attribute": "href"
+        }
+      }
+    }
+  ]
+}
