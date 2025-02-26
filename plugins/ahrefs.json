@@ -47,9 +47,8 @@
             "selector": "table"
         },
         {
-            "action": "extractAll",
-            "script": "Array.from(document.querySelectorAll('table tbody tr')).map((e) => { try { return { id: e.querySelector('td:nth-child(2) div')?.textContent || '', date: e.querySelector('td:nth-child(4) span')?.textContent || '', amount: e.querySelector('td:nth-child(5) div')?.textContent || '', url: e.querySelector('td:nth-child(6) a')?.href || '' }; } catch (error) { console.error('Error processing table row:', error); return { id: '', date: '', amount: '', url: '' }; } })",
-            "variable": "item",
+            "action": "extractAll", 
+            "selector": "table tbody tr",
             "forEach": [
                 {
                     "action": "downloadPdf",
@@ -60,7 +59,16 @@
                         "total": "{{item.amount}}"
                     }
                 }
-            ]
+            ],
+            "fields": {
+                "id": "td:nth-child(2) div",
+                "date": "td:nth-child(4) span",
+                "amount": "td:nth-child(5) div",
+                "url": {
+                    "selector": "td:nth-child(6) a",
+                    "attribute": "href"
+                }
+            }
         }
     ]
 }
