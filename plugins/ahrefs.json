@@ -47,28 +47,26 @@
       "selector": "table"
     },
     {
+      "action": "extractNetworkResponse",
+      "url": "/v4/asGetInvoices",
+      "variable": "invoices",
+      "transform": "(v) => v.map((v) => ({id: v.invoiceId, date: v.date, total: `${v.total} ${v.currency}`, url: v.invoiceId }))"
+    },
+    {
       "action": "extractAll",
-      "selector": "table tbody tr",
+      "script": "{{invoices}}",
+      "variable": "invoice",
       "forEach": [
         {
           "action": "downloadPdf",
-          "url": "{{item.url}}",
+          "url": "https://app.ahrefs.com/download-invoice/{{invoice.id}}",
           "document": {
-            "id": "{{item.id}}",
-            "date": "{{item.date}}",
-            "total": "{{item.amount}}"
+            "id": "{{invoice.id}}",
+            "date": "{{invoice.date}}",
+            "total": "{{invoice.total}}"
           }
         }
-      ],
-      "fields": {
-        "id": "td:nth-child(2) div",
-        "date": "td:nth-child(4) span",
-        "amount": "td:nth-child(5) div",
-        "url": {
-          "selector": "td:nth-child(6) a",
-          "attribute": "href"
-        }
-      }
+      ]
     }
   ]
 }
