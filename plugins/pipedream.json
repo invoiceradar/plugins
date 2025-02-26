@@ -1,0 +1,54 @@
+{
+    "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+    "id": "pipedream",
+    "name": "Pipedream",
+    "description": "Integration and workflow automation platform",
+    "homepage": "https://pipedream.com/",
+    "configSchema": {},
+    "checkAuth": [
+        {
+            "action": "navigate",
+            "url": "https://pipedream.com/settings/billing"
+        },
+        {
+            "action": "checkURL",
+            "url": "https://pipedream.com/settings/billing"
+        }
+    ],
+    "startAuth": [
+        {
+            "action": "navigate",
+            "url": "https://pipedream.com/auth/login"
+        },
+        {
+            "action": "waitForURL",
+            "url": "https://pipedream.com/*"
+        }
+    ],
+    "getDocuments": [
+        {
+            "action": "navigate",
+            "url": "https://pipedream.com/settings/billing"
+        },
+        {
+            "action": "waitForElement",
+            "selector": "[data-pd-t='subscribe button: manage billing']"
+        },
+        {
+            "action": "click",
+            "selector": "[data-pd-t='subscribe button: manage billing']"
+        },
+        {
+            "action": "extract",
+            "script": "window.location.href",
+            "variable": "url"
+        },
+        {
+            "action": "runSnippet",
+            "snippet": "getInvoicesFromStripeBillingPortal",
+            "args": {
+                "url": "{{url}}"
+            }
+        }
+    ]
+}
