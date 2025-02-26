@@ -1,74 +1,74 @@
 {
-    "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
-    "id": "ahrefs",
-    "name": "Ahrefs",
-    "description": "SEO tools and resources to grow your search traffic",
-    "homepage": "https://www.ahrefs.com",
-    "configSchema": {
-        "verifiedLink": {
-            "type": "string",
-            "description": "The verified link to your Ahrefs account",
-            "title": "Verified Link",
-            "default": "https://app.ahrefs.com/user/login"
-        }
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "ahrefs",
+  "name": "Ahrefs",
+  "description": "SEO tools and resources to grow your search traffic",
+  "homepage": "https://www.ahrefs.com",
+  "configSchema": {
+    "verifiedLink": {
+      "type": "string",
+      "description": "The verified link to your Ahrefs account",
+      "title": "Verified Link",
+      "default": "https://app.ahrefs.com/user/login"
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://app.ahrefs.com/dashboard"
     },
-    "checkAuth": [
+    {
+      "action": "checkURL",
+      "url": "https://app.ahrefs.com/dashboard"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "{{config.verifiedLink}}"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://app.ahrefs.com/dashboard"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://app.ahrefs.com/account/billing/invoices",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "click",
+      "selector": "button[name='billing']:nth-child(2)"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "table"
+    },
+    {
+      "action": "extractAll",
+      "selector": "table tbody tr",
+      "forEach": [
         {
-            "action": "navigate", 
-            "url": "https://app.ahrefs.com/dashboard"
-        },
-        {
-            "action": "checkURL",
-            "url": "https://app.ahrefs.com/dashboard"
+          "action": "downloadPdf",
+          "url": "{{item.url}}",
+          "document": {
+            "id": "{{item.id}}",
+            "date": "{{item.date}}",
+            "total": "{{item.amount}}"
+          }
         }
-    ],
-    "startAuth": [
-        {
-            "action": "navigate",
-            "url": "{{config.verifiedLink}}"
-        },
-        {
-            "action": "waitForURL",
-            "url": "https://app.ahrefs.com/dashboard"
+      ],
+      "fields": {
+        "id": "td:nth-child(2) div",
+        "date": "td:nth-child(4) span",
+        "amount": "td:nth-child(5) div",
+        "url": {
+          "selector": "td:nth-child(6) a",
+          "attribute": "href"
         }
-    ],
-    "getDocuments": [
-        {
-            "action": "navigate",
-            "url": "https://app.ahrefs.com/account/billing/invoices",
-            "waitForNetworkIdle": true
-        },
-        {
-            "action": "click",
-            "selector": "button[name='billing']:nth-child(2)"
-        },
-        {
-            "action": "waitForElement",
-            "selector": "table"
-        },
-        {
-            "action": "extractAll", 
-            "selector": "table tbody tr",
-            "forEach": [
-                {
-                    "action": "downloadPdf",
-                    "url": "{{item.url}}",
-                    "document": {
-                        "id": "{{item.id}}",
-                        "date": "{{item.date}}",
-                        "total": "{{item.amount}}"
-                    }
-                }
-            ],
-            "fields": {
-                "id": "td:nth-child(2) div",
-                "date": "td:nth-child(4) span",
-                "amount": "td:nth-child(5) div",
-                "url": {
-                    "selector": "td:nth-child(6) a",
-                    "attribute": "href"
-                }
-            }
-        }
-    ]
+      }
+    }
+  ]
 }
