@@ -1,0 +1,114 @@
+{
+    "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+    "id": "atlassian",
+    "name": "Atlassian",
+    "description": "Collaboration and development tools for teams",
+    "homepage": "https://www.atlassian.com",
+    "configSchema": {
+        "organizationId": {
+            "type": "string",
+            "title": "Organization Name",
+            "description": "The name of your Atlassian organization",
+            "required": true
+        }
+    },
+    "getConfigOptions": [
+        {
+            "action": "navigate",
+            "url": "https://admin.atlassian.com",
+            "waitForNetworkIdle": true
+        },
+        {
+            "action": "extractAll",
+            "script": "fetch('https://admin.atlassian.com/gateway/api/adminhub/organization/my3').then(res => res.json());",
+            "variable": "option",
+            "forEach": [
+                {
+                    "action": "exposeOption",
+                    "config": "organizationId",
+                    "option": {
+                        "label": "{{option.name}}",
+                        "value": "{{option.id}}"
+                    }
+                }
+            ]
+        },
+        {
+            "action": "promptOptionSelection",
+            "config": "organizationId"
+        }
+    ],
+    "checkAuth": [
+        {
+            "action": "navigate",
+            "url": "https://admin.atlassian.com",
+            "waitForNetworkIdle": true
+        },
+        {
+            "action": "checkURL",
+            "url": "https://admin.atlassian.com"
+        }
+    ],
+    "startAuth": [
+        {
+            "action": "navigate",
+            "url": "https://admin.atlassian.com",
+            "waitForNetworkIdle": true
+        },
+        {
+            "action": "waitForURL",
+            "url": "https://admin.atlassian.com"
+        }
+    ],
+    "getDocuments": [
+        {
+            "action": "navigate",
+            "url": "https://admin.atlassian.com/o/{{config.organizationId}}/billing-preview",
+            "waitForNetworkIdle": true
+        },
+        {
+            "action": "waitForElement",
+            "selector": "[data-test='manage-subscription-link']"
+        },
+        {
+            "action": "click",
+            "selector": "[data-test='manage-subscription-link']"
+        },
+        {
+            "action": "waitForElement",
+            "selector": "[data-testid='navigation-link.billingHistory']"
+        },
+        {
+            "action": "click",
+            "selector": "[data-testid='navigation-link.billingHistory']"
+        },
+        {
+            "action": "waitForElement",
+            "selector": "[data-testid='invoicesTable--table']"
+        },
+        {
+            "action": "extractAll",
+            "selector": "[data-testid='invoicesTable--table'] tbody tr",
+            "forEach": [
+                {
+                    "action": "downloadPdf",
+                    "url": "{{item.url}}",
+                    "document": {
+                        "id": "{{item.id}}",
+                        "date": "{{item.date}}",
+                        "total": "{{item.total}}"
+                    }
+                }
+            ],
+            "fields": {
+                "url": {
+                    "selector": "[data-testid='downloadInvoiceButton']",
+                    "attribute": "href"
+                },
+                "id": "td:nth-child(1) > div div",
+                "date": "td:nth-child(2) div",
+                "total": "td:nth-child(3) div"
+            }
+        }
+    ]
+}

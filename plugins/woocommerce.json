@@ -1,0 +1,74 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "woocommerce",
+  "name": "WooCommerce",
+  "description": "E-commerce platform built on WordPress",
+  "homepage": "https://woocommerce.com",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://woocommerce.com/my-dashboard",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkURL",
+      "url": "https://woocommerce.com/my-dashboard*"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://woocommerce.com/sso?next=%2F"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://woocommerce.com/my-dashboard*"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://woocommerce.com/my-account/orders/",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "extractAll",
+      "selector": "table.my_account_orders tr.order",
+      "forEach": [
+        {
+          "action": "navigate",
+          "url": "{{item.viewUrl}}",
+          "waitForNetworkIdle": true
+        },
+        {
+          "action": "extract",
+          "script": "document.querySelector('a.pdf-link').href",
+          "variable": "pdfUrl"
+        },
+        {
+          "action": "downloadPdf",
+          "url": "{{pdfUrl}}",
+          "document": {
+            "id": "{{item.orderNumber}}",
+            "date": "{{item.date}}",
+            "total": "{{item.total}}"
+          }
+        }
+      ],
+      "fields": {
+        "viewUrl": {
+          "selector": "a.view",
+          "attribute": "href"
+        },
+        "orderNumber": "td.order-number a",
+        "date": {
+          "selector": "td.order-date time",
+          "attribute": "datetime"
+        },
+        "total": "td.order-total span.woocommerce-Price-amount",
+        "status": "td.order-status"
+      }
+    }
+  ]
+}
