@@ -13,28 +13,28 @@
   },
   "getConfigOptions": [
     {
-        "action": "navigate",
-        "url": "https://cloud.airbyte.com/workspaces",
-        "waitForNetworkIdle": true
+      "action": "navigate",
+      "url": "https://cloud.airbyte.com/workspaces",
+      "waitForNetworkIdle": true
     },
     {
-        "action": "extractNetworkResponse",
-        "url": "https://cloud.airbyte.com/api/v1/workspaces/list_by_user_id",
-        "variable": "workspaces"
+      "action": "extractNetworkResponse",
+      "url": "https://cloud.airbyte.com/api/v1/workspaces/list_by_user_id",
+      "variable": "workspaces"
     },
     {
-        "action": "extractAll",
-        "script": "{{workspaces}}.workspaces",
-        "forEach": [
-            {
-                "action": "exposeOption",
-                "config": "workspaceId",
-                "option": {
-                    "label": "{{item.name}}",
-                    "value": "{{item.workspaceId}}"
-                }
-            }
-        ]
+      "action": "extractAll",
+      "script": "{{workspaces}}.workspaces",
+      "forEach": [
+        {
+          "action": "exposeOption",
+          "config": "workspaceId",
+          "option": {
+            "label": "{{item.name}}",
+            "value": "{{item.workspaceId}}"
+          }
+        }
+      ]
     }
   ],
   "checkAuth": [
@@ -81,7 +81,6 @@
           }
         }
       ]
-      
     }
   ]
 }
