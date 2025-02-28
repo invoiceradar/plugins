@@ -37,11 +37,15 @@
       "forEach": [
         {
           "action": "if",
-          "script": "'{{item.status}}' === 'Abgeschlossen'",
+          "script": "'{{item.status}}' === 'Succeeded'",
           "then": [
             {
+              "action": "click",
+              "selector": "a[href*='{{item.id}}/confirmation']"
+            },
+            {
               "action": "downloadPdf",
-              "url": "https://app.backlinked.com/api/payments/{{item.id}}/confirmation",
+              "url": "{{item.url}}",
               "document": {
                 "id": "{{item.id}}",
                 "date": "{{item.date}}",
@@ -53,20 +57,20 @@
       ],
       "fields": {
         "id": {
-          "selector": "div:first-child",
-          "transform": "(text) => text.trim()"
+          "selector": "div:first-child"
+        },
+        "url": {
+          "selector": "a[href*='{{item.id}}/confirmation']",
+          "attribute": "href"
         },
         "date": {
-          "selector": "div:nth-child(2)",
-          "transform": "(text) => text.trim()"
+          "selector": "div:nth-child(2)"
         },
         "amount": {
-          "selector": "div:nth-child(6)",
-          "transform": "(text) => text.replace('€', '').trim()"
+          "selector": "div:nth-child(6)"
         },
         "status": {
-          "selector": "div:nth-child(3) > div",
-          "transform": "(text) => text.trim()"
+          "selector": "div:nth-child(3) > div"
         }
       }
     }
