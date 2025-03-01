@@ -1,0 +1,66 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "sendgrid",
+  "name": "SendGrid",
+  "description": "Email delivery and marketing platform",
+  "homepage": "https://sendgrid.com",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://app.sendgrid.com/login",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkURL",
+      "url": "https://app.sendgrid.com/*"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://app.sendgrid.com/login"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://app.sendgrid.com/*"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://app.sendgrid.com/account/billing",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "extractAll",
+      "selector": "[data-qahook='invoiceItem']",
+      "forEach": [
+        {
+          "action": "if",
+          "script": "'{{item.status}}' === 'Paid'",
+          "then": [
+            {
+              "action": "click",
+              "selector": "a.pdf-dowload-link"
+            },
+            {
+              "action": "waitForPdfDownload",
+              "timeout": 30000,
+              "document": {
+                "id": "sendgrid-{{item.date}}",
+                "date": "{{item.date}}",
+                "total": "{{item.amount}}"
+              }
+            }
+          ]
+        }
+      ],
+      "fields": {
+        "status": "[data-qahook='invoiceStatusLabel'] span",
+        "date": ".mako-grid__col-3:nth-child(2) a",
+        "amount": ".amount span"
+      }
+    }
+  ]
+}

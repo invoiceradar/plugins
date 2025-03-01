@@ -1,0 +1,71 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "marker",
+  "name": "Marker.io",
+  "description": "Visual feedback and bug reporting tool",
+  "homepage": "https://marker.io",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://app.marker.io/login",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkURL",
+      "url": "https://app.marker.io/projects/*"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://app.marker.io/login"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://app.marker.io/projects/*"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://app.marker.io/settings/team/billing",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "waitForElement",
+      "selector": "a[href^='/settings/team/billing']",
+      "timeout": 30000
+    },
+    {
+      "action": "click",
+      "selector": "a[href^='/settings/team/billing']"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "#billingPeriod",
+      "timeout": 30000
+    },
+    {
+      "action": "extractNetworkResponse",
+      "url": "https://api.marker.io/users/me/invoices?",
+      "variable": "invoices",
+      "transform": "(v) => v.invoices.map(invoice => ({\n  id: new Date(invoice.issuedAt).toISOString().split('T')[0],\n  date: invoice.issuedAt,\n  total: invoice.total / 100,\n  pdfUrl: invoice.pdfUrl\n}))"
+    },
+    {
+      "action": "extractAll",
+      "script": "{{invoices}}",
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "{{item.pdfUrl}}",
+          "document": {
+            "id": "marker-{{item.id}}",
+            "date": "{{item.date}}",
+            "total": "{{item.total}}"
+          }
+        }
+      ]
+    }
+  ]
+}

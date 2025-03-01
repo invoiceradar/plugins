@@ -9,6 +9,10 @@
     {
       "action": "navigate",
       "url": "https://my.fastbill.com/"
+    },
+    {
+      "action": "checkURL",
+      "url": "https://my.fastbill.com/*"
     }
   ],
   "startAuth": [
@@ -46,10 +50,7 @@
       ],
       "fields": {
         "date": "td:nth-child(1)",
-        "amount": {
-          "selector": "td:nth-child(3)",
-          "transform": "(text) => text.replace('€', '').trim()"
-        },
+        "amount": "td:nth-child(3)",
         "url": {
           "selector": "td:nth-child(2) a:nth-child(2)",
           "attribute": "href"

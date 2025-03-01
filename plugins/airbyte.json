@@ -1,0 +1,86 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "airbyte",
+  "name": "Airbyte",
+  "description": "Open-source data integration platform",
+  "homepage": "https://www.airbyte.com",
+  "configSchema": {
+    "workspaceId": {
+      "type": "string",
+      "title": "Workspace",
+      "description": "Select your Airbyte workspace"
+    }
+  },
+  "getConfigOptions": [
+    {
+      "action": "navigate",
+      "url": "https://cloud.airbyte.com/workspaces",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "extractNetworkResponse",
+      "url": "https://cloud.airbyte.com/api/v1/workspaces/list_by_user_id",
+      "variable": "workspaces"
+    },
+    {
+      "action": "extractAll",
+      "script": "{{workspaces}}.workspaces",
+      "forEach": [
+        {
+          "action": "exposeOption",
+          "config": "workspaceId",
+          "option": {
+            "label": "{{item.name}}",
+            "value": "{{item.workspaceId}}"
+          }
+        }
+      ]
+    }
+  ],
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://cloud.airbyte.com/workspaces/",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkURL",
+      "url": "https://cloud.airbyte.com/workspaces/*"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://cloud.airbyte.com/login"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://cloud.airbyte.com/workspaces/*"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://cloud.airbyte.com/workspaces/{{config.workspaceId}}/settings/billing",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "extractNetworkResponse",
+      "url": "https://cloud.airbyte.com/api/v1/billing/list_invoices",
+      "variable": "invoices"
+    },
+    {
+      "action": "extractAll",
+      "script": "{{invoices}}.invoices",
+      "forEach": [
+        {
+          "action": "runSnippet",
+          "snippet": "getInvoiceFromStripeUrl",
+          "args": {
+            "url": "{{item.invoiceUrl}}"
+          }
+        }
+      ]
+    }
+  ]
+}

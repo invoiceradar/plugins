@@ -12,6 +12,11 @@
       "waitForNetworkIdle": true
     },
     {
+      "description": "Wait for loader to disappear",
+      "action": "waitForElement",
+      "selector": "body:not(:has(.am-wait))"
+    },
+    {
       "action": "checkURL",
       "url": "https://account.adobe.com/orders/billing-history"
     }
