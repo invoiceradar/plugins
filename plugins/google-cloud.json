@@ -34,6 +34,33 @@
       "timeout": 12000000
     }
   ],
+  "getConfigOptions": [
+    {
+      "action": "navigate",
+      "url": "https://console.cloud.google.com/billing",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "extractAll",
+      "selector": "tbody tr",
+      "variable": "item",
+      "fields": {
+        "label": {
+          "selector": "td:nth-child(2)"
+        },
+        "value": {
+          "selector": "td:nth-child(3)"
+        }
+      },
+      "forEach": [
+        {
+          "action": "exposeOption",
+          "config": "accountId",
+          "option": "{{item}}"
+        }
+      ]
+    }
+  ],
   "getDocuments": [
     {
       "action": "navigate",
