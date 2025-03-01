@@ -72,98 +72,192 @@
   "startAuth": [
     {
       "action": "navigate",
-      "url": "https://www.{{config.domain}}/ap/signin?openid.pape.max_auth_age=0&openid.return_to=https%3A%2F%2Fwww.{{config.domain}}%2F&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.assoc_handle=caflex&openid.mode=checkid_setup&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0"
+      "url": "https://www.{{config.domain}}"
+    },
+    {
+      "action": "click",
+      "selector": "a[href*='ap/signin']",
+      "scopeSelector": true
     },
     {
       "action": "waitForURL",
-      "url": "/",
+      "url": "/?*",
       "timeout": 120000
     }
   ],
   "getDocuments": [
     {
       "action": "navigate",
-      "url": "https://www.{{config.domain}}/gp/css/order-history?timeFilter=year-{{currentDate.year}}&orderFilter=year-{{currentDate.year}}"
+      "url": "https://www.{{config.domain}}"
     },
     {
-      "action": "extractAll",
-      "script": "Array.from(document.querySelectorAll('#orderFilter>option[value*=year]'))\n  .map((e) => e.value.replace('year-', ''))\n  .filter((y) => Number(y) >= Number('{{startDate.year}}'))",
-      "variable": "year",
-      "forEach": [
+      "action": "if",
+      "script": "document.title.toLowerCase().includes('business')",
+      "then": [
         {
           "action": "navigate",
-          "url": "https://www.{{config.domain}}/gp/css/order-history?timeFilter=year-{{year}}&orderFilter=year-{{year}}"
+          "url": "https://www.{{config.domain}}/b2b/aba/reports?reportType=items_report_1&dateSpanSelection=PAST_12_MONTHS",
+          "waitForNetworkIdle": true
+        },
+        {
+          "action": "extract",
+          "script": "(async () => {\n  const today = new Date()\n\n  return await fetch(\n    '/b2b/aba/ajax/v2/report/rollupTable?reportType=items_report_1&language=en-GB',\n    {\n      credentials: 'include',\n      headers: {\n        'User-Agent':\n          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:135.0) Gecko/20100101 Firefox/135.0',\n        Accept: '*/*',\n        'Accept-Language': 'en-US,en;q=0.5',\n        'content-type': 'application/json;charset=UTF-8',\n        Priority: 'u=0',\n      },\n      body: JSON.stringify({\n        reportType: 'items_report_1',\n        reportId: '',\n        dateSpanSelection: 'CUSTOM_RANGE',\n        fromDate: {\n          year: '{{startDate.year}}',\n          month: '{{startDate.month}}',\n          day: '{{startDate.day}}',\n        },\n        toDate: {\n          year: today.getFullYear(),\n          month: today.getMonth() + 1,\n          day: today.getDate(),\n        },\n        groupColumn: 'obfCustGroupId',\n        pageMarker: 0,\n        reportName: '',\n        columns: [\n          {\n            text: 'Order Date',\n            value: 'ordDate',\n            visible: true,\n            frozen: false,\n            subjectArea: 'mandatory',\n          },\n          {\n            text: 'Order ID',\n            value: 'ordId',\n            visible: true,\n            frozen: false,\n            subjectArea: 'mandatory',\n          },\n          {\n            text: 'Order Net Total',\n            value: 'ordNetTotal',\n            visible: true,\n            frozen: false,\n            subjectArea: 'orders',\n          },\n          {\n            text: 'Account User',\n            value: 'ocName',\n            visible: true,\n            frozen: false,\n            subjectArea: 'customers',\n          },\n          {\n            text: 'Payment Date',\n            value: 'paymentDate',\n            visible: true,\n            frozen: false,\n            subjectArea: 'paymentForShipments',\n          },\n          {\n            text: 'Payment Amount',\n            value: 'paymentAmount',\n            visible: true,\n            frozen: false,\n            subjectArea: 'paymentForShipments',\n          },\n          {\n            text: 'Seller Name',\n            value: 'merchName',\n            visible: true,\n            frozen: false,\n            subjectArea: 'sellers',\n          },\n          {\n            text: 'Tax Invoice ID',\n            value: 'taxInvId',\n            visible: true,\n            frozen: false,\n            subjectArea: 'orderLineItems',\n          },\n        ],\n        selectedSubjectAreas: [\n          'mandatory',\n          'orders',\n          'customers',\n          'paymentForShipments',\n          'sellers',\n          'orderLineItems',\n        ],\n        tableFilterColumns: [\n          {\n            text: 'Order Date',\n            value: 'ordDate',\n            type: 'LOCAL',\n            operators: [{ text: 'between', value: 'DR' }],\n            props: {},\n          },\n        ],\n        groups: [],\n        localFilters: [],\n        tableFilters: [],\n        globalFilters: [],\n        pageSize: 1000,\n      }),\n      method: 'POST',\n      mode: 'cors',\n    },\n  )\n    .then((r) => r.json())\n    .then((r) =>\n      r.rollupTableView.map((entry) => {\n        const mandatory = entry.mandatory?.[0]?.content\n        const payment = entry.paymentForShipments?.[0]?.content\n        const rawDate =\n          mandatory?.ordDate?.content || payment?.paymentDate?.content || ''\n        let isoDate = ''\n        if (rawDate) {\n          const [day, month, year] = rawDate.split('/')\n          isoDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`\n        }\n        const paymentAmount = payment?.paymentAmount?.rawContent\n        const orderTotal = entry.orders?.[0]?.content?.ordNetTotal?.rawContent\n        const amountData = paymentAmount ||\n          orderTotal || { amount: 0, currency: 'USD' }\n        const total = `${amountData.currency} ${amountData.amount.toFixed(2)}`\n        const invoiceId =\n          entry.orderLineItems?.[0]?.content?.taxInvId?.content || ''\n        const customerName = entry.customers?.[0]?.content?.ocName?.content\n        const orderId = mandatory?.ordId?.content\n        const merchantName = entry.sellers?.[0]?.content?.merchName?.content\n\n        return {\n          date: isoDate,\n          total,\n          invoiceId,\n          customerName,\n          orderId,\n          merchantName,\n        }\n      }),\n    )\n})()",
+          "variable": "itemsToFetch",
+          "scopeSelector": true
+        },
+        {
+          "action": "extract",
+          "script": "(async () => {\n  const ids = JSON.parse('{{itemsToFetch}}').map((i) => i.orderId)\n\n  const body = JSON.stringify({\n    ids,\n    reportType: 'items_report_1',\n  })\n\n  await fetch(\n    '/b2b/aba/ajax/generate-download-links?reportType=items_report_1&dateSpanSelection=PAST_12_MONTHS&language=en-GB',\n    {\n      headers: {\n        accept: '*/*',\n        'accept-language': 'en-US',\n        'content-type': 'application/json;charset=UTF-8',\n      },\n      referrerPolicy: 'strict-origin-when-cross-origin',\n      body,\n      method: 'POST',\n      mode: 'cors',\n      credentials: 'include',\n    },\n  )\n})()",
+          "variable": "downloadLinks",
+          "scopeSelector": true
         },
         {
           "action": "extractAll",
-          "selector": ".order-card,.order",
-          "variable": "order",
-          "fields": {
-            "overviewUrl": {
-              "selector": "a[href*='order-details']",
-              "attribute": "href"
-            },
-            "id": {
-              "selector": ".yohtmlc-order-id span:last-of-type"
-            },
-            "date": {
-              "selector": ".a-col-left .a-column:nth-child(1) .a-size-base"
-            },
-            "price": {
-              "selector": ".yohtmlc-order-total"
-            }
-          },
-          "pagination": {
-            "type": "next",
-            "selector": ".a-pagination li:last-of-type:not(.a-disabled) a",
-            "waitForSelector": ".order-card,.order"
-          },
+          "script": "{{itemsToFetch}}",
+          "variable": "item",
           "forEach": [
             {
-              "action": "navigate",
-              "url": "{{order.overviewUrl}}"
+              "action": "extractNetworkResponse",
+              "url": "generate-download-links",
+              "variable": "downloadLinks",
+              "transform": "(response) => { return response['map']['{{item.orderId}}'].filter(i => i.type === 'download').map(i => ({ url: i.url, documentType: i.url?.includes('creditNote') ? 'refund' : 'invoice', documentNumber: i.fileName.replace('.pdf', '') })) }"
             },
             {
               "action": "extractAll",
-              "selector": ".hide-if-js li:has(a[href$='invoice.pdf'])",
-              "variable": "invoice",
-              "fields": {
-                "url": {
-                  "selector": "a",
-                  "attribute": "href"
-                }
-              },
+              "script": "{{downloadLinks}}",
+              "variable": "downloadLink",
               "forEach": [
                 {
                   "action": "if",
-                  "script": "document.querySelectorAll('.hide-if-js li:has(a[href$=\"invoice.pdf\"])').length >\n  1",
+                  "script": "'{{downloadLink.documentType}}' === 'invoice'",
                   "then": [
                     {
                       "action": "downloadPdf",
-                      "description": "Don't include the price when multiple invoices are present, since there is no reliable way to map them to the order.",
-                      "url": "{{invoice.url}}",
+                      "url": "{{downloadLink.url}}",
                       "document": {
-                        "id": "{{order.id}}-{{index}}",
-                        "date": "{{order.date}}"
+                        "id": "{{downloadLink.documentNumber}}",
+                        "date": "{{item.date}}",
+                        "total": "{{item.total}}",
+                        "type": "invoice"
                       },
                       "metadata": {
-                        "order": "{{order.id}}"
+                        "order": "{{item.orderId}}",
+                        "customerName": "{{item.customerName}}",
+                        "merchantName": "{{item.merchantName}}"
                       }
                     }
                   ],
                   "else": [
                     {
                       "action": "downloadPdf",
-                      "description": "Use the price from the order when only one invoice is present.",
-                      "url": "{{invoice.url}}",
+                      "url": "{{downloadLink.url}}",
                       "document": {
-                        "id": "{{order.id}}",
-                        "date": "{{order.date}}",
-                        "total": "{{order.price}}"
+                        "id": "{{downloadLink.documentNumber}}",
+                        "date": "{{item.date}}",
+                        "total": "{{item.total}}",
+                        "type": "refund"
                       },
                       "metadata": {
-                        "order": "{{order.id}}"
+                        "order": "{{item.orderId}}",
+                        "customerName": "{{item.customerName}}",
+                        "merchantName": "{{item.merchantName}}"
                       }
+                    }
+                  ],
+                  "scopeSelector": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "else": [
+        {
+          "action": "navigate",
+          "url": "https://www.{{config.domain}}/gp/css/order-history?timeFilter=year-{{currentDate.year}}&orderFilter=year-{{currentDate.year}}"
+        },
+        {
+          "action": "extractAll",
+          "script": "Array.from(document.querySelectorAll('#orderFilter>option[value*=year]'))\n  .map((e) => e.value.replace('year-', ''))\n  .filter((y) => Number(y) >= Number('{{startDate.year}}'))",
+          "variable": "year",
+          "forEach": [
+            {
+              "action": "navigate",
+              "url": "https://www.{{config.domain}}/gp/css/order-history?timeFilter=year-{{year}}&orderFilter=year-{{year}}"
+            },
+            {
+              "action": "extractAll",
+              "selector": ".order-card,.order",
+              "variable": "order",
+              "fields": {
+                "overviewUrl": {
+                  "selector": "a[href*='order-details']",
+                  "attribute": "href"
+                },
+                "id": {
+                  "selector": ".yohtmlc-order-id span:last-of-type"
+                },
+                "date": {
+                  "selector": ".a-col-left .a-column:nth-child(1) .a-size-base"
+                },
+                "price": {
+                  "selector": ".yohtmlc-order-total"
+                }
+              },
+              "pagination": {
+                "type": "next",
+                "selector": ".a-pagination li:last-of-type:not(.a-disabled) a",
+                "waitForSelector": ".order-card,.order"
+              },
+              "forEach": [
+                {
+                  "action": "navigate",
+                  "url": "{{order.overviewUrl}}"
+                },
+                {
+                  "action": "extractAll",
+                  "selector": ".hide-if-js li:has(a[href$='invoice.pdf'])",
+                  "variable": "invoice",
+                  "fields": {
+                    "url": {
+                      "selector": "a",
+                      "attribute": "href"
+                    }
+                  },
+                  "forEach": [
+                    {
+                      "action": "if",
+                      "script": "document.querySelectorAll('.hide-if-js li:has(a[href$=\"invoice.pdf\"])').length >\n  1",
+                      "then": [
+                        {
+                          "action": "downloadPdf",
+                          "description": "Don't include the price when multiple invoices are present, since there is no reliable way to map them to the order.",
+                          "url": "{{invoice.url}}",
+                          "document": {
+                            "id": "{{order.id}}-{{index}}",
+                            "date": "{{order.date}}"
+                          },
+                          "metadata": {
+                            "order": "{{order.id}}"
+                          }
+                        }
+                      ],
+                      "else": [
+                        {
+                          "action": "downloadPdf",
+                          "description": "Use the price from the order when only one invoice is present.",
+                          "url": "{{invoice.url}}",
+                          "document": {
+                            "id": "{{order.id}}",
+                            "date": "{{order.date}}",
+                            "total": "{{order.price}}"
+                          },
+                          "metadata": {
+                            "order": "{{order.id}}"
+                          }
+                        }
+                      ],
+                      "scopeSelector": true
                     }
                   ]
                 }
@@ -171,7 +265,8 @@
             }
           ]
         }
-      ]
+      ],
+      "scopeSelector": true
     }
   ]
 }
