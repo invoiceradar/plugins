@@ -1,7 +1,7 @@
 {
-    "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
-    "id": "a1-business",
-    "homepage": "https://www.a1.net/business",
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "a1-business",
+  "homepage": "https://www.a1.net/business",
   "name": "A1 Business",
   "description": "A1 Business Portal",
   "configSchema": {
@@ -13,24 +13,24 @@
   },
   "checkAuth": [
     {
-        "action": "navigate",
-        "url": "https://obp.a1.net/",
-        "waitForNetworkIdle": true
+      "action": "navigate",
+      "url": "https://obp.a1.net/",
+      "waitForNetworkIdle": true
     },
     {
-        "action": "checkURL",
-        "url": "https://obp.a1.net"
+      "action": "checkURL",
+      "url": "https://obp.a1.net"
     }
   ],
   "startAuth": [
     {
-        "action": "navigate",
-        "url": "https://obp.a1.net/",
-        "waitForNetworkIdle": true
+      "action": "navigate",
+      "url": "https://obp.a1.net/",
+      "waitForNetworkIdle": true
     },
     {
-        "action": "waitForURL",
-        "url": "https://obp.a1.net/"
+      "action": "waitForURL",
+      "url": "https://obp.a1.net/"
     }
   ],
   "getDocuments": [
@@ -59,13 +59,13 @@
       "selector": ".table-bill-list .table-body .table-row",
       "forEach": [
         {
-            "action": "downloadPdf",
-            "url": "https://obp.a1.net/bill/download/{{item.downloadUrl}}",
-            "document": {
-              "id": "{{item.invoiceNumber}}",
-              "date": "{{item.dateRange}}",
-              "total": "{{item.amount}}"
-            }
+          "action": "downloadPdf",
+          "url": "https://obp.a1.net/bill/download/{{item.downloadUrl}}",
+          "document": {
+            "id": "{{item.invoiceNumber}}",
+            "date": "{{item.dateRange}}",
+            "total": "{{item.amount}}"
+          }
         }
       ],
       "fields": {
@@ -83,36 +83,36 @@
   ],
   "getConfigOptions": [
     {
-        "action": "navigate",
-        "url": "https://obp.a1.net/"
+      "action": "navigate",
+      "url": "https://obp.a1.net/"
     },
     {
       "action": "waitForElement",
       "selector": ".contract-info"
     },
     {
-        "action": "extractAll",
-        "selector": ".contract-info",
-        "forEach": [
-            {
-                "action": "exposeOption",
-                "config": "contract",
-                "option": {
-                    "label": "{{item.title}}",
-                    "value": "{{item.title}}"
-                }
-            }
-        ],
-        "fields": {
-          "title": {
-            "selector": ".contract-link",
-            "attribute": "title"
+      "action": "extractAll",
+      "selector": ".contract-info",
+      "forEach": [
+        {
+          "action": "exposeOption",
+          "config": "contract",
+          "option": {
+            "label": "{{item.title}}",
+            "value": "{{item.title}}"
           }
         }
+      ],
+      "fields": {
+        "title": {
+          "selector": ".contract-link",
+          "attribute": "title"
+        }
+      }
     },
     {
-        "action": "promptOptionSelection",
-        "config": "contract"
+      "action": "promptOptionSelection",
+      "config": "contract"
     }
   ]
 }
