@@ -1,0 +1,78 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "clearscope",
+  "name": "Clearscope",
+  "description": "Clearscope is a content optimization platform. Collect invoices from Clearscope.",
+  "homepage": "https://www.clearscope.io",
+  "configSchema": {
+    "company": {
+      "type": "string",
+      "title": "Company",
+      "description": "Your Clearscope company identifier",
+      "required": true
+    }
+  },
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.clearscope.io/auth/signin",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://www.clearscope.io/{{config.company}}/getting_started"
+    }
+  ],
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.clearscope.io/",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkURL",
+      "url": "https://www.clearscope.io/{{config.company}}/getting_started"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://www.clearscope.io/{{config.company}}/settings/billing",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "runJs",
+      "script": "(() => {\n  const button = Array.from(document.querySelectorAll('button')).find(el => el.textContent.includes('View invoice history'));\n  if (button) {\n    button.click();\n    return true;\n  }\n  return false;\n})()"
+    },
+    {
+      "action": "waitForElement",
+      "selector": ".modal-body table tbody tr"
+    },
+    {
+      "action": "extractNetworkResponse",
+      "url": "https://www.clearscope.io/{{config.company}}/settings/invoices",
+      "variable": "invoices",
+      "timeout": 30000
+    },
+    {
+      "action": "extract",
+      "script": "(() => {\n    const parser = new DOMParser();\n    const doc = parser.parseFromString('{{invoices}}', 'text/html');\n    const template = doc.querySelector('template');\n    const content = template.content.cloneNode(true);\n    if (!document.body) {\n      const bodyElement = document.createElement('body');\n      document.documentElement.appendChild(bodyElement);\n    }\n    document.body.appendChild(content);\n    const invoices = [];\n    document.querySelectorAll('table tbody tr').forEach(row => {\n      const cells = row.querySelectorAll('td');\n      const invoiceNumber = cells[0]?.querySelector('div')?.textContent?.trim();\n      const createdDate = cells[1]?.querySelector('div')?.textContent?.trim();\n      const status = cells[2]?.querySelector('div')?.textContent?.trim();\n      const amount = cells[3]?.querySelector('div')?.textContent?.trim();\n      const downloadUrl = cells[4]?.querySelector('a[href*=\"pdf\"]')?.getAttribute('href');\n      if (invoiceNumber && downloadUrl) {\n        invoices.push({\n          id: invoiceNumber,\n          date: createdDate,\n          total: amount,\n          url: downloadUrl\n        });\n      }\n    });\n    return invoices;\n  })()",
+      "variable": "allInvoices"
+    },
+    {
+      "action": "extractAll",
+      "script": "{{allInvoices}}",
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "{{item.url}}",
+          "document": {
+            "id": "{{item.id}}",
+            "date": "{{item.date}}",
+            "total": "{{item.total}}"
+          }
+        }
+      ]
+    }
+  ]
+}

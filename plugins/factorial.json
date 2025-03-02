@@ -1,0 +1,58 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "factorial",
+  "name": "Factorial",
+  "description": "Factorial is an HR software platform.",
+  "homepage": "https://factorialhr.com/",
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://api.factorialhr.com/en/users/sign_in",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://app.factorialhr.com/dashboard*"
+    }
+  ],
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://app.factorialhr.com/dashboard",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkURL",
+      "url": "https://app.factorialhr.com/dashboard"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://app.factorialhr.com/settings/plans",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "extractNetworkResponse",
+      "url": "https://api.factorialhr.com/billing/invoices",
+      "variable": "invoices",
+      "transform": "(invoices) => invoices.map(invoice => ({\n  id: invoice.id,\n  number: invoice.number,\n  date: new Date(invoice.date * 1000).toISOString().split('T')[0],\n  total: (invoice.total / 100).toFixed(2),\n  url: `https://api.factorialhr.com/billing/invoices/${invoice.id}.pdf`\n}))"
+    },
+    {
+      "action": "extractAll",
+      "script": "{{invoices}}",
+      "variable": "item",
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "{{item.url}}",
+          "document": {
+            "id": "{{item.number}}",
+            "date": "{{item.date}}",
+            "total": "{{item.total}}"
+          }
+        }
+      ]
+    }
+  ]
+}
