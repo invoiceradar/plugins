@@ -25,15 +25,16 @@
   "checkAuth": [
     {
       "action": "navigate",
-      "url": "https://dash.cloudflare.com/login"
+      "url": "https://dash.cloudflare.com/login",
+      "waitForNetworkIdle": true
     },
     {
       "action": "waitForElement",
       "selector": "[data-testid='header']"
     },
     {
-      "action": "checkElementExists",
-      "selector": "[aria-label='User profile']"
+      "action": "checkURL",
+      "url": "https://dash.cloudflare.com/"
     }
   ],
   "startAuth": [
@@ -52,9 +53,8 @@
       "value": "{{config.password}}"
     },
     {
-      "action": "waitForElement",
-      "selector": "[aria-label='User profile']",
-      "timeout": 120000
+      "action": "waitForURL",
+      "url": "https://dash.cloudflare.com/"
     }
   ],
   "getConfigOptions": [
@@ -64,29 +64,23 @@
       "waitForNetworkIdle": true
     },
     {
-      "action": "waitForElement",
-      "selector": "[aria-label='User profile']"
+      "action": "sleep",
+      "duration": 500
     },
     {
       "action": "if",
       "selector": "[data-testid='page-account-selector']",
       "then": [
         {
-          "action": "waitForElement",
-          "selector": "[data-testid='page-account-selector'] ul li"
+          "action": "extractNetworkResponse",
+          "url": "v4/memberships",
+          "variable": "memberships",
+          "transform": "(res) => res.result.map((m) => ({label: m.account.name, value: m.account.id}))"
         },
         {
           "action": "extractAll",
-          "selector": "[data-testid='page-account-selector'] ul li",
+          "script": "{{memberships}}",
           "variable": "option",
-          "fields": {
-            "label": "div",
-            "value": {
-              "selector": "a",
-              "attribute": "href",
-              "transform": "(v) => v.split('/').pop()"
-            }
-          },
           "forEach": [
             {
               "action": "exposeOption",
