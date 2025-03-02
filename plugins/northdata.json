@@ -1,0 +1,65 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "northdata",
+  "name": "North Data",
+  "description": "North Data provides company information and financial data for businesses in Germany.",
+  "homepage": "https://www.northdata.de",
+  "configSchema": {},
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.northdata.de/_login",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://www.northdata.de/"
+    }
+  ],
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.northdata.de/_selfcare",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkURL",
+      "url": "https://www.northdata.de/_selfcare"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://www.northdata.de/_selfcare",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "waitForElement",
+      "selector": "table.invoices"
+    },
+    {
+      "action": "extractAll",
+      "selector": "table.invoices tbody tr",
+      "fields": {
+        "id": "td:nth-child(1)",
+        "date": "td:nth-child(2)",
+        "total": "td:nth-child(3)",
+        "url": {
+          "selector": "td:nth-child(4) a",
+          "attribute": "href"
+        }
+      },
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "{{item.url}}",
+          "document": {
+            "id": "{{item.id}}",
+            "date": "{{item.date}}",
+            "total": "{{item.total}}"
+          }
+        }
+      ]
+    }
+  ]
+}
