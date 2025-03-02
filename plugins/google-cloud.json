@@ -121,7 +121,7 @@
         },
         {
           "action": "click",
-          "selector": ".b3id-document-zippy-line-item",
+          "selector": ".b3id-document-zippy-line-item.jfk-freestanding-menu-button",
           "scopeSelector": true
         },
         {
