@@ -38,7 +38,7 @@
     {
       "action": "extractAll",
       "variable": "receipt",
-      "selector": "[data-testid='invoice-list'] .grid.gap-3 .text-sm",
+      "selector": "[data-testid='invoice-list'] tbody tr",
       "fields": {
         "url": {
           "selector": "a[href*='invoice.stripe.com']",
