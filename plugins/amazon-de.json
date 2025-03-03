@@ -215,19 +215,22 @@
                   "url": "{{order.overviewUrl}}"
                 },
                 {
+                  "action": "click",
+                  "selector": "[data-component='orderInvoice'] span",
+                  "scopeSelector": false
+                },
+                {
+                  "action": "waitForElement",
+                  "selector": ".a-popover-wrapper[aria-busy='false']"
+                },
+                {
                   "action": "extractAll",
-                  "selector": ".hide-if-js li:has(a[href$='invoice.pdf'])",
+                  "script": "Array.from(document.querySelectorAll(`li:has(a[href$='invoice.pdf']) a`)).map(\n  (i) => ({\n    url: i.href,\n  }),\n)",
                   "variable": "invoice",
-                  "fields": {
-                    "url": {
-                      "selector": "a",
-                      "attribute": "href"
-                    }
-                  },
                   "forEach": [
                     {
                       "action": "if",
-                      "script": "document.querySelectorAll('.hide-if-js li:has(a[href$=\"invoice.pdf\"])').length >\n  1",
+                      "script": "document.querySelectorAll('li:has(a[href$=\"invoice.pdf\"])').length >\n  1",
                       "then": [
                         {
                           "action": "downloadPdf",
