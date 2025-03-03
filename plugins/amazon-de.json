@@ -120,7 +120,7 @@
               "action": "extractNetworkResponse",
               "url": "generate-download-links",
               "variable": "downloadLinks",
-              "transform": "(response) => { return response['map']['{{item.orderId}}'].filter(i => i.type === 'download').map(i => ({ url: i.url, documentType: i.url?.includes('creditNote') ? 'refund' : 'invoice', documentNumber: i.fileName.replace('.pdf', '') })) }"
+              "transform": "(response) => { return response['map']['{{item.orderId}}']?.filter(i => i.type === 'download').map(i => ({ url: i.url, documentType: i.url?.includes('creditNote') ? 'refund' : 'invoice', documentNumber: i.fileName.replace('.pdf', '') })) || [] }"
             },
             {
               "action": "extractAll",
