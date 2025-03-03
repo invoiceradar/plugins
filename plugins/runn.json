@@ -1,0 +1,74 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "runn",
+  "name": "Runn",
+  "description": "Resource planning and forecasting platform",
+  "homepage": "https://runn.io",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://app.runn.io/account/billing",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkURL",
+      "url": "https://app.runn.io/account/billing"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://app.runn.io/"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "#pageManager"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://app.runn.io/account/billing",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "waitForElement",
+      "selector": "table[data-component='Table'] tbody tr"
+    },
+    {
+      "action": "extractAll",
+      "selector": "table[data-component='Table'] tbody tr",
+      "forEach": [
+        {
+          "action": "if",
+          "script": "'{{item.status}}' === 'Paid'",
+          "then": [
+            {
+              "action": "runJs",
+              "script": "document.querySelector('table[data-component=\"Table\"] tbody tr:nth-child(' + (parseInt('{{index}}') + 1) + ') button').click();"
+            },
+            {
+              "action": "waitForNetworkIdle",
+              "timeout": 30000
+            },
+            {
+              "action": "waitForPdfDownload",
+              "timeout": 30000,
+              "document": {
+                "id": "{{item.created}}",
+                "date": "{{item.created}}",
+                "total": "{{item.amount}}"
+              }
+            }
+          ]
+        }
+      ],
+      "fields": {
+        "created": "td:nth-child(1)",
+        "amount": "td:nth-child(3)",
+        "status": "td:nth-child(4)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "shutterstock",
+  "name": "Shutterstock",
+  "description": "Shutterstock is a stock photo, vector, and illustration agency.",
+  "homepage": "https://shutterstock.com",
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.shutterstock.com/de/account/profile",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkURL",
+      "url": "https://www.shutterstock.com/de/account/*"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://accounts.shutterstock.com/login",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://www.shutterstock.com/de/account/*"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://www.shutterstock.com/de/account/purchases",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "waitForElement",
+      "selector": "table > tbody > tr",
+      "timeout": 30000
+    },
+    {
+      "action": "extractAll",
+      "selector": "table > tbody > tr",
+      "forEach": [
+        {
+          "action": "click",
+          "selector": "a[data-automation$='_link']"
+        },
+        {
+          "action": "waitForURL",
+          "url": "https://www.shutterstock.com/de/account/invoice/*"
+        },
+        {
+          "action": "printPdf",
+          "document": {
+            "id": "{{item.invoiceNumber}}",
+            "date": "{{item.date}}",
+            "total": "{{item.price}}"
+          }
+        }
+      ],
+      "fields": {
+        "date": "[data-automation$='_date']",
+        "description": "[data-automation$='_description']",
+        "price": "[data-automation$='_price']",
+        "invoiceNumber": "[data-automation$='_link']"
+      }
+    }
+  ]
+}
