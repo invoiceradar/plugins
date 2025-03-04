@@ -1,0 +1,69 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "netcologne",
+  "name": "NetCologne",
+  "description": "NetCologne MeineKundenwelt",
+  "homepage": "https://www.netcologne.de",
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://meinekundenwelt.netcologne.de/rechnungen",
+      "waitForNetworkIdle": true,
+      "description": "Navigate to the Rechnungen page and wait for it to load."
+    },
+    {
+      "action": "checkElementExists",
+      "selector": "[data-e2e='billing-history']",
+      "description": "Verify that the billing history element exists, indicating a logged-in state."
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://meinekundenwelt.netcologne.de/rechnungen",
+      "waitForNetworkIdle": true,
+      "description": "Navigate to the Rechnungen page to allow the user to log in."
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[data-e2e='billing-history']",
+      "timeout": 120000,
+      "description": "Wait up to 120 seconds for the billing history element to appear (user login)."
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "extractAll",
+      "variable": "yearRange",
+      "script": "(async () => {\n  // Retrieve the id_token from local storage\n  const id_token = localStorage.getItem('id_token');\n  // Call the range API to get available years\n  const response = await fetch(\n    'https://meinekundenwelt.netcologne.de/api/api/core/invoice/meta/range',\n    {\n      credentials: 'include',\n      headers: { Authorization: `Bearer ${id_token}` }\n    }\n  );\n  const rangeData = await response.json();\n  // Use the implicit startDate (YYYY-MM-DD) to determine the starting year\n  const fromYear = Math.max(rangeData.fromYear, {{startDate.year}});\n  const years = [];\n  for (let y = fromYear; y <= rangeData.toYear; y++) {\n    years.push({ year: y });\n  }\n  return years;\n})()",
+      "forEach": [
+        {
+          "action": "extractAll",
+          "variable": "netcologneInvoice",
+          "script": "(async () => {\n  const id_token = localStorage.getItem('id_token');\n  // Fetch invoice metadata for the given year\n  const response = await fetch(`https://meinekundenwelt.netcologne.de/api/api/core/invoice/meta/list?year={{yearRange.year}}`, {\n    credentials: 'include',\n    headers: { Authorization: `Bearer ${id_token}` }\n  });\n  if (!response.ok) return [];\n  const data = await response.json();\n  const results = [];\n  (data || []).forEach(item => {\n    const invoiceDate = item.date || '';\n    const total = item.amount || '';\n    const invoiceEntries = item.invoices || [];\n    invoiceEntries.forEach(inv => {\n      const pdfId = inv?.invoice?.pdf;\n      if (pdfId) {\n        results.push({ date: invoiceDate, total: total, pdfId: pdfId });\n      }\n    });\n  });\n  return results;\n})()",
+          "forEach": [
+            {
+              "action": "extract",
+              "variable": "pdfBase64",
+              "script": "(async () => {\n  const id_token = localStorage.getItem('id_token');\n  const response = await fetch(`https://meinekundenwelt.netcologne.de/api/api/core/invoice/file/{{netcologneInvoice.pdfId}}`, {\n    credentials: 'include',\n    headers: { Authorization: `Bearer ${id_token}` }\n  });\n  const blob = await response.blob();\n  return new Promise((resolve, reject) => {\n    const reader = new FileReader();\n    reader.onloadend = () => { resolve(reader.result.split(\",\")[1]); };\n    reader.onerror = reject;\n    reader.readAsDataURL(blob);\n  });\n})()",
+              "description": "Fetch the PDF file as a base64 string using the Authorization header."
+            },
+            {
+              "action": "downloadBase64Pdf",
+              "base64": "{{pdfBase64}}",
+              "document": {
+                "id": "{{netcologneInvoice.pdfId}}",
+                "date": "{{netcologneInvoice.date}}",
+                "total": "{{netcologneInvoice.total}}",
+                "type": "invoice"
+              },
+              "description": "Download the PDF using the base64 string."
+            }
+          ],
+          "description": "For each valid year, fetch all invoice metadata."
+        }
+      ],
+      "description": "Extract an array of years (filtered by the implicit startDate) from the range API."
+    }
+  ]
+}
