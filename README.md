@@ -408,6 +408,7 @@ This section provides an overview of the available steps that can be used to cre
 
   - [Extract (`extract`)](#extract-extract)
   - [Extract All (`extractAll`)](#extract-all-extractall)
+  - [Extract Network Response (`extractNetworkResponse`)](#extract-network-response-extractnetworkresponse)
 
 - [📄 Document Retrieval Steps](#📄-document-retrieval-steps)
 
@@ -693,6 +694,33 @@ When using JavaScript, the result should be an array of objects or values. If th
 **Pagination**
 
 Experimental support, not yet documented.
+
+#### Extract Network Response (`extractNetworkResponse`)
+
+Extracts data from a network response by matching the URL path. The URL parameter is used as a substring match against network requests, so you only need to provide a unique part of the URL path.
+
+The response content is automatically parsed as JSON if possible, otherwise returned as a string. You can optionally transform the response using the `transform` parameter.
+
+```json
+{
+  "action": "extractNetworkResponse",
+  "url": "api/invoices",
+  "variable": "response"
+}
+```
+
+With transformation:
+
+```json
+{
+  "action": "extractNetworkResponse",
+  "url": "api/data",
+  "variable": "items",
+  "transform": "(response) => response.items.map(item => ({ id: item.id, date: item.createdAt, total: `${item.currency} ${item.amount}` }))"
+}
+```
+
+The transformed data will be stored in the specified variable and can be used in subsequent steps.
 
 ### 📄 Document Retrieval Steps
 
