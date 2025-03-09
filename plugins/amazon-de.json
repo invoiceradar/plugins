@@ -118,7 +118,7 @@
           "forEach": [
             {
               "action": "extract",
-              "script": "{\n  {\n    downloadLinks\n  }\n}\n;['{{item.orderId}}']\n  ?.filter((i) => i.type === 'download')\n  .map((i) => ({\n    url: i.url,\n    documentType: i.url?.includes('creditNote') ? 'refund' : 'invoice',\n    documentNumber: i.fileName.replace('.pdf', ''),\n  })) || []",
+              "script": "{{downloadLinks}}['{{item.orderId}}']\n  ?.filter((i) => i.type === 'download')\n  .map((i) => ({\n    url: i.url,\n    documentType: i.url?.includes('creditNote') ? 'refund' : 'invoice',\n    documentNumber: i.fileName.replace('.pdf', ''),\n  })) || []",
               "variable": "currentLinks",
               "scopeSelector": true
             },
