@@ -9,7 +9,11 @@
       "type": "string",
       "title": "Region",
       "description": "Select your PostHog region (EU or US)",
-      "default": "eu"
+      "default": "eu",
+      "options": [
+        { "label": "EU", "value": "eu" },
+        { "label": "US", "value": "us" }
+      ]
     }
   },
   "checkAuth": [
@@ -26,6 +30,10 @@
     {
       "action": "navigate",
       "url": "https://{{config.region}}.posthog.com/login"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://{{config.region}}.posthog.com/project/**"
     }
   ],
   "getDocuments": [
