@@ -8,7 +8,8 @@
   "checkAuth": [
     {
       "action": "navigate",
-      "url": "https://cloud.elastic.co/billing/history"
+      "url": "https://cloud.elastic.co/billing/history",
+      "waitForNetworkIdle": true
     },
     {
       "action": "checkURL",
