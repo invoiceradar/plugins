@@ -14,21 +14,22 @@
   "checkAuth": [
     {
       "action": "navigate",
-      "url": "https://hub.docker.com/"
+      "url": "https://hub.docker.com/billing",
+      "waitForNetworkIdle": true
     },
     {
       "action": "checkURL",
-      "url": "https://hub.docker.com/"
+      "url": "https://hub.docker.com/**"
     }
   ],
   "startAuth": [
     {
       "action": "navigate",
-      "url": "https://login.docker.com/u/login/identifier"
+      "url": "https://hub.docker.com/billing"
     },
     {
       "action": "waitForURL",
-      "url": "https://hub.docker.com/"
+      "url": "https://hub.docker.com/**"
     }
   ],
   "getDocuments": [
