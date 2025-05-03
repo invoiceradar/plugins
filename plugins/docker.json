@@ -40,7 +40,7 @@
     },
     {
       "action": "waitForElement",
-      "selector": "button"
+      "selector": "div[role='tablist']"
     },
     {
       "action": "click",
