@@ -29,7 +29,7 @@
   "getDocuments": [
     {
       "action": "navigate",
-      "url": "https://plausible.io/settings"
+      "url": "https://plausible.io/settings/billing/invoices"
     },
     {
       "action": "extractAll",
