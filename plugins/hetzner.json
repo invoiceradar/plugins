@@ -4,13 +4,6 @@
   "name": "Hetzner",
   "description": "Hetzner is a German cloud hosting provider.",
   "homepage": "https://www.hetzner.com/",
-  "configSchema": {
-    "username": {
-      "type": "string",
-      "title": "Username",
-      "required": false
-    }
-  },
   "checkAuth": [
     {
       "action": "navigate",
