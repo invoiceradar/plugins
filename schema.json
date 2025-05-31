@@ -193,10 +193,10 @@
                   "type": "number",
                   "description": "The number of milliseconds to wait for. Defaults to 15s.",
                   "title": "Timeout",
+                  "default": 15000,
                   "examples": [
                     15000
-                  ],
-                  "default": 15000
+                  ]
                 },
                 "iframe": {
                   "anyOf": [
@@ -243,10 +243,10 @@
                   "type": "number",
                   "description": "The number of milliseconds to wait for. Defaults to 15s.",
                   "title": "Timeout",
+                  "default": 15000,
                   "examples": [
                     15000
-                  ],
-                  "default": 15000
+                  ]
                 },
                 "optional": {
                   "type": "boolean",
@@ -277,10 +277,10 @@
                   "type": "number",
                   "description": "The number of milliseconds to wait for. Defaults to 15s.",
                   "title": "Timeout",
+                  "default": 15000,
                   "examples": [
                     15000
-                  ],
-                  "default": 15000
+                  ]
                 },
                 "optional": {
                   "type": "boolean",
@@ -317,7 +317,7 @@
                   "type": "boolean",
                   "description": "Whether or not to wait for the network to be idle after navigation",
                   "title": "Wait for Network Idle",
-                  "default": false
+                  "default": true
                 },
                 "description": {
                   "type": "string",
@@ -447,10 +447,8 @@
                   "type": "object",
                   "required": [],
                   "properties": {},
-                  "patternProperties": {
-                    "": {
-                      "type": "string"
-                    }
+                  "additionalProperties": {
+                    "type": "string"
                   },
                   "description": "Additional metadata to include in the exported invoice",
                   "title": "Metadata"
@@ -465,10 +463,10 @@
                   "type": "number",
                   "description": "The number of milliseconds to wait for. Defaults to 15s.",
                   "title": "Timeout",
+                  "default": 15000,
                   "examples": [
                     15000
-                  ],
-                  "default": 15000
+                  ]
                 },
                 "description": {
                   "type": "string",
@@ -500,10 +498,10 @@
                   "type": "number",
                   "description": "The number of milliseconds to wait for. Defaults to 15s.",
                   "title": "Timeout",
+                  "default": 15000,
                   "examples": [
                     15000
-                  ],
-                  "default": 15000
+                  ]
                 },
                 "description": {
                   "type": "string",
@@ -634,10 +632,8 @@
                   "type": "object",
                   "required": [],
                   "properties": {},
-                  "patternProperties": {
-                    "": {
-                      "type": "string"
-                    }
+                  "additionalProperties": {
+                    "type": "string"
                   },
                   "description": "Additional metadata to include in the exported invoice",
                   "title": "Metadata"
@@ -706,6 +702,15 @@
                     "console.log(\"Hello World\");"
                   ]
                 },
+                "timeout": {
+                  "type": "number",
+                  "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                  "title": "Timeout",
+                  "default": 15000,
+                  "examples": [
+                    15000
+                  ]
+                },
                 "description": {
                   "type": "string",
                   "description": "A human-readable description of what this step does",
@@ -760,44 +765,42 @@
                   "type": "object",
                   "required": [],
                   "properties": {},
-                  "patternProperties": {
-                    "": {
-                      "anyOf": [
-                        {
-                          "type": "object",
-                          "required": [
-                            "selector"
-                          ],
-                          "properties": {
-                            "selector": {
-                              "type": "string",
-                              "description": "The CSS selector to use to find the element",
-                              "title": "Selector",
-                              "examples": [
-                                "#example"
-                              ]
-                            },
-                            "attribute": {
-                              "type": "string",
-                              "description": "The attribute to get from the element. If not specified, the inner text will be used",
-                              "title": "Attribute"
-                            },
-                            "transform": {
-                              "type": "string",
-                              "description": "A JavaScript function to transform the value",
-                              "title": "Transform",
-                              "examples": [
-                                "(v) => Number(v.replace('$', ''))"
-                              ]
-                            }
+                  "additionalProperties": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "required": [
+                          "selector"
+                        ],
+                        "properties": {
+                          "selector": {
+                            "type": "string",
+                            "description": "The CSS selector to use to find the element",
+                            "title": "Selector",
+                            "examples": [
+                              "#example"
+                            ]
                           },
-                          "additionalProperties": false
+                          "attribute": {
+                            "type": "string",
+                            "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                            "title": "Attribute"
+                          },
+                          "transform": {
+                            "type": "string",
+                            "description": "A JavaScript function to transform the value",
+                            "title": "Transform",
+                            "examples": [
+                              "(v) => Number(v.replace('$', ''))"
+                            ]
+                          }
                         },
-                        {
-                          "type": "string"
-                        }
-                      ]
-                    }
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ]
                   }
                 },
                 "description": {
@@ -900,10 +903,8 @@
                   "type": "object",
                   "required": [],
                   "properties": {},
-                  "patternProperties": {
-                    "": {
-                      "type": "string"
-                    }
+                  "additionalProperties": {
+                    "type": "string"
                   },
                   "description": "Additional metadata to include in the exported invoice",
                   "title": "Metadata"
@@ -918,10 +919,10 @@
                   "type": "number",
                   "description": "The number of milliseconds to wait for. Defaults to 15s.",
                   "title": "Timeout",
+                  "default": 15000,
                   "examples": [
                     15000
-                  ],
-                  "default": 15000
+                  ]
                 },
                 "url": {
                   "type": "string",
@@ -955,6 +956,11 @@
                   "description": "The URL to wait for",
                   "title": "URL"
                 },
+                "findResponse": {
+                  "type": "string",
+                  "description": "You get a list of all requests & responses. If you want to find a specific response, you can use this to filter the list",
+                  "title": "Find Response"
+                },
                 "variable": {
                   "type": "string",
                   "description": "The name of the variable to store the response in",
@@ -969,10 +975,10 @@
                   "type": "number",
                   "description": "The number of milliseconds to wait for. Defaults to 15s.",
                   "title": "Timeout",
+                  "default": 15000,
                   "examples": [
                     15000
-                  ],
-                  "default": 15000
+                  ]
                 },
                 "description": {
                   "type": "string",
@@ -1048,10 +1054,8 @@
                   "type": "object",
                   "required": [],
                   "properties": {},
-                  "patternProperties": {
-                    "": {
-                      "type": "string"
-                    }
+                  "additionalProperties": {
+                    "type": "string"
                   },
                   "description": "Additional metadata to include in the exported invoice",
                   "title": "Metadata"
@@ -1093,6 +1097,15 @@
                   "title": "Script",
                   "examples": [
                     "console.log(\"Hello World\");"
+                  ]
+                },
+                "timeout": {
+                  "type": "number",
+                  "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                  "title": "Timeout",
+                  "default": 15000,
+                  "examples": [
+                    15000
                   ]
                 },
                 "action": {
@@ -1180,44 +1193,42 @@
                   "type": "object",
                   "required": [],
                   "properties": {},
-                  "patternProperties": {
-                    "": {
-                      "anyOf": [
-                        {
-                          "type": "object",
-                          "required": [
-                            "selector"
-                          ],
-                          "properties": {
-                            "selector": {
-                              "type": "string",
-                              "description": "The CSS selector to use to find the element",
-                              "title": "Selector",
-                              "examples": [
-                                "#example"
-                              ]
-                            },
-                            "attribute": {
-                              "type": "string",
-                              "description": "The attribute to get from the element. If not specified, the inner text will be used",
-                              "title": "Attribute"
-                            },
-                            "transform": {
-                              "type": "string",
-                              "description": "A JavaScript function to transform the value",
-                              "title": "Transform",
-                              "examples": [
-                                "(v) => Number(v.replace('$', ''))"
-                              ]
-                            }
+                  "additionalProperties": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "required": [
+                          "selector"
+                        ],
+                        "properties": {
+                          "selector": {
+                            "type": "string",
+                            "description": "The CSS selector to use to find the element",
+                            "title": "Selector",
+                            "examples": [
+                              "#example"
+                            ]
                           },
-                          "additionalProperties": false
+                          "attribute": {
+                            "type": "string",
+                            "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                            "title": "Attribute"
+                          },
+                          "transform": {
+                            "type": "string",
+                            "description": "A JavaScript function to transform the value",
+                            "title": "Transform",
+                            "examples": [
+                              "(v) => Number(v.replace('$', ''))"
+                            ]
+                          }
                         },
-                        {
-                          "type": "string"
-                        }
-                      ]
-                    }
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ]
                   }
                 },
                 "iframe": {
@@ -1310,11 +1321,42 @@
             {
               "type": "object",
               "required": [
-                "script",
                 "action",
-                "then"
+                "then",
+                "script"
               ],
               "properties": {
+                "action": {
+                  "type": "string",
+                  "enum": [
+                    "if"
+                  ]
+                },
+                "scopeSelector": {
+                  "anyOf": [
+                    {
+                      "type": "boolean",
+                      "description": "Defaults to true. If set, the selector will be scoped to the parent element",
+                      "title": "Scope Selector",
+                      "default": true
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "then": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/Step"
+                  }
+                },
+                "else": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/Step"
+                  }
+                },
                 "script": {
                   "type": "string",
                   "description": "A JavaScript script to run in the page context",
@@ -1323,36 +1365,14 @@
                     "console.log(\"Hello World\");"
                   ]
                 },
-                "action": {
-                  "type": "string",
-                  "enum": [
-                    "if"
+                "timeout": {
+                  "type": "number",
+                  "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                  "title": "Timeout",
+                  "default": 15000,
+                  "examples": [
+                    15000
                   ]
-                },
-                "scopeSelector": {
-                  "anyOf": [
-                    {
-                      "type": "boolean",
-                      "description": "Defaults to true. If set, the selector will be scoped to the parent element",
-                      "title": "Scope Selector",
-                      "default": true
-                    },
-                    {
-                      "type": "null"
-                    }
-                  ]
-                },
-                "then": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/$defs/Step"
-                  }
-                },
-                "else": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/$defs/Step"
-                  }
                 }
               },
               "additionalProperties": false
@@ -1360,19 +1380,11 @@
             {
               "type": "object",
               "required": [
-                "selector",
                 "action",
-                "then"
+                "then",
+                "selector"
               ],
               "properties": {
-                "selector": {
-                  "type": "string",
-                  "description": "The CSS selector to use to find the element",
-                  "title": "Selector",
-                  "examples": [
-                    "#example"
-                  ]
-                },
                 "action": {
                   "type": "string",
                   "enum": [
@@ -1403,6 +1415,14 @@
                   "items": {
                     "$ref": "#/$defs/Step"
                   }
+                },
+                "selector": {
+                  "type": "string",
+                  "description": "The CSS selector to use to find the element",
+                  "title": "Selector",
+                  "examples": [
+                    "#example"
+                  ]
                 }
               },
               "additionalProperties": false
@@ -1488,10 +1508,8 @@
                       "type": "object",
                       "required": [],
                       "properties": {},
-                      "patternProperties": {
-                        "": {
-                          "type": "string"
-                        }
+                      "additionalProperties": {
+                        "type": "string"
                       }
                     }
                   ]
@@ -1559,95 +1577,219 @@
       "description": "The URL of the service the plugin is for. Used for linking to the service and for the plugin logo.",
       "title": "Plugin Homepage"
     },
+    "userAgentOverride": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "boolean"
+        }
+      ],
+      "description": "Overwrite the user agent of the browser",
+      "title": "Overwrite User Agent"
+    },
+    "autofill": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "object",
+          "required": [],
+          "properties": {
+            "username": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "object",
+                  "required": [],
+                  "properties": {
+                    "selector": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ],
+              "description": "The value to autofill. If set to `true`, the plugin will autofill the field. If set to a string, the plugin will autofill the field with the given value.",
+              "title": "Autofill Value",
+              "default": true
+            },
+            "password": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "object",
+                  "required": [],
+                  "properties": {
+                    "selector": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ],
+              "description": "The value to autofill. If set to `true`, the plugin will autofill the field. If set to a string, the plugin will autofill the field with the given value.",
+              "title": "Autofill Value",
+              "default": true
+            },
+            "otp": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "object",
+                  "required": [],
+                  "properties": {
+                    "selector": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ],
+              "description": "The value to autofill. If set to `true`, the plugin will autofill the field. If set to a string, the plugin will autofill the field with the given value.",
+              "title": "Autofill Value",
+              "default": true
+            },
+            "submit": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "object",
+                  "required": [],
+                  "properties": {
+                    "selector": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ],
+              "description": "The value to autofill. If set to `true`, the plugin will autofill the field. If set to a string, the plugin will autofill the field with the given value.",
+              "title": "Autofill Value",
+              "default": true
+            }
+          },
+          "additionalProperties": false
+        }
+      ],
+      "description": "Autofill configuration for the plugin. If set to `true`, the plugin will show a Username, Password, and OTP field. If set to an object, you can configure the fields to show and optionally provide selectors for the fields.",
+      "title": "Autofill",
+      "default": true
+    },
     "configSchema": {
       "type": "object",
       "required": [],
       "properties": {},
-      "patternProperties": {
-        "": {
-          "type": "object",
-          "required": [
-            "type"
-          ],
-          "properties": {
-            "type": {
-              "type": "string",
-              "enum": [
-                "string",
-                "number",
-                "boolean",
-                "password"
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "string",
+              "number",
+              "boolean",
+              "password"
+            ],
+            "description": "The type of the property.",
+            "title": "Type"
+          },
+          "title": {
+            "type": "string"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "value",
+                "label"
               ],
-              "description": "The type of the property.",
-              "title": "Type"
-            },
-            "title": {
-              "type": "string"
-            },
-            "options": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "required": [
-                  "value",
-                  "label"
-                ],
-                "properties": {
-                  "value": {
-                    "type": "string"
-                  },
-                  "label": {
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": false
-              },
-              "description": "A list of options for the property. Only available for dropdowns.",
-              "title": "Options"
-            },
-            "description": {
-              "type": "string",
-              "description": "A brief description of what this property is used for",
-              "title": "Description"
-            },
-            "example": {
-              "type": "string",
-              "description": "An example value for this property",
-              "title": "Example"
-            },
-            "required": {
-              "type": "boolean",
-              "description": "Whether or not this property is required for the plugin to function",
-              "title": "Required"
-            },
-            "default": {
-              "anyOf": [
-                {
+              "properties": {
+                "value": {
                   "type": "string"
                 },
-                {
-                  "type": "number"
-                },
-                {
-                  "type": "boolean"
+                "label": {
+                  "type": "string"
                 }
-              ],
-              "description": "The default value for this property",
-              "title": "Default"
-            }
+              },
+              "additionalProperties": false
+            },
+            "description": "A list of options for the property. Only available for dropdowns.",
+            "title": "Options"
           },
-          "additionalProperties": false,
-          "description": "Defines a single property in the plugin configuration schema",
-          "title": "Configuration Property",
-          "examples": [
-            {
-              "type": "string",
-              "title": "Username",
-              "description": "The username for login",
-              "required": true
-            }
-          ]
-        }
+          "description": {
+            "type": "string",
+            "description": "A brief description of what this property is used for",
+            "title": "Description"
+          },
+          "example": {
+            "type": "string",
+            "description": "An example value for this property",
+            "title": "Example"
+          },
+          "required": {
+            "type": "boolean",
+            "description": "Whether or not this property is required for the plugin to function",
+            "title": "Required"
+          },
+          "default": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              }
+            ],
+            "description": "The default value for this property",
+            "title": "Default"
+          },
+          "hidden": {
+            "type": "boolean",
+            "description": "Whether or not this property is hidden from the user",
+            "title": "Hidden"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Defines a single property in the plugin configuration schema",
+        "title": "Configuration Property",
+        "examples": [
+          {
+            "type": "string",
+            "title": "Username",
+            "description": "The username for login",
+            "required": true
+          }
+        ]
       },
       "description": "A list of properties that can be configured for the plugin",
       "title": "Configuration Properties"
@@ -1846,10 +1988,10 @@
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
+                    "default": 15000,
                     "examples": [
                       15000
-                    ],
-                    "default": 15000
+                    ]
                   },
                   "iframe": {
                     "anyOf": [
@@ -1896,10 +2038,10 @@
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
+                    "default": 15000,
                     "examples": [
                       15000
-                    ],
-                    "default": 15000
+                    ]
                   },
                   "optional": {
                     "type": "boolean",
@@ -1930,10 +2072,10 @@
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
+                    "default": 15000,
                     "examples": [
                       15000
-                    ],
-                    "default": 15000
+                    ]
                   },
                   "optional": {
                     "type": "boolean",
@@ -1970,7 +2112,7 @@
                     "type": "boolean",
                     "description": "Whether or not to wait for the network to be idle after navigation",
                     "title": "Wait for Network Idle",
-                    "default": false
+                    "default": true
                   },
                   "description": {
                     "type": "string",
@@ -2100,10 +2242,8 @@
                     "type": "object",
                     "required": [],
                     "properties": {},
-                    "patternProperties": {
-                      "": {
-                        "type": "string"
-                      }
+                    "additionalProperties": {
+                      "type": "string"
                     },
                     "description": "Additional metadata to include in the exported invoice",
                     "title": "Metadata"
@@ -2118,10 +2258,10 @@
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
+                    "default": 15000,
                     "examples": [
                       15000
-                    ],
-                    "default": 15000
+                    ]
                   },
                   "description": {
                     "type": "string",
@@ -2153,10 +2293,10 @@
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
+                    "default": 15000,
                     "examples": [
                       15000
-                    ],
-                    "default": 15000
+                    ]
                   },
                   "description": {
                     "type": "string",
@@ -2287,10 +2427,8 @@
                     "type": "object",
                     "required": [],
                     "properties": {},
-                    "patternProperties": {
-                      "": {
-                        "type": "string"
-                      }
+                    "additionalProperties": {
+                      "type": "string"
                     },
                     "description": "Additional metadata to include in the exported invoice",
                     "title": "Metadata"
@@ -2359,6 +2497,15 @@
                       "console.log(\"Hello World\");"
                     ]
                   },
+                  "timeout": {
+                    "type": "number",
+                    "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                    "title": "Timeout",
+                    "default": 15000,
+                    "examples": [
+                      15000
+                    ]
+                  },
                   "description": {
                     "type": "string",
                     "description": "A human-readable description of what this step does",
@@ -2413,44 +2560,42 @@
                     "type": "object",
                     "required": [],
                     "properties": {},
-                    "patternProperties": {
-                      "": {
-                        "anyOf": [
-                          {
-                            "type": "object",
-                            "required": [
-                              "selector"
-                            ],
-                            "properties": {
-                              "selector": {
-                                "type": "string",
-                                "description": "The CSS selector to use to find the element",
-                                "title": "Selector",
-                                "examples": [
-                                  "#example"
-                                ]
-                              },
-                              "attribute": {
-                                "type": "string",
-                                "description": "The attribute to get from the element. If not specified, the inner text will be used",
-                                "title": "Attribute"
-                              },
-                              "transform": {
-                                "type": "string",
-                                "description": "A JavaScript function to transform the value",
-                                "title": "Transform",
-                                "examples": [
-                                  "(v) => Number(v.replace('$', ''))"
-                                ]
-                              }
+                    "additionalProperties": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "required": [
+                            "selector"
+                          ],
+                          "properties": {
+                            "selector": {
+                              "type": "string",
+                              "description": "The CSS selector to use to find the element",
+                              "title": "Selector",
+                              "examples": [
+                                "#example"
+                              ]
                             },
-                            "additionalProperties": false
+                            "attribute": {
+                              "type": "string",
+                              "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                              "title": "Attribute"
+                            },
+                            "transform": {
+                              "type": "string",
+                              "description": "A JavaScript function to transform the value",
+                              "title": "Transform",
+                              "examples": [
+                                "(v) => Number(v.replace('$', ''))"
+                              ]
+                            }
                           },
-                          {
-                            "type": "string"
-                          }
-                        ]
-                      }
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "string"
+                        }
+                      ]
                     }
                   },
                   "description": {
@@ -2553,10 +2698,8 @@
                     "type": "object",
                     "required": [],
                     "properties": {},
-                    "patternProperties": {
-                      "": {
-                        "type": "string"
-                      }
+                    "additionalProperties": {
+                      "type": "string"
                     },
                     "description": "Additional metadata to include in the exported invoice",
                     "title": "Metadata"
@@ -2571,10 +2714,10 @@
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
+                    "default": 15000,
                     "examples": [
                       15000
-                    ],
-                    "default": 15000
+                    ]
                   },
                   "url": {
                     "type": "string",
@@ -2608,6 +2751,11 @@
                     "description": "The URL to wait for",
                     "title": "URL"
                   },
+                  "findResponse": {
+                    "type": "string",
+                    "description": "You get a list of all requests & responses. If you want to find a specific response, you can use this to filter the list",
+                    "title": "Find Response"
+                  },
                   "variable": {
                     "type": "string",
                     "description": "The name of the variable to store the response in",
@@ -2622,10 +2770,10 @@
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
+                    "default": 15000,
                     "examples": [
                       15000
-                    ],
-                    "default": 15000
+                    ]
                   },
                   "description": {
                     "type": "string",
@@ -2701,10 +2849,8 @@
                     "type": "object",
                     "required": [],
                     "properties": {},
-                    "patternProperties": {
-                      "": {
-                        "type": "string"
-                      }
+                    "additionalProperties": {
+                      "type": "string"
                     },
                     "description": "Additional metadata to include in the exported invoice",
                     "title": "Metadata"
@@ -2746,6 +2892,15 @@
                     "title": "Script",
                     "examples": [
                       "console.log(\"Hello World\");"
+                    ]
+                  },
+                  "timeout": {
+                    "type": "number",
+                    "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                    "title": "Timeout",
+                    "default": 15000,
+                    "examples": [
+                      15000
                     ]
                   },
                   "action": {
@@ -2833,44 +2988,42 @@
                     "type": "object",
                     "required": [],
                     "properties": {},
-                    "patternProperties": {
-                      "": {
-                        "anyOf": [
-                          {
-                            "type": "object",
-                            "required": [
-                              "selector"
-                            ],
-                            "properties": {
-                              "selector": {
-                                "type": "string",
-                                "description": "The CSS selector to use to find the element",
-                                "title": "Selector",
-                                "examples": [
-                                  "#example"
-                                ]
-                              },
-                              "attribute": {
-                                "type": "string",
-                                "description": "The attribute to get from the element. If not specified, the inner text will be used",
-                                "title": "Attribute"
-                              },
-                              "transform": {
-                                "type": "string",
-                                "description": "A JavaScript function to transform the value",
-                                "title": "Transform",
-                                "examples": [
-                                  "(v) => Number(v.replace('$', ''))"
-                                ]
-                              }
+                    "additionalProperties": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "required": [
+                            "selector"
+                          ],
+                          "properties": {
+                            "selector": {
+                              "type": "string",
+                              "description": "The CSS selector to use to find the element",
+                              "title": "Selector",
+                              "examples": [
+                                "#example"
+                              ]
                             },
-                            "additionalProperties": false
+                            "attribute": {
+                              "type": "string",
+                              "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                              "title": "Attribute"
+                            },
+                            "transform": {
+                              "type": "string",
+                              "description": "A JavaScript function to transform the value",
+                              "title": "Transform",
+                              "examples": [
+                                "(v) => Number(v.replace('$', ''))"
+                              ]
+                            }
                           },
-                          {
-                            "type": "string"
-                          }
-                        ]
-                      }
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "string"
+                        }
+                      ]
                     }
                   },
                   "iframe": {
@@ -2963,11 +3116,42 @@
               {
                 "type": "object",
                 "required": [
-                  "script",
                   "action",
-                  "then"
+                  "then",
+                  "script"
                 ],
                 "properties": {
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "if"
+                    ]
+                  },
+                  "scopeSelector": {
+                    "anyOf": [
+                      {
+                        "type": "boolean",
+                        "description": "Defaults to true. If set, the selector will be scoped to the parent element",
+                        "title": "Scope Selector",
+                        "default": true
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "then": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/$defs/Step"
+                    }
+                  },
+                  "else": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/$defs/Step"
+                    }
+                  },
                   "script": {
                     "type": "string",
                     "description": "A JavaScript script to run in the page context",
@@ -2976,36 +3160,14 @@
                       "console.log(\"Hello World\");"
                     ]
                   },
-                  "action": {
-                    "type": "string",
-                    "enum": [
-                      "if"
+                  "timeout": {
+                    "type": "number",
+                    "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                    "title": "Timeout",
+                    "default": 15000,
+                    "examples": [
+                      15000
                     ]
-                  },
-                  "scopeSelector": {
-                    "anyOf": [
-                      {
-                        "type": "boolean",
-                        "description": "Defaults to true. If set, the selector will be scoped to the parent element",
-                        "title": "Scope Selector",
-                        "default": true
-                      },
-                      {
-                        "type": "null"
-                      }
-                    ]
-                  },
-                  "then": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/$defs/Step"
-                    }
-                  },
-                  "else": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/$defs/Step"
-                    }
                   }
                 },
                 "additionalProperties": false
@@ -3013,19 +3175,11 @@
               {
                 "type": "object",
                 "required": [
-                  "selector",
                   "action",
-                  "then"
+                  "then",
+                  "selector"
                 ],
                 "properties": {
-                  "selector": {
-                    "type": "string",
-                    "description": "The CSS selector to use to find the element",
-                    "title": "Selector",
-                    "examples": [
-                      "#example"
-                    ]
-                  },
                   "action": {
                     "type": "string",
                     "enum": [
@@ -3056,6 +3210,14 @@
                     "items": {
                       "$ref": "#/$defs/Step"
                     }
+                  },
+                  "selector": {
+                    "type": "string",
+                    "description": "The CSS selector to use to find the element",
+                    "title": "Selector",
+                    "examples": [
+                      "#example"
+                    ]
                   }
                 },
                 "additionalProperties": false
@@ -3141,10 +3303,8 @@
                         "type": "object",
                         "required": [],
                         "properties": {},
-                        "patternProperties": {
-                          "": {
-                            "type": "string"
-                          }
+                        "additionalProperties": {
+                          "type": "string"
                         }
                       }
                     ]
@@ -3374,10 +3534,10 @@
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
+                    "default": 15000,
                     "examples": [
                       15000
-                    ],
-                    "default": 15000
+                    ]
                   },
                   "iframe": {
                     "anyOf": [
@@ -3424,10 +3584,10 @@
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
+                    "default": 15000,
                     "examples": [
                       15000
-                    ],
-                    "default": 15000
+                    ]
                   },
                   "optional": {
                     "type": "boolean",
@@ -3458,10 +3618,10 @@
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
+                    "default": 15000,
                     "examples": [
                       15000
-                    ],
-                    "default": 15000
+                    ]
                   },
                   "optional": {
                     "type": "boolean",
@@ -3498,7 +3658,7 @@
                     "type": "boolean",
                     "description": "Whether or not to wait for the network to be idle after navigation",
                     "title": "Wait for Network Idle",
-                    "default": false
+                    "default": true
                   },
                   "description": {
                     "type": "string",
@@ -3628,10 +3788,8 @@
                     "type": "object",
                     "required": [],
                     "properties": {},
-                    "patternProperties": {
-                      "": {
-                        "type": "string"
-                      }
+                    "additionalProperties": {
+                      "type": "string"
                     },
                     "description": "Additional metadata to include in the exported invoice",
                     "title": "Metadata"
@@ -3646,10 +3804,10 @@
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
+                    "default": 15000,
                     "examples": [
                       15000
-                    ],
-                    "default": 15000
+                    ]
                   },
                   "description": {
                     "type": "string",
@@ -3681,10 +3839,10 @@
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
+                    "default": 15000,
                     "examples": [
                       15000
-                    ],
-                    "default": 15000
+                    ]
                   },
                   "description": {
                     "type": "string",
@@ -3815,10 +3973,8 @@
                     "type": "object",
                     "required": [],
                     "properties": {},
-                    "patternProperties": {
-                      "": {
-                        "type": "string"
-                      }
+                    "additionalProperties": {
+                      "type": "string"
                     },
                     "description": "Additional metadata to include in the exported invoice",
                     "title": "Metadata"
@@ -3887,6 +4043,15 @@
                       "console.log(\"Hello World\");"
                     ]
                   },
+                  "timeout": {
+                    "type": "number",
+                    "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                    "title": "Timeout",
+                    "default": 15000,
+                    "examples": [
+                      15000
+                    ]
+                  },
                   "description": {
                     "type": "string",
                     "description": "A human-readable description of what this step does",
@@ -3941,44 +4106,42 @@
                     "type": "object",
                     "required": [],
                     "properties": {},
-                    "patternProperties": {
-                      "": {
-                        "anyOf": [
-                          {
-                            "type": "object",
-                            "required": [
-                              "selector"
-                            ],
-                            "properties": {
-                              "selector": {
-                                "type": "string",
-                                "description": "The CSS selector to use to find the element",
-                                "title": "Selector",
-                                "examples": [
-                                  "#example"
-                                ]
-                              },
-                              "attribute": {
-                                "type": "string",
-                                "description": "The attribute to get from the element. If not specified, the inner text will be used",
-                                "title": "Attribute"
-                              },
-                              "transform": {
-                                "type": "string",
-                                "description": "A JavaScript function to transform the value",
-                                "title": "Transform",
-                                "examples": [
-                                  "(v) => Number(v.replace('$', ''))"
-                                ]
-                              }
+                    "additionalProperties": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "required": [
+                            "selector"
+                          ],
+                          "properties": {
+                            "selector": {
+                              "type": "string",
+                              "description": "The CSS selector to use to find the element",
+                              "title": "Selector",
+                              "examples": [
+                                "#example"
+                              ]
                             },
-                            "additionalProperties": false
+                            "attribute": {
+                              "type": "string",
+                              "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                              "title": "Attribute"
+                            },
+                            "transform": {
+                              "type": "string",
+                              "description": "A JavaScript function to transform the value",
+                              "title": "Transform",
+                              "examples": [
+                                "(v) => Number(v.replace('$', ''))"
+                              ]
+                            }
                           },
-                          {
-                            "type": "string"
-                          }
-                        ]
-                      }
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "string"
+                        }
+                      ]
                     }
                   },
                   "description": {
@@ -4081,10 +4244,8 @@
                     "type": "object",
                     "required": [],
                     "properties": {},
-                    "patternProperties": {
-                      "": {
-                        "type": "string"
-                      }
+                    "additionalProperties": {
+                      "type": "string"
                     },
                     "description": "Additional metadata to include in the exported invoice",
                     "title": "Metadata"
@@ -4099,10 +4260,10 @@
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
+                    "default": 15000,
                     "examples": [
                       15000
-                    ],
-                    "default": 15000
+                    ]
                   },
                   "url": {
                     "type": "string",
@@ -4136,6 +4297,11 @@
                     "description": "The URL to wait for",
                     "title": "URL"
                   },
+                  "findResponse": {
+                    "type": "string",
+                    "description": "You get a list of all requests & responses. If you want to find a specific response, you can use this to filter the list",
+                    "title": "Find Response"
+                  },
                   "variable": {
                     "type": "string",
                     "description": "The name of the variable to store the response in",
@@ -4150,10 +4316,10 @@
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
+                    "default": 15000,
                     "examples": [
                       15000
-                    ],
-                    "default": 15000
+                    ]
                   },
                   "description": {
                     "type": "string",
@@ -4229,10 +4395,8 @@
                     "type": "object",
                     "required": [],
                     "properties": {},
-                    "patternProperties": {
-                      "": {
-                        "type": "string"
-                      }
+                    "additionalProperties": {
+                      "type": "string"
                     },
                     "description": "Additional metadata to include in the exported invoice",
                     "title": "Metadata"
@@ -4274,6 +4438,15 @@
                     "title": "Script",
                     "examples": [
                       "console.log(\"Hello World\");"
+                    ]
+                  },
+                  "timeout": {
+                    "type": "number",
+                    "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                    "title": "Timeout",
+                    "default": 15000,
+                    "examples": [
+                      15000
                     ]
                   },
                   "action": {
@@ -4361,44 +4534,42 @@
                     "type": "object",
                     "required": [],
                     "properties": {},
-                    "patternProperties": {
-                      "": {
-                        "anyOf": [
-                          {
-                            "type": "object",
-                            "required": [
-                              "selector"
-                            ],
-                            "properties": {
-                              "selector": {
-                                "type": "string",
-                                "description": "The CSS selector to use to find the element",
-                                "title": "Selector",
-                                "examples": [
-                                  "#example"
-                                ]
-                              },
-                              "attribute": {
-                                "type": "string",
-                                "description": "The attribute to get from the element. If not specified, the inner text will be used",
-                                "title": "Attribute"
-                              },
-                              "transform": {
-                                "type": "string",
-                                "description": "A JavaScript function to transform the value",
-                                "title": "Transform",
-                                "examples": [
-                                  "(v) => Number(v.replace('$', ''))"
-                                ]
-                              }
+                    "additionalProperties": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "required": [
+                            "selector"
+                          ],
+                          "properties": {
+                            "selector": {
+                              "type": "string",
+                              "description": "The CSS selector to use to find the element",
+                              "title": "Selector",
+                              "examples": [
+                                "#example"
+                              ]
                             },
-                            "additionalProperties": false
+                            "attribute": {
+                              "type": "string",
+                              "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                              "title": "Attribute"
+                            },
+                            "transform": {
+                              "type": "string",
+                              "description": "A JavaScript function to transform the value",
+                              "title": "Transform",
+                              "examples": [
+                                "(v) => Number(v.replace('$', ''))"
+                              ]
+                            }
                           },
-                          {
-                            "type": "string"
-                          }
-                        ]
-                      }
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "string"
+                        }
+                      ]
                     }
                   },
                   "iframe": {
@@ -4491,11 +4662,42 @@
               {
                 "type": "object",
                 "required": [
-                  "script",
                   "action",
-                  "then"
+                  "then",
+                  "script"
                 ],
                 "properties": {
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "if"
+                    ]
+                  },
+                  "scopeSelector": {
+                    "anyOf": [
+                      {
+                        "type": "boolean",
+                        "description": "Defaults to true. If set, the selector will be scoped to the parent element",
+                        "title": "Scope Selector",
+                        "default": true
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "then": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/$defs/Step"
+                    }
+                  },
+                  "else": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/$defs/Step"
+                    }
+                  },
                   "script": {
                     "type": "string",
                     "description": "A JavaScript script to run in the page context",
@@ -4504,36 +4706,14 @@
                       "console.log(\"Hello World\");"
                     ]
                   },
-                  "action": {
-                    "type": "string",
-                    "enum": [
-                      "if"
+                  "timeout": {
+                    "type": "number",
+                    "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                    "title": "Timeout",
+                    "default": 15000,
+                    "examples": [
+                      15000
                     ]
-                  },
-                  "scopeSelector": {
-                    "anyOf": [
-                      {
-                        "type": "boolean",
-                        "description": "Defaults to true. If set, the selector will be scoped to the parent element",
-                        "title": "Scope Selector",
-                        "default": true
-                      },
-                      {
-                        "type": "null"
-                      }
-                    ]
-                  },
-                  "then": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/$defs/Step"
-                    }
-                  },
-                  "else": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/$defs/Step"
-                    }
                   }
                 },
                 "additionalProperties": false
@@ -4541,19 +4721,11 @@
               {
                 "type": "object",
                 "required": [
-                  "selector",
                   "action",
-                  "then"
+                  "then",
+                  "selector"
                 ],
                 "properties": {
-                  "selector": {
-                    "type": "string",
-                    "description": "The CSS selector to use to find the element",
-                    "title": "Selector",
-                    "examples": [
-                      "#example"
-                    ]
-                  },
                   "action": {
                     "type": "string",
                     "enum": [
@@ -4584,6 +4756,14 @@
                     "items": {
                       "$ref": "#/$defs/Step"
                     }
+                  },
+                  "selector": {
+                    "type": "string",
+                    "description": "The CSS selector to use to find the element",
+                    "title": "Selector",
+                    "examples": [
+                      "#example"
+                    ]
                   }
                 },
                 "additionalProperties": false
@@ -4669,10 +4849,8 @@
                         "type": "object",
                         "required": [],
                         "properties": {},
-                        "patternProperties": {
-                          "": {
-                            "type": "string"
-                          }
+                        "additionalProperties": {
+                          "type": "string"
                         }
                       }
                     ]
@@ -4740,10 +4918,8 @@
                         "type": "object",
                         "required": [],
                         "properties": {},
-                        "patternProperties": {
-                          "": {
-                            "type": "string"
-                          }
+                        "additionalProperties": {
+                          "type": "string"
                         }
                       }
                     ]
@@ -4966,10 +5142,10 @@
                         "type": "number",
                         "description": "The number of milliseconds to wait for. Defaults to 15s.",
                         "title": "Timeout",
+                        "default": 15000,
                         "examples": [
                           15000
-                        ],
-                        "default": 15000
+                        ]
                       },
                       "iframe": {
                         "anyOf": [
@@ -5016,10 +5192,10 @@
                         "type": "number",
                         "description": "The number of milliseconds to wait for. Defaults to 15s.",
                         "title": "Timeout",
+                        "default": 15000,
                         "examples": [
                           15000
-                        ],
-                        "default": 15000
+                        ]
                       },
                       "optional": {
                         "type": "boolean",
@@ -5050,10 +5226,10 @@
                         "type": "number",
                         "description": "The number of milliseconds to wait for. Defaults to 15s.",
                         "title": "Timeout",
+                        "default": 15000,
                         "examples": [
                           15000
-                        ],
-                        "default": 15000
+                        ]
                       },
                       "optional": {
                         "type": "boolean",
@@ -5090,7 +5266,7 @@
                         "type": "boolean",
                         "description": "Whether or not to wait for the network to be idle after navigation",
                         "title": "Wait for Network Idle",
-                        "default": false
+                        "default": true
                       },
                       "description": {
                         "type": "string",
@@ -5220,10 +5396,8 @@
                         "type": "object",
                         "required": [],
                         "properties": {},
-                        "patternProperties": {
-                          "": {
-                            "type": "string"
-                          }
+                        "additionalProperties": {
+                          "type": "string"
                         },
                         "description": "Additional metadata to include in the exported invoice",
                         "title": "Metadata"
@@ -5238,10 +5412,10 @@
                         "type": "number",
                         "description": "The number of milliseconds to wait for. Defaults to 15s.",
                         "title": "Timeout",
+                        "default": 15000,
                         "examples": [
                           15000
-                        ],
-                        "default": 15000
+                        ]
                       },
                       "description": {
                         "type": "string",
@@ -5273,10 +5447,10 @@
                         "type": "number",
                         "description": "The number of milliseconds to wait for. Defaults to 15s.",
                         "title": "Timeout",
+                        "default": 15000,
                         "examples": [
                           15000
-                        ],
-                        "default": 15000
+                        ]
                       },
                       "description": {
                         "type": "string",
@@ -5407,10 +5581,8 @@
                         "type": "object",
                         "required": [],
                         "properties": {},
-                        "patternProperties": {
-                          "": {
-                            "type": "string"
-                          }
+                        "additionalProperties": {
+                          "type": "string"
                         },
                         "description": "Additional metadata to include in the exported invoice",
                         "title": "Metadata"
@@ -5479,6 +5651,15 @@
                           "console.log(\"Hello World\");"
                         ]
                       },
+                      "timeout": {
+                        "type": "number",
+                        "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                        "title": "Timeout",
+                        "default": 15000,
+                        "examples": [
+                          15000
+                        ]
+                      },
                       "description": {
                         "type": "string",
                         "description": "A human-readable description of what this step does",
@@ -5533,44 +5714,42 @@
                         "type": "object",
                         "required": [],
                         "properties": {},
-                        "patternProperties": {
-                          "": {
-                            "anyOf": [
-                              {
-                                "type": "object",
-                                "required": [
-                                  "selector"
-                                ],
-                                "properties": {
-                                  "selector": {
-                                    "type": "string",
-                                    "description": "The CSS selector to use to find the element",
-                                    "title": "Selector",
-                                    "examples": [
-                                      "#example"
-                                    ]
-                                  },
-                                  "attribute": {
-                                    "type": "string",
-                                    "description": "The attribute to get from the element. If not specified, the inner text will be used",
-                                    "title": "Attribute"
-                                  },
-                                  "transform": {
-                                    "type": "string",
-                                    "description": "A JavaScript function to transform the value",
-                                    "title": "Transform",
-                                    "examples": [
-                                      "(v) => Number(v.replace('$', ''))"
-                                    ]
-                                  }
+                        "additionalProperties": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "required": [
+                                "selector"
+                              ],
+                              "properties": {
+                                "selector": {
+                                  "type": "string",
+                                  "description": "The CSS selector to use to find the element",
+                                  "title": "Selector",
+                                  "examples": [
+                                    "#example"
+                                  ]
                                 },
-                                "additionalProperties": false
+                                "attribute": {
+                                  "type": "string",
+                                  "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                                  "title": "Attribute"
+                                },
+                                "transform": {
+                                  "type": "string",
+                                  "description": "A JavaScript function to transform the value",
+                                  "title": "Transform",
+                                  "examples": [
+                                    "(v) => Number(v.replace('$', ''))"
+                                  ]
+                                }
                               },
-                              {
-                                "type": "string"
-                              }
-                            ]
-                          }
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "string"
+                            }
+                          ]
                         }
                       },
                       "description": {
@@ -5673,10 +5852,8 @@
                         "type": "object",
                         "required": [],
                         "properties": {},
-                        "patternProperties": {
-                          "": {
-                            "type": "string"
-                          }
+                        "additionalProperties": {
+                          "type": "string"
                         },
                         "description": "Additional metadata to include in the exported invoice",
                         "title": "Metadata"
@@ -5691,10 +5868,10 @@
                         "type": "number",
                         "description": "The number of milliseconds to wait for. Defaults to 15s.",
                         "title": "Timeout",
+                        "default": 15000,
                         "examples": [
                           15000
-                        ],
-                        "default": 15000
+                        ]
                       },
                       "url": {
                         "type": "string",
@@ -5728,6 +5905,11 @@
                         "description": "The URL to wait for",
                         "title": "URL"
                       },
+                      "findResponse": {
+                        "type": "string",
+                        "description": "You get a list of all requests & responses. If you want to find a specific response, you can use this to filter the list",
+                        "title": "Find Response"
+                      },
                       "variable": {
                         "type": "string",
                         "description": "The name of the variable to store the response in",
@@ -5742,10 +5924,10 @@
                         "type": "number",
                         "description": "The number of milliseconds to wait for. Defaults to 15s.",
                         "title": "Timeout",
+                        "default": 15000,
                         "examples": [
                           15000
-                        ],
-                        "default": 15000
+                        ]
                       },
                       "description": {
                         "type": "string",
@@ -5821,10 +6003,8 @@
                         "type": "object",
                         "required": [],
                         "properties": {},
-                        "patternProperties": {
-                          "": {
-                            "type": "string"
-                          }
+                        "additionalProperties": {
+                          "type": "string"
                         },
                         "description": "Additional metadata to include in the exported invoice",
                         "title": "Metadata"
@@ -5866,6 +6046,15 @@
                         "title": "Script",
                         "examples": [
                           "console.log(\"Hello World\");"
+                        ]
+                      },
+                      "timeout": {
+                        "type": "number",
+                        "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                        "title": "Timeout",
+                        "default": 15000,
+                        "examples": [
+                          15000
                         ]
                       },
                       "action": {
@@ -5953,44 +6142,42 @@
                         "type": "object",
                         "required": [],
                         "properties": {},
-                        "patternProperties": {
-                          "": {
-                            "anyOf": [
-                              {
-                                "type": "object",
-                                "required": [
-                                  "selector"
-                                ],
-                                "properties": {
-                                  "selector": {
-                                    "type": "string",
-                                    "description": "The CSS selector to use to find the element",
-                                    "title": "Selector",
-                                    "examples": [
-                                      "#example"
-                                    ]
-                                  },
-                                  "attribute": {
-                                    "type": "string",
-                                    "description": "The attribute to get from the element. If not specified, the inner text will be used",
-                                    "title": "Attribute"
-                                  },
-                                  "transform": {
-                                    "type": "string",
-                                    "description": "A JavaScript function to transform the value",
-                                    "title": "Transform",
-                                    "examples": [
-                                      "(v) => Number(v.replace('$', ''))"
-                                    ]
-                                  }
+                        "additionalProperties": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "required": [
+                                "selector"
+                              ],
+                              "properties": {
+                                "selector": {
+                                  "type": "string",
+                                  "description": "The CSS selector to use to find the element",
+                                  "title": "Selector",
+                                  "examples": [
+                                    "#example"
+                                  ]
                                 },
-                                "additionalProperties": false
+                                "attribute": {
+                                  "type": "string",
+                                  "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                                  "title": "Attribute"
+                                },
+                                "transform": {
+                                  "type": "string",
+                                  "description": "A JavaScript function to transform the value",
+                                  "title": "Transform",
+                                  "examples": [
+                                    "(v) => Number(v.replace('$', ''))"
+                                  ]
+                                }
                               },
-                              {
-                                "type": "string"
-                              }
-                            ]
-                          }
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "string"
+                            }
+                          ]
                         }
                       },
                       "iframe": {
@@ -6083,11 +6270,42 @@
                   {
                     "type": "object",
                     "required": [
-                      "script",
                       "action",
-                      "then"
+                      "then",
+                      "script"
                     ],
                     "properties": {
+                      "action": {
+                        "type": "string",
+                        "enum": [
+                          "if"
+                        ]
+                      },
+                      "scopeSelector": {
+                        "anyOf": [
+                          {
+                            "type": "boolean",
+                            "description": "Defaults to true. If set, the selector will be scoped to the parent element",
+                            "title": "Scope Selector",
+                            "default": true
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "then": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/$defs/Step"
+                        }
+                      },
+                      "else": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/$defs/Step"
+                        }
+                      },
                       "script": {
                         "type": "string",
                         "description": "A JavaScript script to run in the page context",
@@ -6096,36 +6314,14 @@
                           "console.log(\"Hello World\");"
                         ]
                       },
-                      "action": {
-                        "type": "string",
-                        "enum": [
-                          "if"
+                      "timeout": {
+                        "type": "number",
+                        "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                        "title": "Timeout",
+                        "default": 15000,
+                        "examples": [
+                          15000
                         ]
-                      },
-                      "scopeSelector": {
-                        "anyOf": [
-                          {
-                            "type": "boolean",
-                            "description": "Defaults to true. If set, the selector will be scoped to the parent element",
-                            "title": "Scope Selector",
-                            "default": true
-                          },
-                          {
-                            "type": "null"
-                          }
-                        ]
-                      },
-                      "then": {
-                        "type": "array",
-                        "items": {
-                          "$ref": "#/$defs/Step"
-                        }
-                      },
-                      "else": {
-                        "type": "array",
-                        "items": {
-                          "$ref": "#/$defs/Step"
-                        }
                       }
                     },
                     "additionalProperties": false
@@ -6133,19 +6329,11 @@
                   {
                     "type": "object",
                     "required": [
-                      "selector",
                       "action",
-                      "then"
+                      "then",
+                      "selector"
                     ],
                     "properties": {
-                      "selector": {
-                        "type": "string",
-                        "description": "The CSS selector to use to find the element",
-                        "title": "Selector",
-                        "examples": [
-                          "#example"
-                        ]
-                      },
                       "action": {
                         "type": "string",
                         "enum": [
@@ -6176,6 +6364,14 @@
                         "items": {
                           "$ref": "#/$defs/Step"
                         }
+                      },
+                      "selector": {
+                        "type": "string",
+                        "description": "The CSS selector to use to find the element",
+                        "title": "Selector",
+                        "examples": [
+                          "#example"
+                        ]
                       }
                     },
                     "additionalProperties": false
@@ -6261,10 +6457,8 @@
                             "type": "object",
                             "required": [],
                             "properties": {},
-                            "patternProperties": {
-                              "": {
-                                "type": "string"
-                              }
+                            "additionalProperties": {
+                              "type": "string"
                             }
                           }
                         ]
@@ -6496,10 +6690,10 @@
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
+                    "default": 15000,
                     "examples": [
                       15000
-                    ],
-                    "default": 15000
+                    ]
                   },
                   "iframe": {
                     "anyOf": [
@@ -6546,10 +6740,10 @@
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
+                    "default": 15000,
                     "examples": [
                       15000
-                    ],
-                    "default": 15000
+                    ]
                   },
                   "optional": {
                     "type": "boolean",
@@ -6580,10 +6774,10 @@
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
+                    "default": 15000,
                     "examples": [
                       15000
-                    ],
-                    "default": 15000
+                    ]
                   },
                   "optional": {
                     "type": "boolean",
@@ -6620,7 +6814,7 @@
                     "type": "boolean",
                     "description": "Whether or not to wait for the network to be idle after navigation",
                     "title": "Wait for Network Idle",
-                    "default": false
+                    "default": true
                   },
                   "description": {
                     "type": "string",
@@ -6750,10 +6944,8 @@
                     "type": "object",
                     "required": [],
                     "properties": {},
-                    "patternProperties": {
-                      "": {
-                        "type": "string"
-                      }
+                    "additionalProperties": {
+                      "type": "string"
                     },
                     "description": "Additional metadata to include in the exported invoice",
                     "title": "Metadata"
@@ -6768,10 +6960,10 @@
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
+                    "default": 15000,
                     "examples": [
                       15000
-                    ],
-                    "default": 15000
+                    ]
                   },
                   "description": {
                     "type": "string",
@@ -6803,10 +6995,10 @@
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
+                    "default": 15000,
                     "examples": [
                       15000
-                    ],
-                    "default": 15000
+                    ]
                   },
                   "description": {
                     "type": "string",
@@ -6937,10 +7129,8 @@
                     "type": "object",
                     "required": [],
                     "properties": {},
-                    "patternProperties": {
-                      "": {
-                        "type": "string"
-                      }
+                    "additionalProperties": {
+                      "type": "string"
                     },
                     "description": "Additional metadata to include in the exported invoice",
                     "title": "Metadata"
@@ -7009,6 +7199,15 @@
                       "console.log(\"Hello World\");"
                     ]
                   },
+                  "timeout": {
+                    "type": "number",
+                    "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                    "title": "Timeout",
+                    "default": 15000,
+                    "examples": [
+                      15000
+                    ]
+                  },
                   "description": {
                     "type": "string",
                     "description": "A human-readable description of what this step does",
@@ -7063,44 +7262,42 @@
                     "type": "object",
                     "required": [],
                     "properties": {},
-                    "patternProperties": {
-                      "": {
-                        "anyOf": [
-                          {
-                            "type": "object",
-                            "required": [
-                              "selector"
-                            ],
-                            "properties": {
-                              "selector": {
-                                "type": "string",
-                                "description": "The CSS selector to use to find the element",
-                                "title": "Selector",
-                                "examples": [
-                                  "#example"
-                                ]
-                              },
-                              "attribute": {
-                                "type": "string",
-                                "description": "The attribute to get from the element. If not specified, the inner text will be used",
-                                "title": "Attribute"
-                              },
-                              "transform": {
-                                "type": "string",
-                                "description": "A JavaScript function to transform the value",
-                                "title": "Transform",
-                                "examples": [
-                                  "(v) => Number(v.replace('$', ''))"
-                                ]
-                              }
+                    "additionalProperties": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "required": [
+                            "selector"
+                          ],
+                          "properties": {
+                            "selector": {
+                              "type": "string",
+                              "description": "The CSS selector to use to find the element",
+                              "title": "Selector",
+                              "examples": [
+                                "#example"
+                              ]
                             },
-                            "additionalProperties": false
+                            "attribute": {
+                              "type": "string",
+                              "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                              "title": "Attribute"
+                            },
+                            "transform": {
+                              "type": "string",
+                              "description": "A JavaScript function to transform the value",
+                              "title": "Transform",
+                              "examples": [
+                                "(v) => Number(v.replace('$', ''))"
+                              ]
+                            }
                           },
-                          {
-                            "type": "string"
-                          }
-                        ]
-                      }
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "string"
+                        }
+                      ]
                     }
                   },
                   "description": {
@@ -7203,10 +7400,8 @@
                     "type": "object",
                     "required": [],
                     "properties": {},
-                    "patternProperties": {
-                      "": {
-                        "type": "string"
-                      }
+                    "additionalProperties": {
+                      "type": "string"
                     },
                     "description": "Additional metadata to include in the exported invoice",
                     "title": "Metadata"
@@ -7221,10 +7416,10 @@
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
+                    "default": 15000,
                     "examples": [
                       15000
-                    ],
-                    "default": 15000
+                    ]
                   },
                   "url": {
                     "type": "string",
@@ -7258,6 +7453,11 @@
                     "description": "The URL to wait for",
                     "title": "URL"
                   },
+                  "findResponse": {
+                    "type": "string",
+                    "description": "You get a list of all requests & responses. If you want to find a specific response, you can use this to filter the list",
+                    "title": "Find Response"
+                  },
                   "variable": {
                     "type": "string",
                     "description": "The name of the variable to store the response in",
@@ -7272,10 +7472,10 @@
                     "type": "number",
                     "description": "The number of milliseconds to wait for. Defaults to 15s.",
                     "title": "Timeout",
+                    "default": 15000,
                     "examples": [
                       15000
-                    ],
-                    "default": 15000
+                    ]
                   },
                   "description": {
                     "type": "string",
@@ -7351,10 +7551,8 @@
                     "type": "object",
                     "required": [],
                     "properties": {},
-                    "patternProperties": {
-                      "": {
-                        "type": "string"
-                      }
+                    "additionalProperties": {
+                      "type": "string"
                     },
                     "description": "Additional metadata to include in the exported invoice",
                     "title": "Metadata"
@@ -7396,6 +7594,15 @@
                     "title": "Script",
                     "examples": [
                       "console.log(\"Hello World\");"
+                    ]
+                  },
+                  "timeout": {
+                    "type": "number",
+                    "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                    "title": "Timeout",
+                    "default": 15000,
+                    "examples": [
+                      15000
                     ]
                   },
                   "action": {
@@ -7483,44 +7690,42 @@
                     "type": "object",
                     "required": [],
                     "properties": {},
-                    "patternProperties": {
-                      "": {
-                        "anyOf": [
-                          {
-                            "type": "object",
-                            "required": [
-                              "selector"
-                            ],
-                            "properties": {
-                              "selector": {
-                                "type": "string",
-                                "description": "The CSS selector to use to find the element",
-                                "title": "Selector",
-                                "examples": [
-                                  "#example"
-                                ]
-                              },
-                              "attribute": {
-                                "type": "string",
-                                "description": "The attribute to get from the element. If not specified, the inner text will be used",
-                                "title": "Attribute"
-                              },
-                              "transform": {
-                                "type": "string",
-                                "description": "A JavaScript function to transform the value",
-                                "title": "Transform",
-                                "examples": [
-                                  "(v) => Number(v.replace('$', ''))"
-                                ]
-                              }
+                    "additionalProperties": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "required": [
+                            "selector"
+                          ],
+                          "properties": {
+                            "selector": {
+                              "type": "string",
+                              "description": "The CSS selector to use to find the element",
+                              "title": "Selector",
+                              "examples": [
+                                "#example"
+                              ]
                             },
-                            "additionalProperties": false
+                            "attribute": {
+                              "type": "string",
+                              "description": "The attribute to get from the element. If not specified, the inner text will be used",
+                              "title": "Attribute"
+                            },
+                            "transform": {
+                              "type": "string",
+                              "description": "A JavaScript function to transform the value",
+                              "title": "Transform",
+                              "examples": [
+                                "(v) => Number(v.replace('$', ''))"
+                              ]
+                            }
                           },
-                          {
-                            "type": "string"
-                          }
-                        ]
-                      }
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "string"
+                        }
+                      ]
                     }
                   },
                   "iframe": {
@@ -7613,11 +7818,42 @@
               {
                 "type": "object",
                 "required": [
-                  "script",
                   "action",
-                  "then"
+                  "then",
+                  "script"
                 ],
                 "properties": {
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "if"
+                    ]
+                  },
+                  "scopeSelector": {
+                    "anyOf": [
+                      {
+                        "type": "boolean",
+                        "description": "Defaults to true. If set, the selector will be scoped to the parent element",
+                        "title": "Scope Selector",
+                        "default": true
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "then": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/$defs/Step"
+                    }
+                  },
+                  "else": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/$defs/Step"
+                    }
+                  },
                   "script": {
                     "type": "string",
                     "description": "A JavaScript script to run in the page context",
@@ -7626,36 +7862,14 @@
                       "console.log(\"Hello World\");"
                     ]
                   },
-                  "action": {
-                    "type": "string",
-                    "enum": [
-                      "if"
+                  "timeout": {
+                    "type": "number",
+                    "description": "The number of milliseconds to wait for. Defaults to 15s.",
+                    "title": "Timeout",
+                    "default": 15000,
+                    "examples": [
+                      15000
                     ]
-                  },
-                  "scopeSelector": {
-                    "anyOf": [
-                      {
-                        "type": "boolean",
-                        "description": "Defaults to true. If set, the selector will be scoped to the parent element",
-                        "title": "Scope Selector",
-                        "default": true
-                      },
-                      {
-                        "type": "null"
-                      }
-                    ]
-                  },
-                  "then": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/$defs/Step"
-                    }
-                  },
-                  "else": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/$defs/Step"
-                    }
                   }
                 },
                 "additionalProperties": false
@@ -7663,19 +7877,11 @@
               {
                 "type": "object",
                 "required": [
-                  "selector",
                   "action",
-                  "then"
+                  "then",
+                  "selector"
                 ],
                 "properties": {
-                  "selector": {
-                    "type": "string",
-                    "description": "The CSS selector to use to find the element",
-                    "title": "Selector",
-                    "examples": [
-                      "#example"
-                    ]
-                  },
                   "action": {
                     "type": "string",
                     "enum": [
@@ -7706,6 +7912,14 @@
                     "items": {
                       "$ref": "#/$defs/Step"
                     }
+                  },
+                  "selector": {
+                    "type": "string",
+                    "description": "The CSS selector to use to find the element",
+                    "title": "Selector",
+                    "examples": [
+                      "#example"
+                    ]
                   }
                 },
                 "additionalProperties": false
@@ -7791,10 +8005,8 @@
                         "type": "object",
                         "required": [],
                         "properties": {},
-                        "patternProperties": {
-                          "": {
-                            "type": "string"
-                          }
+                        "additionalProperties": {
+                          "type": "string"
                         }
                       }
                     ]
@@ -7833,38 +8045,5 @@
   },
   "additionalProperties": false,
   "description": "Schema definition for a JSON-based plugin",
-  "title": "JSON Plugin Schema",
-  "examples": [
-    {
-      "name": "ExamplePlugin",
-      "description": "This is an example plugin",
-      "configSchema": {
-        "exampleProperty": {
-          "type": "string",
-          "title": "Example Property",
-          "description": "An example property for demonstration",
-          "required": true
-        }
-      },
-      "startAuth": [
-        {
-          "action": "navigate",
-          "url": "https://example.com/login"
-        }
-      ],
-      "checkAuth": [
-        {
-          "action": "checkElementExists",
-          "selector": "#logout"
-        }
-      ],
-      "getDocuments": [
-        {
-          "action": "navigate",
-          "url": "https://example.com/invoices"
-        }
-      ],
-      "id": "example-plugin"
-    }
-  ]
+  "title": "JSON Plugin Schema"
 }
