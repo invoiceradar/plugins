@@ -4,18 +4,6 @@
   "name": "Mailerlite",
   "description": "Mailerlite is an email sending service.",
   "homepage": "https://mailerlite.com",
-  "configSchema": {
-    "username": {
-      "type": "string",
-      "title": "Username",
-      "required": false
-    },
-    "password": {
-      "type": "password",
-      "title": "Password",
-      "required": false
-    }
-  },
   "checkAuth": [
     {
       "action": "navigate",

@@ -18,6 +18,7 @@ Invoice Radar is a document automation tool that helps you fetch, download, and 
 4. [Writing Your First Plugin](#4-writing-your-first-plugin)
 5. [Useful Patterns](#5-useful-patterns)
 6. [Steps Reference](#steps-reference)
+7. [Autofill Configuration](#autofill-configuration)
 
 ## 2. Getting Started
 
@@ -968,4 +969,65 @@ You can also use a string that is contained inside the iframe's `src` attribute 
   "selector": "#button-inside-iframe",
   "iframe": "iframe.example.com"
 },
+```
+
+## Autofill Configuration
+
+The autofill feature helps streamline the authentication process by automatically filling login credentials. Configure this feature using the top-level `autofill` property in your plugin configuration.
+
+### Default Behavior
+
+By default, `autofill` is set to `true`, which enables automatic input detection for:
+
+- **Username** (also works for email fields)
+- **Password**
+- **OTP** (One-Time Password/2FA codes)
+- **Submit** (automatically submits the form after filling credentials)
+
+When enabled, Invoice Radar will automatically detect and fill these fields during the authentication process, then submit the form to complete the login.
+
+### Customization Options
+
+You can customize or disable autofill for individual fields by setting each property (`username`, `password`, `otp`, `submit`) to either:
+
+- **`false`** - Disables autofill for that specific field
+- **Configuration object** - Customizes the behavior with these options:
+  - `selector`: Custom CSS selector if the default detection doesn't work
+  - `title`: Custom label for the field in the UI (e.g., "Email" instead of "Username")
+
+### Configuration Examples
+
+#### Disable Autofill Completely
+
+```json
+{
+  "autofill": false
+}
+```
+
+#### Disabling automatic submission
+
+```json
+{
+  "autofill": {
+    "submit": false
+  }
+}
+```
+
+#### Custom Configuration
+
+```json
+{
+  "autofill": {
+    "username": {
+      "selector": "#email-input",
+      "title": "Email Address"
+    },
+    "password": false,
+    "submit": {
+      "selector": "#login-submit"
+    }
+  }
+}
 ```

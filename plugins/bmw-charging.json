@@ -4,53 +4,14 @@
   "name": "BMW Charging",
   "description": "BMW Charging / Digital Charging Solutions provides charging cards for EVs.",
   "homepage": "https://bmw-public-charging.com/",
-  "configSchema": {
-    "mail": {
-      "type": "string",
-      "title": "E-Mail",
-      "required": false
-    },
-    "password": {
-      "type": "password",
-      "title": "Password",
-      "required": false
-    }
-  },
   "startAuth": [
     {
       "action": "navigate",
       "url": "https://bmw-public-charging.com/c/portal/login?rel=/web/de/bmw-de/dashboard&locale=de_DE"
     },
     {
-      "action": "waitForElement",
-      "selector": "input[id='email']"
-    },
-    {
-      "action": "type",
-      "selector": "input[id='email']",
-      "value": "{{config.mail}}"
-    },
-    {
-      "action": "click",
-      "selector": ".custom-button.__b.primary"
-    },
-    {
-      "action": "waitForElement",
-      "selector": "input[id='password']"
-    },
-    {
-      "action": "type",
-      "selector": "input[id='password']",
-      "value": "{{config.password}}"
-    },
-    {
-      "action": "click",
-      "selector": ".custom-button.__b.primary"
-    },
-    {
       "action": "waitForURL",
-      "url": "https://bmw-public-charging.com/web/de/bmw-de/dashboard/start",
-      "timeout": 1200000
+      "url": "https://bmw-public-charging.com/web/de/bmw-de/dashboard/start"
     }
   ],
   "checkAuth": [

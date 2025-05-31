@@ -4,16 +4,9 @@
   "name": "NetCologne",
   "description": "NetCologne MeineKundenwelt",
   "homepage": "https://www.netcologne.de",
-  "configSchema": {
+  "autofill": {
     "username": {
-      "type": "string",
-      "title": "Username",
-      "description": "Your NetCologne Kundennummer"
-    },
-    "password": {
-      "type": "password",
-      "title": "Password",
-      "description": "Your NetCologne password"
+      "title": "Kundennummer"
     }
   },
   "checkAuth": [
@@ -35,37 +28,6 @@
       "url": "https://meinekundenwelt.netcologne.de/rechnungen",
       "waitForNetworkIdle": true,
       "description": "Navigate to the Rechnungen page to allow the user to log in."
-    },
-    {
-      "action": "if",
-      "script": "('{{config.username}}' !== '')",
-      "then": [
-        {
-          "action": "type",
-          "selector": "input[placeholder='Kundennummer']",
-          "value": "{{config.username}}",
-          "description": "Automatically type the username if provided."
-        }
-      ],
-      "else": []
-    },
-    {
-      "action": "if",
-      "script": "('{{config.password}}' !== '')",
-      "then": [
-        {
-          "action": "type",
-          "selector": "input[placeholder='Passwort']",
-          "value": "{{config.password}}",
-          "description": "Automatically type the password if provided."
-        },
-        {
-          "action": "click",
-          "selector": "input[type='submit']",
-          "description": "Click the login button if password is provided."
-        }
-      ],
-      "else": []
     },
     {
       "action": "waitForElement",
