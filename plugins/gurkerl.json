@@ -1,0 +1,56 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "gurkerl",
+  "name": "Gurkerl",
+  "description": "Austrian online grocery delivery service",
+  "homepage": "https://www.gurkerl.at",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.gurkerl.at/benutzer/profil",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkURL",
+      "url": "https://www.gurkerl.at/benutzer/profil"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.gurkerl.at/benutzer/anmelden?redirectUrl=%2Fbenutzer%2Fprofil"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://www.gurkerl.at/benutzer/profil*",
+      "timeout": 120000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "extractAll",
+      "script": "fetch('https://www.gurkerl.at/api/v3/orders/delivered?limit=300').then(res => res.json()).then(response => response.map(order => ({ id: order.id, orderTime: order.orderTime, total: order.priceComposition.total })))",
+      "variable": "order",
+      "forEach": [
+        {
+          "action": "extractAll",
+          "script": "fetch('https://www.gurkerl.at/api/v3/orders/{{order.id}}').then(res => res.json()).then(response => response.documents.map(doc => ({ ...doc, id: doc.link.replace('https://www.gurkerl.at/services/frontend-service/files/', '').replace(/\\?.*$/, ''), type: doc.link.includes('receipt') ? 'receipt' : doc.link.includes('invoice') ? 'invoice' : 'other' })))",
+          "variable": "document",
+          "forEach": [
+            {
+              "action": "downloadPdf",
+              "url": "{{document.link}}",
+              "document": {
+                "id": "{{document.id}}",
+                "date": "{{order.orderTime}}",
+                "total": "{{order.total.amount}} {{order.total.currency}}",
+                "type": "{{document.type}}"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
