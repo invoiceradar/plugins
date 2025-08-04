@@ -1,8 +1,8 @@
 {
   "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
-  "id": "odido",
-  "name": "Odido",
-  "description": "Extract invoices and bills from Odido telecom services (mobile, internet, and TV)",
+  "id": "odido_nl",
+  "name": "Odido Netherlands",
+  "description": "Extract invoices and bills from Odido Netherlands telecom services (mobile, internet, and TV)",
   "homepage": "https://www.odido.nl",
   "configSchema": {
     "monthsBack": {
