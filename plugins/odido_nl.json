@@ -1,0 +1,97 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "odido_nl",
+  "name": "Odido Netherlands",
+  "description": "Extract invoices and bills from Odido Netherlands telecom services (mobile, internet, and TV)",
+  "homepage": "https://www.odido.nl",
+  "configSchema": {
+    "monthsBack": {
+      "type": "number",
+      "title": "Months Back",
+      "description": "How many months back to retrieve invoices",
+      "default": 12,
+      "required": false
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.odido.nl/my/abonnement-overzicht"
+    },
+    {
+      "action": "checkElementExists",
+      "selector": "a[href='/logout']"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.odido.nl/login"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "form, input[type='email'], input[type='password']"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://www.odido.nl/my/thuis/facturen",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "extractAll",
+      "selector": ".list-group-inset .media",
+      "variable": "invoice",
+      "fields": {
+        "date": {
+          "selector": "h3:first-of-type"
+        },
+        "amount": {
+          "selector": "h3.ml-auto.m-0"
+        },
+        "summaryUrl": {
+          "selector": "a.stretched-link",
+          "attribute": "href"
+        }
+      },
+      "forEach": [
+        {
+          "action": "navigate",
+          "url": "https://www.odido.nl{{invoice.summaryUrl}}"
+        },
+        {
+          "action": "extract",
+          "variable": "invoiceDate",
+          "script": "window.location.href.substring(window.location.href.indexOf('month=') + 6, window.location.href.indexOf('month=') + 12).replace(/(.{4})(.{2})/, '$1-$2-01')",
+          "scopeSelector": true
+        },
+        {
+          "action": "extract",
+          "variable": "pdfUrl",
+          "script": "window.location.href.replace('#summarytitle', '') + '&action=DownloadInvoice'",
+          "scopeSelector": true
+        },
+        {
+          "action": "downloadPdf",
+          "url": "{{pdfUrl}}",
+          "document": {
+            "id": "{{invoiceDate}}",
+            "date": "{{invoiceDate}}",
+            "total": "{{invoice.amount}}"
+          }
+        }
+      ]
+    }
+  ],
+  "autofill": {
+    "username": {
+      "title": "E-mailadres"
+    },
+    "password": true,
+    "otp": true,
+    "submit": {
+      "selector": "button[type='submit'], input[type='submit'], .btn-primary"
+    }
+  }
+}
