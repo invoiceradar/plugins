@@ -1,0 +1,71 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "ionos",
+  "name": "IONOS",
+  "description": "IONOS is a German Internet service provider that is known for its web hosting, domain and cloud computing products.",
+  "homepage": "https://www.ionos.de",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://mein.ionos.de/account/billing/invoices"
+    },
+    {
+      "action": "checkURL",
+      "url": "https://mein.ionos.de/account/billing/invoices"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://login.ionos.de/"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "#oao-customer",
+      "timeout": 120000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://mein.ionos.de/account/billing/invoices"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "table.table.table--responsive.table--has-toolbar#table__0",
+      "timeout": 30000
+    },
+    {
+      "action": "dropdownSelect",
+      "selector": "#invoice-pagination",
+      "value": "50"
+    },
+    {
+      "action": "extractAll",
+      "selector": "table.table.table--responsive.table--has-toolbar#table__0 tbody tr",
+      "fields": {
+        "id": {
+          "selector": "td:nth-child(4)"
+        },
+        "date": {
+          "selector": "td:nth-child(1)"
+        },
+        "total": {
+          "selector": "td:nth-child(2) p"
+        },
+        "pdfLink": {
+          "selector": "td:nth-child(5) a",
+          "attribute": "href"
+        }
+      },
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "https://mein.ionos.de{{item.pdfLink}}",
+          "document": "{{item}}"
+        }
+      ]
+    }
+  ]
+}
