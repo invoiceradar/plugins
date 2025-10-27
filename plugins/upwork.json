@@ -55,7 +55,7 @@
       },
       "pagination": {
         "selector": "button[data-ev-label='show_more']",
-        "behavior": "paginateThenProcess" 
+        "behavior": "paginateThenProcess"
       },
       "forEach": [
         {
