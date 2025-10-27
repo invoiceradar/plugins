@@ -35,11 +35,6 @@
   ],
   "getDocuments": [
     {
-      "action": "navigate",
-      "url": "https://app.mailjet.com/account/billing",
-      "waitForNetworkIdle": true
-    },
-    {
       "action": "extractAll",
       "script": "fetch('https://app.mailjet.com/account/billing/invoices?page=1&limit=100',{credentials:'include'}).then(r=>r.json()).then(d=>d.invoices.map(i=>({...i, date:new Intl.DateTimeFormat('en-CA').format(new Date(i.date*1000))})));",
       "forEach": [
