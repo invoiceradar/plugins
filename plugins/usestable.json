@@ -40,6 +40,10 @@
       "waitForNetworkIdle": true
     },
     {
+      "action": "waitForElement",
+      "selector": "a[href*=\"billing.stripe.com/p/session\"]"
+    },
+    {
       "action": "extract",
       "script": "document.querySelector('a[href*=\"billing.stripe.com/p/session\"]').href",
       "variable": "stripeUrl"
