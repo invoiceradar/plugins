@@ -36,7 +36,7 @@
   "getDocuments": [
     {
       "action": "extractAll",
-      "script": "fetch('https://app.revenuecat.com/v1/developers/me/invoices',{headers:{'x-requested-with':'XMLHttpRequest'},referrer:'https://app.revenuecat.com/settings/billing/invoices',credentials:'include'}).then(r=>r.json()).then(d=>d['invoices'].map(i=>({...i,amount_due:i.amount_due/100,date:new Intl.DateTimeFormat('en-CA').format(new Date(i.date*1000))})));",
+      "script": "fetch('https://app.revenuecat.com/v1/developers/me/invoices',{headers:{'x-requested-with':'XMLHttpRequest'},referrer:'https://app.revenuecat.com/settings/billing/invoices',credentials:'include'}).then(r=>r.json()).then(d=>d['invoices'].map(i=>({...i,amount_due:i.amount_due/100,date:new Date(i.date*1000)})));",
       "forEach": [
         {
           "action": "downloadPdf",
