@@ -1,0 +1,53 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "revenuecat",
+  "name": "RevenueCat",
+  "description": "RevenueCat is a subscription management platform for mobile apps.",
+  "homepage": "https://www.revenuecat.com",
+  "autofill": {
+    "username": {
+      "selector": "#email",
+      "title": "Email"
+    },
+    "password": true,
+    "otp": true
+  },
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://app.revenuecat.com/login"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "a[href='/settings']"
+    }
+  ],
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://app.revenuecat.com/login",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkURL",
+      "url": "https://app.revenuecat.com/overview"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "extractAll",
+      "script": "fetch('https://app.revenuecat.com/v1/developers/me/invoices',{headers:{'x-requested-with':'XMLHttpRequest'},referrer:'https://app.revenuecat.com/settings/billing/invoices',credentials:'include'}).then(r=>r.json()).then(d=>d['invoices'].map(i=>({...i,amount_due:i.amount_due/100,date:new Date(i.date*1000)})));",
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "{{item.url}}",
+          "document": {
+            "id": "{{item.id}}",
+            "date": "{{item.date}}",
+            "total": "{{item.amount_due}}"
+          }
+        }
+      ]
+    }
+  ]
+}
