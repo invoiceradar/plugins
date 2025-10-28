@@ -1,0 +1,59 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "usestable",
+  "name": "Stable",
+  "description": "Stable is a virtual address and mailbox for business. Get help switching your address and manage mail online with our easy-to-use dashboard",
+  "homepage": "https://usestable.com",
+  "autofill": {
+    "username": {
+      "selector": "#email",
+      "title": "Email"
+    },
+    "password": true,
+    "otp": false
+  },
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://dashboard.usestable.com/login?to=%2Fsettings%2Fbilling"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "button[aria-haspopup='menu']"
+    }
+  ],
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://dashboard.usestable.com/login",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkURL",
+      "url": "https://dashboard.usestable.com/dashboard"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://dashboard.usestable.com/settings/billing",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "waitForElement",
+      "selector": "a[href*=\"billing.stripe.com/p/session\"]"
+    },
+    {
+      "action": "extract",
+      "script": "document.querySelector('a[href*=\"billing.stripe.com/p/session\"]').href",
+      "variable": "stripeUrl"
+    },
+    {
+      "action": "runSnippet",
+      "snippet": "getInvoicesFromStripeBillingPortal",
+      "args": {
+        "url": "{{stripeUrl}}"
+      }
+    }
+  ]
+}
