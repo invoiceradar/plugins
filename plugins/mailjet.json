@@ -1,0 +1,53 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "mailjet",
+  "name": "Mailjet",
+  "description": "Mailjet is an email service provider that helps businesses manage their email communications.",
+  "homepage": "https://www.mailjet.com",
+  "autofill": {
+    "username": {
+      "selector": "#email",
+      "title": "Email"
+    },
+    "password": true,
+    "otp": true
+  },
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://app.mailjet.com/signin"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "button[data-testid=\"topMenu-dropdown-account\"]"
+    }
+  ],
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://app.mailjet.com/signin",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkURL",
+      "url": "https://app.mailjet.com/dashboard"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "extractAll",
+      "script": "fetch('https://app.mailjet.com/account/billing/invoices?page=1&limit=100',{credentials:'include'}).then(r=>r.json()).then(d=>d.invoices.map(i=>({...i, date:new Date(i.date*1000)})));",
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "https://app.mailjet.com{{item.downloadLink}}",
+          "document": {
+            "id": "{{item.id}}",
+            "date": "{{item.date}}",
+            "total": "{{item.amount}} {{item.currency}}"
+          }
+        }
+      ]
+    }
+  ]
+}
