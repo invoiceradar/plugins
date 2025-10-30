@@ -1,0 +1,117 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "twilio",
+  "name": "Twilio",
+  "description": "Extract invoices from Twilio Console",
+  "homepage": "https://www.twilio.com",
+  "configSchema": {
+    "accountSid": {
+      "type": "string",
+      "title": "Account",
+      "required": true
+    }
+  },
+  "getConfigOptions": [
+    {
+      "action": "navigate",
+      "url": "https://console.twilio.com"
+    },
+    {
+      "action": "extractAll",
+      "script": "await fetch('https://www.twilio.com/console/api/navigation/rpc?name=accountList&args=%7B%7D', { credentials: 'include', headers: { 'x-target-region': 'us1' } }).then(res => res.json()).then(data => data.result)",
+      "variable": "account",
+      "forEach": [
+        {
+          "action": "exposeOption",
+          "config": "accountSid",
+          "option": {
+            "value": "{{account.sid}}",
+            "label": "{{account.friendlyName}}"
+          }
+        }
+      ]
+    }
+  ],
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://console.twilio.com/billing/invoices",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkElementExists",
+      "selector": "[data-testid='admin-dropdown']"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://console.twilio.com/"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[data-testid='admin-dropdown']"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://console.twilio.com"
+    },
+    {
+      "action": "if",
+      "script": "localStorage.getItem('accountSid') !== '{{config.accountSid}}'",
+      "then": [
+        {
+          "action": "extract",
+          "variable": "csrfToken",
+          "script": "await fetch('https://www.twilio.com/api/csrf', { credentials: 'include' }).then(res => res.json()).then(data => data.csrf)",
+          "scopeSelector": true
+        },
+        {
+          "action": "runJs",
+          "script": "await fetch(\n  'https://www.twilio.com/console/projects/summary/{{config.accountSid}}',\n  {\n    credentials: 'include',\n    headers: {\n      'x-target-region': 'us1',\n      'x-twilio-csrf': '{{csrfToken}}',\n      'content-type': 'application/json',\n    },\n    body: '{}',\n    method: 'POST',\n  },\n)"
+        },
+        {
+          "action": "runJs",
+          "script": "location.reload()"
+        }
+      ],
+      "scopeSelector": true
+    },
+    {
+      "action": "waitForNetworkIdle"
+    },
+    {
+      "action": "extract",
+      "variable": "csrfToken",
+      "script": "await fetch('https://www.twilio.com/api/csrf', { credentials: 'include' }).then(res => res.json()).then(data => data.csrf)",
+      "scopeSelector": true
+    },
+    {
+      "action": "extractAll",
+      "script": "await fetch(\n  'https://www.twilio.com/console/billing/api/v1/statements?offset=0&limit=100',\n  {\n    credentials: 'include',\n    headers: {\n      'x-twilio-csrf': '{{csrfToken}}',\n      'Content-Type': 'application/json',\n      'x-target-region': 'us1',\n    },\n  },\n)\n  .then((res) => {\n    if (!res.ok) throw new Error('Could not get billing information');\n    return res.json();\n  })\n  .then((data) => {\n    if (!data.statements) throw new Error('Could not get billing information');\n    return data.statements.filter((s) => s.amount > 0);\n  })\n  .catch((err) => {\n    throw new Error('Could not get billing information: ' + err.message);\n  })",
+      "variable": "statement",
+      "forEach": [
+        {
+          "action": "extract",
+          "variable": "pdfUrl",
+          "script": "await fetch('https://www.twilio.com/console/billing/api/v3/invoices', {\n  credentials: 'include',\n  headers: {\n    'x-twilio-csrf': '{{csrfToken}}',\n    'Content-Type': 'application/json',\n    'x-target-region': 'us1',\n  },\n  method: 'POST',\n  body: JSON.stringify({\n    year: '{{statement.year}}',\n    month: '{{statement.month}}',\n    type: 'pdf',\n    sid: '{{statement.pdfSid}}',\n  }),\n}).then((res) => res.json())",
+          "scopeSelector": true
+        },
+        {
+          "action": "downloadPdf",
+          "url": "{{pdfUrl}}",
+          "document": {
+            "id": "{{statement.pdfSid}}",
+            "date": "{{statement.monthYear}}",
+            "total": "{{statement.totalSpend}}"
+          }
+        }
+      ]
+    }
+  ],
+  "autofill": {
+    "submit": false
+  }
+}
