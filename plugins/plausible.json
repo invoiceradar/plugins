@@ -33,8 +33,21 @@
     },
     {
       "action": "extractAll",
-      "script": "Array.from(\n  Array.from(document.querySelectorAll('h2'))\n    .filter((el) => el.textContent.startsWith('Invoices'))[0]\n    .closest('div')\n    .querySelectorAll('table tbody tr'),\n)\n  .map((row) => {\n    const cells = row.querySelectorAll('td')\n    if (cells.length !== 3) {\n      return null\n    }\n    const date = cells[0].innerText.trim()\n    const total = cells[1].innerText.trim()\n    const url = cells[2].querySelector('a').href\n    const match = url.match(/receipt\\/([^\\/]+)/)\n    const id = match ? match[1] : null\n    return { id, date, total, url }\n  })\n  .filter((row) => row !== null)",
+      "selector": "table tbody tr:has(a[href*='/receipt/'])",
       "variable": "item",
+      "fields": {
+        "date": "td:nth-child(1)",
+        "total": "td:nth-child(2)",
+        "url": {
+          "selector": "td:nth-child(3) a",
+          "attribute": "href"
+        },
+        "id": {
+          "selector": "td:nth-child(3) a",
+          "attribute": "href",
+          "transform": "(url) => url.match(/receipt\\/([^\\/]+)/)?.[1]"
+        }
+      },
       "forEach": [
         {
           "action": "sleep",
@@ -51,5 +64,6 @@
         }
       ]
     }
-  ]
+  ],
+  "autofill": true
 }

@@ -1,0 +1,94 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "upwork",
+  "name": "Upwork",
+  "description": "Upwork is a global freelancing platform where businesses and independent professionals connect and collaborate remotely.",
+  "homepage": "https://www.upwork.com",
+  "autofill": {
+    "username": {
+      "selector": "#email",
+      "title": "Email"
+    },
+    "password": true,
+    "otp": true
+  },
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.upwork.com/ab/account-security/login"
+    },
+    {
+      "action": "waitForElement",
+      "selector": ".nav-user-info"
+    }
+  ],
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.upwork.com/ab/account-security/login",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkURL",
+      "url": "https://www.upwork.com/nx/client/dashboard/"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://www.upwork.com/nx/payments/reports/transaction-history"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "div[data-qa='transaction-history-page']"
+    },
+    {
+      "action": "extractAll",
+      "selector": "tbody > tr[data-qa='payments-table-row']",
+      "variable": "invoice",
+      "fields": {
+        "date": "td.col-date .nowrap, td.col-date",
+        "type": "td.col-payment-type",
+        "paymentMethod": "td.col-payment-method .text-base, td.col-payment-method",
+        "amount": "td.col-amount",
+        "receiptBtn": "button[aria-label='Receipt'][data-ev-label='download_receipt_btn']"
+      },
+      "pagination": {
+        "selector": "button[data-ev-label='show_more']",
+        "behavior": "paginateThenProcess"
+      },
+      "forEach": [
+        {
+          "action": "runJs",
+          "script": "document.querySelector('#payment-row-' + parseInt('{{index}}')).click();"
+        },
+        {
+          "action": "waitForElement",
+          "selector": "span[data-qa='transaction-id']"
+        },
+        {
+          "action": "extract",
+          "script": "document.querySelector('span[data-qa=\"transaction-id\"]').innerText",
+          "variable": "invoiceId"
+        },
+        {
+          "action": "runJs",
+          "script": "document.querySelector('button[data-qa=\"slider-close-btn\"]').click();"
+        },
+        {
+          "action": "click",
+          "selector": "button[aria-label='Receipt'][data-ev-label='download_receipt_btn']",
+          "scopeSelector": true
+        },
+        {
+          "action": "waitForPdfDownload",
+          "document": {
+            "id": "{{invoiceId}}",
+            "date": "{{invoice.date}}",
+            "total": "{{invoice.amount}}"
+          }
+        }
+      ]
+    }
+  ]
+}
