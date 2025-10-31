@@ -15,7 +15,7 @@
     },
     {
       "action": "checkElementExists",
-      "selector": "button.nav-popover-items-toggler figure"
+      "selector": "[name='user_id']"
     }
   ],
   "startAuth": [
@@ -25,7 +25,7 @@
     },
     {
       "action": "waitForElement",
-      "selector": "button.nav-popover-items-toggler figure",
+      "selector": "[name='user_id']",
       "timeout": 120000
     }
   ],
