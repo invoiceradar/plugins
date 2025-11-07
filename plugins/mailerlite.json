@@ -4,6 +4,14 @@
   "name": "Mailerlite",
   "description": "Mailerlite is an email sending service.",
   "homepage": "https://mailerlite.com",
+  "configSchema": {
+    "accountId": {
+      "type": "string",
+      "title": "Account ID",
+      "description": "The ID of your MailerLite account",
+      "required": false
+    }
+  },
   "checkAuth": [
     {
       "action": "navigate",
@@ -21,21 +29,61 @@
     },
     {
       "action": "waitForElement",
-      "selector": "#email"
-    },
-    { "action": "type", "selector": "#email", "value": "{{config.username}}" },
-    {
-      "action": "type",
-      "selector": "#password",
-      "value": "{{config.password}}"
-    },
-    {
-      "action": "waitForElement",
       "selector": "[data-test-id='user-dropdown']",
       "timeout": 120000
     }
   ],
+  "getConfigOptions": [
+    {
+      "action": "navigate",
+      "url": "https://dashboard.mailerlite.com/accounts",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "extractAll",
+      "selector": "[data-test-id='account-box']",
+      "variable": "account",
+      "fields": {
+        "name": {
+          "selector": "//div[contains(@class, 'flex-col')]/span[1]"
+        },
+        "accountId": {
+          "selector": "form",
+          "attribute": "action",
+          "transform": "(url) => url.split('/').pop()"
+        }
+      },
+      "forEach": [
+        {
+          "action": "exposeOption",
+          "config": "accountId",
+          "option": {
+            "label": "{{account.name}}",
+            "value": "{{account.accountId}}"
+          }
+        }
+      ]
+    }
+  ],
   "getDocuments": [
+    {
+      "action": "if",
+      "script": "Boolean('{{config.accountId}}')",
+      "then": [
+        {
+          "action": "navigate",
+          "url": "https://dashboard.mailerlite.com/accounts",
+          "waitForNetworkIdle": true
+        },
+        {
+          "action": "click",
+          "selector": "form[action='https://dashboard.mailerlite.com/accounts/switch/{{config.accountId}}'] [data-test-id='select-account-button']"
+        },
+        {
+          "action": "waitForNetworkIdle"
+        }
+      ]
+    },
     {
       "action": "navigate",
       "url": "https://dashboard.mailerlite.com/billing/invoices"
