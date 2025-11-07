@@ -46,7 +46,7 @@
     },
     {
       "action": "checkURL",
-      "url": "https://admin.atlassian.com"
+      "url": "https://admin.atlassian.com/**"
     }
   ],
   "startAuth": [
@@ -57,7 +57,7 @@
     },
     {
       "action": "waitForURL",
-      "url": "https://admin.atlassian.com"
+      "url": "https://admin.atlassian.com/**"
     }
   ],
   "getDocuments": [
