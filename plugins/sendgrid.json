@@ -4,7 +4,7 @@
   "name": "SendGrid",
   "description": "Email delivery and marketing platform",
   "homepage": "https://sendgrid.com",
-  "configSchema": {},
+
   "checkAuth": [
     {
       "action": "navigate",
@@ -12,8 +12,17 @@
       "waitForNetworkIdle": true
     },
     {
-      "action": "checkURL",
+      "action": "waitForURL",
       "url": "https://app.sendgrid.com/*"
+    },
+    {
+      "action": "sleep",
+      "duration": 2000,
+      "description": "We need to check if they redirect to 2FA page"
+    },
+    {
+      "action": "checkURL",
+      "url": "https://app.sendgrid.com/"
     }
   ],
   "startAuth": [
@@ -24,6 +33,14 @@
     {
       "action": "waitForURL",
       "url": "https://app.sendgrid.com/*"
+    },
+    {
+      "action": "sleep",
+      "duration": 2000
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://app.sendgrid.com/"
     }
   ],
   "getDocuments": [
