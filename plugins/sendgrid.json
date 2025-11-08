@@ -12,10 +12,6 @@
       "waitForNetworkIdle": true
     },
     {
-      "action": "waitForURL",
-      "url": "https://app.sendgrid.com/*"
-    },
-    {
       "action": "sleep",
       "duration": 2000,
       "description": "We need to check if they redirect to 2FA page"
