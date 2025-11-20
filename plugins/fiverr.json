@@ -27,6 +27,11 @@
       "action": "waitForElement",
       "selector": "[name='user_id']",
       "timeout": 120000
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://www.fiverr.com/",
+      "timeout": 120000
     }
   ],
   "getDocuments": [
@@ -43,17 +48,43 @@
       "selector": ".table-tbody .table-tr",
       "forEach": [
         {
-          "action": "downloadPdf",
-          "url": "{{item.url}}",
-          "document": {
-            "id": "{{item.id}}",
-            "date": "{{item.date}}",
-            "total": "{{item.amount}} {{item.currency}}"
-          }
+          "action": "if",
+          "script": "'{{item.documentType}}' == 'Invoice'",
+          "then": [
+            {
+              "action": "downloadPdf",
+              "url": "{{item.url}}",
+              "document": {
+                "type": "invoice",
+                "id": "{{item.id}}",
+                "date": "{{item.date}}",
+                "total": "{{item.amount}} {{item.currency}}"
+              },
+              "metadata": {
+                "orderId": "{{item.orderId}}"
+              }
+            }
+          ],
+          "else": [
+            {
+              "action": "downloadPdf",
+              "url": "{{item.url}}",
+              "document": {
+                "type": "refund",
+                "id": "{{item.id}}",
+                "date": "{{item.date}}",
+                "total": "{{item.amount}} {{item.currency}}"
+              },
+              "metadata": {
+                "orderId": "{{item.orderId}}"
+              }
+            }
+          ]
         }
       ],
       "fields": {
         "id": ".table-td.table-hide-sm p:last-of-type",
+        "documentType": "td:nth-of-type(3) > p",
         "date": {
           "selector": ".table-td:nth-of-type(2)",
           "transform": "(d) => d.replaceAll('/', '.')"
@@ -63,7 +94,8 @@
         "url": {
           "selector": ".table-td:nth-of-type(8) a",
           "attribute": "href"
-        }
+        },
+        "orderId": ".invoices-table-link"
       },
       "pagination": {
         "type": "next",
