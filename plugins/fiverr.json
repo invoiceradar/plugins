@@ -48,7 +48,7 @@
     {
       "action": "extract",
       "variable": "invoiceData",
-      "script": "(() => {\n  const context = '{{isPro}}' === 'true' ? 'team' : 'user'\n\n  return fetch(\n    `/perseus/financial-dashboard/api/billing/get-invoices?pageSize=250&pageNumber=1&contextType=${context}`,\n    {\n      headers: {\n        accept: 'application/json',\n        'accept-language': 'en',\n        'x-requested-with': 'XMLHttpRequest',\n      },\n      method: 'GET',\n      mode: 'cors',\n      credentials: 'include',\n    },\n  )\n    .then((r) => r.json())\n    .then((data) => data.paged_results)\n})()",
+      "script": "(() => {\n  const context = '{{isPro}}' === 'true' ? 'team' : 'user'\n\n  return fetch(\n    `/perseus/financial-dashboard/api/billing/get-invoices?pageSize=250&pageNumber=1&contextType=${context}`,\n    {\n      headers: {\n        accept: 'application/json',\n        'accept-language': 'en',\n        'x-requested-with': 'XMLHttpRequest',\n      },\n      method: 'GET',\n      mode: 'cors',\n      credentials: 'include',\n    },\n  )\n    .then((r) => r.json())\n    .then((data) =>\n      data.paged_results.map((r) => ({\n        ...r,\n        total_amount: r.total_amount / 100,\n      })),\n    )\n})()",
       "scopeSelector": true
     },
     {
