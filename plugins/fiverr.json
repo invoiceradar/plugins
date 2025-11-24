@@ -29,8 +29,8 @@
       "timeout": 120000
     },
     {
-      "action": "waitForURL",
-      "url": "https://www.fiverr.com/",
+      "action": "waitForCondition",
+      "script": "window.location.pathname === '/'",
       "timeout": 120000
     }
   ],
@@ -41,8 +41,14 @@
     },
     {
       "action": "extract",
+      "script": "window.location.href.includes('pro.fiverr.com')",
+      "variable": "isPro",
+      "scopeSelector": true
+    },
+    {
+      "action": "extract",
       "variable": "invoiceData",
-      "script": "fetch(\n  'https://www.fiverr.com/perseus/financial-dashboard/api/billing/get-invoices?pageSize=250&pageNumber=1&contextType=user',\n  {\n    headers: {\n      accept: 'application/json',\n      'accept-language': 'en',\n      'x-requested-with': 'XMLHttpRequest',\n    },\n    method: 'GET',\n    mode: 'cors',\n    credentials: 'include',\n  },\n)\n  .then((r) => r.json())\n  .then((data) => data.paged_results)",
+      "script": "(() => {\n  const context = '{{isPro}}' === 'true' ? 'team' : 'user'\n\n  return fetch(\n    `/perseus/financial-dashboard/api/billing/get-invoices?pageSize=250&pageNumber=1&contextType=${context}`,\n    {\n      headers: {\n        accept: 'application/json',\n        'accept-language': 'en',\n        'x-requested-with': 'XMLHttpRequest',\n      },\n      method: 'GET',\n      mode: 'cors',\n      credentials: 'include',\n    },\n  )\n    .then((r) => r.json())\n    .then((data) => data.paged_results)\n})()",
       "scopeSelector": true
     },
     {
@@ -62,11 +68,7 @@
                 "id": "{{invoice.id}}",
                 "date": "{{invoice.transaction_date}}",
                 "total": "{{invoice.total_amount}}",
-                "currency": "{{invoice.currency}}",
-                "metadata": {
-                  "serviceType": "{{invoice.service_type}}",
-                  "orderNumber": "{{invoice.order_number}}"
-                }
+                "currency": "{{invoice.currency}}"
               }
             }
           ],
@@ -79,11 +81,7 @@
                 "id": "{{invoice.id}}",
                 "date": "{{invoice.transaction_date}}",
                 "total": "{{invoice.total_amount}}",
-                "currency": "{{invoice.currency}}",
-                "metadata": {
-                  "serviceType": "{{invoice.service_type}}",
-                  "orderNumber": "{{invoice.order_number}}"
-                }
+                "currency": "{{invoice.currency}}"
               }
             }
           ],
