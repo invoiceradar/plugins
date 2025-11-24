@@ -40,67 +40,57 @@
       "url": "https://www.fiverr.com/billing"
     },
     {
-      "action": "waitForElement",
-      "selector": ".table-tbody"
+      "action": "extract",
+      "variable": "invoiceData",
+      "script": "fetch(\n  'https://www.fiverr.com/perseus/financial-dashboard/api/billing/get-invoices?pageSize=250&pageNumber=1&contextType=user',\n  {\n    headers: {\n      accept: 'application/json',\n      'accept-language': 'en',\n      'x-requested-with': 'XMLHttpRequest',\n    },\n    method: 'GET',\n    mode: 'cors',\n    credentials: 'include',\n  },\n)\n  .then((r) => r.json())\n  .then((data) => data.paged_results)",
+      "scopeSelector": true
     },
     {
       "action": "extractAll",
-      "selector": ".table-tbody .table-tr",
+      "script": "{{invoiceData}}",
+      "variable": "invoice",
       "forEach": [
         {
           "action": "if",
-          "script": "'{{item.documentType}}' == 'Invoice'",
+          "script": "'{{invoice.transaction_type}}' === 'INVOICE'",
           "then": [
             {
               "action": "downloadPdf",
-              "url": "{{item.url}}",
+              "url": "https://www.fiverr.com{{invoice.download_url}}",
               "document": {
                 "type": "invoice",
-                "id": "{{item.id}}",
-                "date": "{{item.date}}",
-                "total": "{{item.amount}} {{item.currency}}"
-              },
-              "metadata": {
-                "orderId": "{{item.orderId}}"
+                "id": "{{invoice.id}}",
+                "date": "{{invoice.transaction_date}}",
+                "total": "{{invoice.total_amount}}",
+                "currency": "{{invoice.currency}}",
+                "metadata": {
+                  "serviceType": "{{invoice.service_type}}",
+                  "orderNumber": "{{invoice.order_number}}"
+                }
               }
             }
           ],
           "else": [
             {
               "action": "downloadPdf",
-              "url": "{{item.url}}",
+              "url": "https://www.fiverr.com{{invoice.download_url}}",
               "document": {
                 "type": "refund",
-                "id": "{{item.id}}",
-                "date": "{{item.date}}",
-                "total": "{{item.amount}} {{item.currency}}"
-              },
-              "metadata": {
-                "orderId": "{{item.orderId}}"
+                "id": "{{invoice.id}}",
+                "date": "{{invoice.transaction_date}}",
+                "total": "{{invoice.total_amount}}",
+                "currency": "{{invoice.currency}}",
+                "metadata": {
+                  "serviceType": "{{invoice.service_type}}",
+                  "orderNumber": "{{invoice.order_number}}"
+                }
               }
             }
-          ]
+          ],
+          "scopeSelector": true
         }
-      ],
-      "fields": {
-        "id": ".table-td.table-hide-sm p:last-of-type",
-        "documentType": "td:nth-of-type(3) > p",
-        "date": {
-          "selector": ".table-td:nth-of-type(2)",
-          "transform": "(d) => d.replaceAll('/', '.')"
-        },
-        "amount": ".table-td:nth-of-type(7)",
-        "currency": ".table-td:nth-of-type(6)",
-        "url": {
-          "selector": ".table-td:nth-of-type(8) a",
-          "attribute": "href"
-        },
-        "orderId": ".invoices-table-link"
-      },
-      "pagination": {
-        "type": "next",
-        "selector": ".table-pagination-arrows > button:nth-child(2):not(.table-pagination-arrow-disabled)"
-      }
+      ]
     }
-  ]
+  ],
+  "autofill": true
 }
