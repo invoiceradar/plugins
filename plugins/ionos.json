@@ -46,7 +46,9 @@
       "selector": "table.table.table--responsive.table--has-toolbar#table__0 tbody tr",
       "fields": {
         "id": {
-          "selector": "td:nth-child(4)"
+          "selector": "td:nth-child(5) a",
+          "attribute": "href",
+          "transform": "(url) => url.split('ref=')[1]"
         },
         "date": {
           "selector": "td:nth-child(1)"
