@@ -1,0 +1,64 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "premiumsim",
+  "name": "PremiumSIM",
+  "description": "PremiumSIM ist eine Marke der Drillisch Online GmbH",
+  "homepage": "https://www.premiumsim.de/",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://service.premiumsim.de/start",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkURL",
+      "url": "https://service.premiumsim.de/start"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://service.premiumsim.de/"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://service.premiumsim.de/start",
+      "timeout": 120000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://service.premiumsim.de/mytariff/invoice/showAll"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "#tab-nac"
+    },    
+    {
+      "action": "extractAll",
+      "selector": "#tab-nac > div > div",
+      "variable": "invoice",
+      "fields": {
+        "id": "details > summary",
+        "date": "details > summary",
+        "url": {
+          "selector": "details > div > div > p:nth-child(1) > a",
+          "attribute": "href"
+        }
+      },
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "{{invoice.url}}",
+          "document": {
+            "type": "invoice",
+            "id": "{{invoice.id}}",
+            "date": "{{invoice.date}}"
+          }
+        }
+      ]
+    }
+  ]
+}
