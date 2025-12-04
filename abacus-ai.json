@@ -1,0 +1,69 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "abacus-ai",
+  "name": "Abacus.AI",
+  "description": "Abacus.AI ChatLLM",
+  "homepage": "https://abacus.ai/chat_llm-ent",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://apps.abacus.ai/chatllm/admin/profile",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkURL",
+      "url": "https://apps.abacus.ai/chatllm/admin/profile"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://apps.abacus.ai/chatllm/admin/profile"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://apps.abacus.ai/chatllm/**",
+      "timeout": 120000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://apps.abacus.ai/chatllm/admin/billing/"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "div > div > table:nth-child(8)"
+    },    
+    {
+      "action": "extractAll",
+      "selector": "div > div > table:nth-child(8) tbody tr",
+      "variable": "invoice",
+      "fields": {
+        "random": {
+            "selector": "td:nth-child(1)",
+            "transform": "(id) => `${id}_${Math.floor(Math.random() * 1000000)}`"
+        },
+        "date": "td:nth-child(1)",
+        "total": "td:nth-child(2)"
+      },
+      "forEach": [
+        {
+          "action": "click",
+          "selector": "td:nth-child(3) > div > button",
+          "scopeSelector": true
+        },
+        {
+          "action": "waitForPdfDownload",
+          "document": {
+            "type": "invoice",
+            "id": "{{invoice.date}}#{{index}}",
+            "date": "{{invoice.date}}",
+            "total": "{{invoice.total}}"
+          }
+        }
+      ]
+    }
+  ]
+}
