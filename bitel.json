@@ -1,0 +1,64 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "bitel",
+  "name": "BITel Gesellschaft für Telekommunikation mbH",
+  "description": "Als regionaler Telekommunikationsanbieter versorgt die BITel Gesellschaft für Telekommunikation mbH Bielefeld, Gütersloh, Halle/Westf., Oerlinghausen, Rietberg-Varensell, Steinhagen, Verl und Werther mit zukunftssicheren Kommunikationstechnologien. Unser Portfolio richtet sich dabei nach dem Kommunikationsbedarf von Geschäfts- und Privatkunden und reicht von Sprach- und Datendiensten über komplexe Standortvernetzungen bis hin zur Bereitstellung eines breiten nationalen und internationalen TV-/HDTV-Angebots.",
+  "homepage": "https://www.bitel.de/privatkunden.html",
+  "configSchema": {},
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://portal.meinbitel.net/customer/dashboard",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkURL",
+      "url": "https://portal.meinbitel.net/customer/dashboard"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://portal.meinbitel.net/sessions/new"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://portal.meinbitel.net/customer/dashboard",
+      "timeout": 120000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://portal.meinbitel.net/invoices"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "table.table.table-hover.table-borderless.table-striped"
+    },    
+    {
+      "action": "extractAll",
+      "selector": "table.table.table-hover.table-borderless.table-striped tbody tr",
+      "variable": "invoice",
+      "fields": {
+        "id": "td:nth-child(2)",
+        "date": "td:nth-child(1)",
+        "url": {
+          "selector": "td:nth-child(3) a",
+          "attribute": "href"
+        }
+      },
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "{{invoice.url}}",
+          "document": {
+            "type": "invoice",
+            "id": "{{invoice.id}}",
+            "date": "{{invoice.date}}"
+          }
+        }
+      ]
+    }
+  ]
+}
