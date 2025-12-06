@@ -20,21 +20,10 @@
       "url": "https://bmw-public-charging.com/web/de/bmw-de/dashboard/start"
     },
     {
-      "action": "waitForNetworkIdle",
-      "timeout": 15000
-    },
-    {
-      "action": "extract",
-      "script": "window.location.href.match(/(.*)\\/dashboard/)[1]",
-      "variable": "baseUrl"
-    },
-    {
-      "action": "navigate",
-      "url": "{{baseUrl}}/dashboard/invoices"
-    },
-    {
-      "action": "waitForNetworkIdle",
-      "timeout": 15000
+      "action": "waitForElement",
+      "selector": ".signed-in-nav-item",
+      "timeout": 5000,
+      "optional": true
     },
     {
       "action": "checkElementExists",
@@ -47,8 +36,8 @@
       "url": "https://bmw-public-charging.com/web/de/bmw-de/dashboard/start"
     },
     {
-      "action": "sleep",
-      "duration": 2000
+      "action": "waitForElement",
+      "selector": "#app-container:not(.loading)"
     },
     {
       "action": "extract",
