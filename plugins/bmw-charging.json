@@ -10,14 +10,27 @@
       "url": "https://bmw-public-charging.com/c/portal/login?rel=/web/de/bmw-de/dashboard&locale=de_DE"
     },
     {
-      "action": "waitForURL",
-      "url": "https://bmw-public-charging.com/web/de/bmw-de/dashboard/start"
+      "action": "waitForElement",
+      "selector": ".signed-in-nav-item"
     }
   ],
   "checkAuth": [
     {
       "action": "navigate",
-      "url": "https://bmw-public-charging.com/web/de/bmw-de/dashboard/invoices"
+      "url": "https://bmw-public-charging.com/web/de/bmw-de/dashboard/start"
+    },
+    {
+      "action": "waitForNetworkIdle",
+      "timeout": 15000
+    },
+    {
+      "action": "extract",
+      "script": "window.location.href.match(/(.*)\\/dashboard/)[1]",
+      "variable": "baseUrl"
+    },
+    {
+      "action": "navigate",
+      "url": "{{baseUrl}}/dashboard/invoices"
     },
     {
       "action": "waitForNetworkIdle",
@@ -25,17 +38,30 @@
     },
     {
       "action": "checkElementExists",
-      "selector": ".dcs-invoice-panel"
+      "selector": ".signed-in-nav-item"
     }
   ],
   "getDocuments": [
     {
       "action": "navigate",
-      "url": "https://bmw-public-charging.com/web/de/bmw-de/dashboard/invoices"
+      "url": "https://bmw-public-charging.com/web/de/bmw-de/dashboard/start"
     },
     {
-      "action": "waitForNetworkIdle",
-      "timeout": 15000
+      "action": "sleep",
+      "duration": 2000
+    },
+    {
+      "action": "extract",
+      "script": "window.location.href.match(/(.*)\\/dashboard/)[1]",
+      "variable": "baseUrl"
+    },
+    {
+      "action": "navigate",
+      "url": "{{baseUrl}}/dashboard/invoices"
+    },
+    {
+      "action": "waitForElement",
+      "selector": ".dcs-invoice-panel"
     },
     {
       "action": "extractAll",
