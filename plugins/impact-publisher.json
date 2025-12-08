@@ -12,7 +12,7 @@
     },
     {
       "action": "checkElementExists",
-      "selector": "#partnerFinanceSnapshot"
+      "selector": ".partnerFinanceInfo"
     }
   ],
   "startAuth": [
@@ -22,7 +22,7 @@
     },
     {
       "action": "waitForElement",
-      "selector": "#partnerFinanceSnapshot",
+      "selector": ".partnerFinanceInfo",
       "timeout": 120000
     }
   ],
