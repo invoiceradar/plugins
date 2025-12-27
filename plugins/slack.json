@@ -9,7 +9,7 @@
       "type": "string",
       "title": "Workspace ID",
       "required": true,
-      "description": "You can find your workspace ID in the URL. '<workspace-id>.slack.com'"
+      "description": "You can find your workspace ID in the URL. '<workspace-id>.slack.com'. Without slack.com"
     }
   },
   "checkAuth": [

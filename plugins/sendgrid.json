@@ -27,10 +27,6 @@
       "url": "https://app.sendgrid.com/login"
     },
     {
-      "action": "waitForURL",
-      "url": "https://app.sendgrid.com/*"
-    },
-    {
       "action": "sleep",
       "duration": 2000
     },

@@ -5,6 +5,18 @@
   "description": "financeAds is a affiliate plattform. This plugin allows you to download invoices from your financeAds publisher account.",
   "homepage": "https://www.financeads.net/",
   "configSchema": {},
+  "autofill": {
+    "username": {
+      "selector": "input[name='name']"
+    },
+    "password": {
+      "selector": "input[name='password']"
+    },
+    "otp": false,
+    "submit": {
+      "selector": "form button[type='submit']"
+    }
+  },
   "checkAuth": [
     {
       "action": "navigate",
@@ -12,7 +24,7 @@
     },
     {
       "action": "checkElementExists",
-      "selector": "fads-affiliate-dashboard"
+      "selector": "a[href='https://dashboard.financeads.net/logout']"
     }
   ],
   "startAuth": [
@@ -22,7 +34,7 @@
     },
     {
       "action": "waitForElement",
-      "selector": ".fads-affiliate-dashboard",
+      "selector": "a[href='https://dashboard.financeads.net/logout']",
       "timeout": 120000
     }
   ],
@@ -33,18 +45,19 @@
     },
     {
       "action": "extractAll",
-      "selector": "#auszahlung-card > .card-body > div:not(.d-none) > .row",
+      "selector": "table.card-table tbody tr",
       "variable": "invoice",
       "fields": {
         "id": {
           "selector": "a",
-          "attribute": "title"
+          "attribute": "href",
+          "transform": "(v) => v.split('/')[7]"
         },
         "date": {
-          "selector": ".row"
+          "selector": "td"
         },
         "total": {
-          "selector": "div:nth-child(2) > .row > div:last-child"
+          "selector": "td:nth-child(2)"
         },
         "url": {
           "selector": "a",
