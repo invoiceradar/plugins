@@ -34,11 +34,11 @@
     },
     {
       "action": "waitForElement",
-      "selector": "div > div > table:nth-child(8)"
+      "selector": "div > div > table:nth-child(9)"
     },    
     {
       "action": "extractAll",
-      "selector": "div > div > table:nth-child(8) tbody tr",
+      "selector": "div > div > table:nth-child(9) tbody tr",
       "variable": "invoice",
       "fields": {
         "random": {
