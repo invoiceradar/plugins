@@ -35,7 +35,7 @@
     {
       "action": "waitForElement",
       "selector": "#tab-nac"
-    },    
+    },
     {
       "action": "extractAll",
       "selector": "#tab-nac > div > div",
