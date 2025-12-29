@@ -64,7 +64,7 @@
       "forEach": [
         {
           "action": "if",
-          "condition": "{{item.pdfLink}}",
+          "script": "'{{item.pdfLink}}' !== ''",
           "then": [
             {
               "action": "downloadPdf",
