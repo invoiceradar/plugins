@@ -48,7 +48,7 @@
         "id": {
           "selector": "td:nth-child(5) a",
           "attribute": "href",
-          "transform": "(url) => url.split('ref=')[1]"
+          "transform": "(url) => url ? url.split('ref=')[1] : null"
         },
         "date": {
           "selector": "td:nth-child(1)"
@@ -63,9 +63,15 @@
       },
       "forEach": [
         {
-          "action": "downloadPdf",
-          "url": "https://mein.ionos.de{{item.pdfLink}}",
-          "document": "{{item}}"
+          "action": "if",
+          "condition": "{{item.pdfLink}}",
+          "then": [
+            {
+              "action": "downloadPdf",
+              "url": "https://mein.ionos.de{{item.pdfLink}}",
+              "document": "{{item}}"
+            }
+          ]
         }
       ]
     }
