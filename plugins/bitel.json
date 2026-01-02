@@ -1,8 +1,8 @@
 {
   "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
   "id": "bitel",
-  "name": "BITel Gesellschaft für Telekommunikation mbH",
-  "description": "Als regionaler Telekommunikationsanbieter versorgt die BITel Gesellschaft für Telekommunikation mbH Bielefeld, Gütersloh, Halle/Westf., Oerlinghausen, Rietberg-Varensell, Steinhagen, Verl und Werther mit zukunftssicheren Kommunikationstechnologien. Unser Portfolio richtet sich dabei nach dem Kommunikationsbedarf von Geschäfts- und Privatkunden und reicht von Sprach- und Datendiensten über komplexe Standortvernetzungen bis hin zur Bereitstellung eines breiten nationalen und internationalen TV-/HDTV-Angebots.",
+  "name": "BITel",
+  "description": "Regionaler Telekommunikationsanbieter",
   "homepage": "https://www.bitel.de/privatkunden.html",
   "configSchema": {},
   "checkAuth": [
