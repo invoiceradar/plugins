@@ -11,6 +11,10 @@
       "waitForNetworkIdle": true
     },
     {
+      "action": "sleep",
+      "duration": 1000
+    },
+    {
       "action": "checkURL",
       "url": "https://www.shutterstock.com/de/account/*"
     }
