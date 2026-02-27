@@ -77,7 +77,7 @@
         },
         {
           "action": "click",
-          "selector": "button[aria-label='Receipt'][data-ev-label='download_receipt_btn']",
+          "selector": "[data-ev-label='download_receipt_btn']",
           "scopeSelector": true
         },
         {
