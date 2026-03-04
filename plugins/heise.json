@@ -37,7 +37,7 @@
     },
     {
       "action": "runJs",
-      "script": "() => { const src = document.querySelector('iframe[src*=\"selfservice.plenigo.com\"]').src; const session = new URL(src).searchParams.get('session'); window.location.href = 'https://selfservice.plenigo.com/de/invoices?sessionId=' + session; }"
+      "script": "const src = document.querySelector('iframe[src*=\"selfservice.plenigo.com\"]').src; const session = new URL(src).searchParams.get('session'); window.location.href = 'https://selfservice.plenigo.com/de/invoices?sessionId=' + session;"
     },
     {
       "action": "waitForElement",
