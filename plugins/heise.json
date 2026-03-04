@@ -1,0 +1,75 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "heise",
+  "name": "Heise Medien",
+  "description": "Rechnungen von heise.de. Billing läuft über das plenigo Selfservice-Portal.",
+  "homepage": "https://www.heise.de/",
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.heise.de/sso/registration/add_subscriber_id/plenigo?plsnippet=order"
+    },
+    {
+      "action": "checkURL",
+      "url": "https://www.heise.de/sso/registration/add_subscriber_id/plenigo*"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.heise.de/sso/login/?forward=%2Fsso%2Fregistration%2Fadd_subscriber_id%2Fplenigo%3Fplsnippet%3Dorder"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "a[href='/sso/login/logout']",
+      "timeout": 120000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://www.heise.de/sso/registration/add_subscriber_id/plenigo?plsnippet=order"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "iframe[src*='selfservice.plenigo.com']",
+      "timeout": 30000
+    },
+    {
+      "action": "runJs",
+      "script": "() => { const src = document.querySelector('iframe[src*=\"selfservice.plenigo.com\"]').src; const session = new URL(src).searchParams.get('session'); window.location.href = 'https://selfservice.plenigo.com/de/invoices?sessionId=' + session; }"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "[data-test='invoices']",
+      "timeout": 30000
+    },
+    {
+      "action": "extractAll",
+      "selector": ".row:not(.row__title)",
+      "fields": {
+        "id": {
+          "selector": "[data-test$='.invoiceId']"
+        },
+        "date": {
+          "selector": "[data-test$='.date']",
+          "transform": "(d) => d.split('.').reverse().map((v, i) => i === 0 ? '20' + v : v).join('-')"
+        },
+        "total": {
+          "selector": "[data-test$='.price']"
+        },
+        "pdfHref": {
+          "selector": "[data-test$='.downloadPdf']",
+          "attribute": "href"
+        }
+      },
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "https://selfservice.plenigo.com{{item.pdfHref}}",
+          "document": "{{item}}"
+        }
+      ]
+    }
+  ]
+}
