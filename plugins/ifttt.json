@@ -1,0 +1,66 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "ifttt",
+  "name": "IFTTT",
+  "description": "IFTTT is an automation platform that connects apps, devices, and services.",
+  "homepage": "https://ifttt.com",
+  "autofill": true,
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://ifttt.com/billing"
+    },
+    {
+      "action": "checkURL",
+      "url": "https://ifttt.com/billing"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://ifttt.com/session/new"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "a[href='/my_applets']",
+      "timeout": 120000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://ifttt.com/billing"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "table tbody tr",
+      "timeout": 30000
+    },
+    {
+      "action": "extractAll",
+      "selector": "table tbody tr:has(td:nth-child(3) a)",
+      "fields": {
+        "date": {
+          "selector": "td:nth-child(1)",
+          "transform": "(d) => new Date(d + ' UTC').toISOString().split('T')[0]"
+        },
+        "total": {
+          "selector": "td:nth-child(2)"
+        },
+        "receiptUrl": {
+          "selector": "td:nth-child(3) a",
+          "attribute": "href"
+        }
+      },
+      "forEach": [
+        {
+          "action": "runSnippet",
+          "snippet": "getInvoiceFromStripeUrl",
+          "args": {
+            "url": "{{item.receiptUrl}}"
+          }
+        }
+      ]
+    }
+  ]
+}
