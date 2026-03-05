@@ -12,7 +12,7 @@
     },
     {
       "action": "checkURL",
-      "url": "https://unsplash.com/*/account"
+      "url": "https://unsplash.com/**/account"
     }
   ],
   "startAuth": [
@@ -34,7 +34,7 @@
     },
     {
       "action": "waitForURL",
-      "url": "https://billing.unsplash.com/*",
+      "url": "https://billing.unsplash.com/**",
       "timeout": 30000
     },
     {
