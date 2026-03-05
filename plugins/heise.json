@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
   "id": "heise",
   "name": "Heise Medien",
-  "description": "Rechnungen von heise.de. Billing läuft über das plenigo Selfservice-Portal.",
+  "description": "Heise Medien is a German technology publisher offering online media subscriptions.",
   "homepage": "https://www.heise.de/",
   "checkAuth": [
     {
