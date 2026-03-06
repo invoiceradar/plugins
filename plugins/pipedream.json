@@ -31,12 +31,16 @@
       "url": "https://pipedream.com/settings/billing"
     },
     {
-      "action": "waitForElement",
-      "selector": "[data-pd-t='subscribe button: manage billing']"
+      "action": "sleep",
+      "duration": 3000
     },
     {
       "action": "click",
       "selector": "[data-pd-t='subscribe button: manage billing']"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://payments.pipedream.com/**"
     },
     {
       "action": "extract",
