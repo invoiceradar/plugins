@@ -1,78 +1,78 @@
 {
-	"$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
-	"id": "thumio",
-	"name": "Thum.io",
-	"description": "Thum.io provides website screenshot and thumbnail generation as a service.",
-	"homepage": "https://www.thum.io",
-	"checkAuth": [
-		{
-			"action": "navigate",
-			"url": "https://www.thum.io/admin/billing"
-		},
-		{
-			"action": "checkURL",
-			"url": "/admin/billing"
-		}
-	],
-	"startAuth": [
-		{
-			"action": "navigate",
-			"url": "https://www.thum.io/login"
-		},
-		{
-			"action": "waitForURL",
-			"url": "/admin/**",
-			"timeout": 120000
-		}
-	],
-	"getDocuments": [
-		{
-			"action": "navigate",
-			"url": "https://www.thum.io/admin/billing"
-		},
-		{
-			"action": "waitForElement",
-			"selector": "a[href*='/admin/invoices/']",
-			"timeout": 30000
-		},
-		{
-			"action": "extractAll",
-			"selector": "div:has(> a[href*='/admin/invoices/'])",
-			"variable": "item",
-			"fields": {
-				"date": {
-					"selector": "a",
-					"transform": "(text) => { const parts = text.split('–'); return (parts[1] || parts[0]).trim(); }"
-				},
-				"id": {
-					"selector": "a",
-					"attribute": "href",
-					"transform": "(href) => href.match(/invoices\\/(\\d+)/)?.[1]"
-				},
-				"url": {
-					"selector": "a",
-					"attribute": "href"
-				}
-			},
-			"forEach": [
-				{
-					"action": "sleep",
-					"duration": 2000,
-					"description": "Prevent rate limiting"
-				},
-				{
-					"action": "navigate",
-					"url": "https://www.thum.io{{item.url}}"
-				},
-				{
-					"action": "printPdf",
-					"document": {
-						"type": "invoice",
-						"id": "{{item.id}}",
-						"date": "{{item.date}}"
-					}
-				}
-			]
-		}
-	]
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "thumio",
+  "name": "Thum.io",
+  "description": "Thum.io provides website screenshot and thumbnail generation as a service.",
+  "homepage": "https://www.thum.io",
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.thum.io/admin/billing"
+    },
+    {
+      "action": "checkURL",
+      "url": "/admin/billing"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.thum.io/login"
+    },
+    {
+      "action": "waitForURL",
+      "url": "/admin/**",
+      "timeout": 120000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://www.thum.io/admin/billing"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "a[href*='/admin/invoices/']",
+      "timeout": 30000
+    },
+    {
+      "action": "extractAll",
+      "selector": "div:has(> a[href*='/admin/invoices/'])",
+      "variable": "item",
+      "fields": {
+        "date": {
+          "selector": "a",
+          "transform": "(text) => { const parts = text.split('–'); return (parts[1] || parts[0]).trim(); }"
+        },
+        "id": {
+          "selector": "a",
+          "attribute": "href",
+          "transform": "(href) => href.match(/invoices\\/(\\d+)/)?.[1]"
+        },
+        "url": {
+          "selector": "a",
+          "attribute": "href"
+        }
+      },
+      "forEach": [
+        {
+          "action": "sleep",
+          "duration": 2000,
+          "description": "Prevent rate limiting"
+        },
+        {
+          "action": "navigate",
+          "url": "https://www.thum.io{{item.url}}"
+        },
+        {
+          "action": "printPdf",
+          "document": {
+            "type": "invoice",
+            "id": "{{item.id}}",
+            "date": "{{item.date}}"
+          }
+        }
+      ]
+    }
+  ]
 }
