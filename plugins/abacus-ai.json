@@ -51,8 +51,7 @@
       "forEach": [
         {
           "action": "click",
-          "selector": "td:nth-child(3) > div > button",
-          "scopeSelector": true
+          "selector": "td:nth-child(4) > div > button"
         },
         {
           "action": "waitForPdfDownload",
