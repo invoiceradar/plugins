@@ -1,0 +1,85 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "phantombuster",
+  "name": "PhantomBuster",
+  "description": "Fetch invoices from PhantomBuster via Quaderno billing portal.",
+  "homepage": "https://phantombuster.com",
+  "autofill": false,
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://thephantomcompany.quadernoapp.com/billing/b1a8feb4851f1c2674371731f0d054ffd8251552",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkElementExists",
+      "selector": "ol.list.billing"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://thephantomcompany.quadernoapp.com/billing/b1a8feb4851f1c2674371731f0d054ffd8251552"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "ol.list.billing",
+      "timeout": 120000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://thephantomcompany.quadernoapp.com/billing/b1a8feb4851f1c2674371731f0d054ffd8251552",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "extractAll",
+      "selector": "ol.list.billing li.list-group",
+      "variable": "invoice",
+      "fields": {
+        "id": {
+          "selector": "h3 a"
+        },
+        "date": {
+          "selector": "div.list-item:nth-of-type(2)"
+        },
+        "total": {
+          "selector": ".list-item:nth-child(4)"
+        },
+        "url": {
+          "selector": "h3 a",
+          "attribute": "href"
+        }
+      },
+      "forEach": [
+        {
+          "action": "navigate",
+          "url": "{{invoice.url}}",
+          "waitForNetworkIdle": true
+        },
+        {
+          "action": "extract",
+          "variable": "pdf",
+          "scopeSelector": false,
+          "fields": {
+            "url": {
+              "selector": "a[href*='.pdf']",
+              "attribute": "href"
+            }
+          }
+        },
+        {
+          "action": "downloadPdf",
+          "url": "{{pdf.url}}",
+          "document": {
+            "id": "{{invoice.id}}",
+            "date": "{{invoice.date}}",
+            "total": "{{invoice.total}}",
+            "type": "invoice"
+          }
+        }
+      ]
+    }
+  ]
+}

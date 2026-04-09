@@ -18,11 +18,11 @@
   "startAuth": [
     {
       "action": "navigate",
-      "url": "https://rapidapi.com/auth/login"
+      "url": "https://rapidapi.com/developer/billing/transaction-history"
     },
     {
       "action": "waitForURL",
-      "url": "https://rapidapi.com/**",
+      "url": "https://rapidapi.com/developer/**",
       "timeout": 120000
     }
   ],

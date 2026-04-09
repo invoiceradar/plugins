@@ -29,7 +29,7 @@
     },
     {
       "action": "waitForElement",
-      "selector": "nav .account",
+      "selector": "nav .account,[aria-label='User Menu']",
       "timeout": 120000
     }
   ],
@@ -40,12 +40,12 @@
       "waitForNetworkIdle": true
     },
     {
-      "action": "waitForCondition",
-      "script": "window.currentUser?.organizations?.length > 0"
+      "action": "waitForElement",
+      "selector": "nav .account,[aria-label='User Menu']"
     },
     {
       "action": "extractAll",
-      "script": "window.currentUser.organizations.map((org) => ({\n  label: org.name,\n  value: org.uuid.substring(0, 6),\n}))",
+      "script": "fetch('https://cloud.digitalocean.com/graphql', {\n  method: 'POST',\n  credentials: 'include',\n  headers: {\n    'accept': '*/*',\n    'accept-language': 'en',\n    'apollographql-client-name': 'ui-projects',\n    'apollographql-client-version': '2026.1.27-27d7ba8137f3328a2c1c36d1ad8b8e5756de53b4',\n    'content-type': 'application/json'\n  },\n  body: JSON.stringify({\n    operationName: 'getMe',\n    variables: { features: ['ui_projects_activity', 'personalized_homepage_ui', 'amd_no_paywall', 'read_only_mode', 'genai_in_create_dropdown', 'genai_serverless_inference', 'genai_rebrand', 'ui_copilot', 'ui_payment_guard_modal_autorender', 'iam_session_manager', 'managed_nfs_global_release_ui', 'ui_watchdeck', 'bare_metal_gpu_ui', 'spaces_ui_cold_tier', 'ui_resource_limits'] },\n    query: `query getMe($features: [String]) {\n  getMe {\n    avatar\n    name\n    email\n    nav_message\n    created_at\n    uuid\n    status\n    droplet_limit\n    droplet_count\n    id\n    current_context {\n      ...org\n      __typename\n    }\n    current_context_id\n    current_context_urn\n    default_team_urn\n    usage_total\n    credit\n    credits {\n      credit_type\n      description\n      expiration_date\n      issue_amount\n      remaining_amount\n      __typename\n    }\n    organizations {\n      ...org\n      __typename\n    }\n    has_secure_login\n    team_limit\n    in_bad_standing\n    onboarding_step\n    onboarding_origin\n    is_hold\n    is_trial\n    payment_method\n    authn_type\n    tfa_enabled\n    two_factor_methods {\n      is_primary\n      type\n      phone_number\n      code_count\n      __typename\n    }\n    pending_login_email\n    has_vendor_portal_access\n    teamsv3_enabled\n    is_vendor\n    __typename\n  }\n  sessionData {\n    session_id\n    __typename\n  }\n  AreFeaturesEnabled(BulkFeatureEnabledRequest: {features: $features}) {\n    features {\n      enabled\n      feature {\n        name\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment org on Organization {\n  id\n  uuid\n  avatar_initials\n  avatar_color\n  name\n  contact_email\n  role\n  status\n  requires_secure_login\n  onboarding_step\n  usage_total\n  in_bad_standing\n  is_hold\n  is_trial\n  is_ach_debit_eligible\n  is_wire_transfer_eligible\n  is_achwire_only\n  payment_method\n  droplet_limit\n  droplet_count\n  pending_email\n  email_verified_at\n  payment_terms\n  subject_role {\n    name\n    description\n    __typename\n  }\n  sso_config {\n    uuid\n    is_enabled\n    is_required\n    __typename\n  }\n  authentication {\n    status\n    current_methods\n    required_methods\n    __typename\n  }\n  __typename\n}`\n  })\n})\n  .then((res) => res.json())\n  .then((res) => res.data.getMe.organizations.map((org) => ({\n    label: org.name,\n    value: org.uuid.split('-')[0]\n  })))",
       "variable": "option",
       "forEach": [
         {

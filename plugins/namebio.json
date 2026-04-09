@@ -1,0 +1,87 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "namebio",
+  "name": "NameBio",
+  "description": "Fetch invoices from NameBio, a domain name sales history and analytics platform.",
+  "homepage": "https://namebio.com",
+  "autofill": false,
+  "configSchema": {
+    "username": {
+      "type": "string",
+      "title": "Login Email",
+      "required": true
+    },
+    "password": {
+      "type": "string",
+      "title": "Password",
+      "required": true
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://namebio.com/account",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkElementExists",
+      "selector": "#user-name:not(:empty)"
+    },
+    {
+      "action": "runJs",
+      "script": "document.querySelector('#user-name').textContent.trim() !== 'Guest'"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://namebio.com/top-100-domain-name-sales-all-time",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "runJs",
+      "script": "fetch('https://namebio.com/login?r=4844994', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest' }, body: 'email=' + encodeURIComponent('{{config.username}}') + '&password=' + encodeURIComponent('{{config.password}}'), credentials: 'include' }).then(r => r.ok)"
+    },
+    {
+      "action": "sleep",
+      "duration": 2000
+    },
+    {
+      "action": "navigate",
+      "url": "https://namebio.com/account",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "runJs",
+      "script": "document.querySelector('#user-name').textContent.trim() !== 'Guest'"
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://namebio.com/account",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "click",
+      "selector": "button.green-haze[type='submit']"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://*.stripe.com/**",
+      "timeout": 15000
+    },
+    {
+      "action": "extract",
+      "variable": "stripeUrl",
+      "script": "window.location.href"
+    },
+    {
+      "action": "runSnippet",
+      "snippet": "getInvoicesFromStripeBillingPortal",
+      "args": {
+        "url": "{{stripeUrl}}"
+      }
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "forminit",
+  "name": "Forminit",
+  "description": "Fetch invoices from Forminit, a form building platform.",
+  "homepage": "https://forminit.com",
+  "autofill": {
+    "username": {
+      "selector": "input#email",
+      "title": "Email"
+    },
+    "password": {
+      "selector": "input#password"
+    },
+    "submit": {
+      "selector": "button[type='submit']"
+    }
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://app.forminit.com/home",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkURL",
+      "url": "https://app.forminit.com/home"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://app.forminit.com/login"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://app.forminit.com/home",
+      "timeout": 120000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://app.forminit.com/home",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "runJs",
+      "script": "const accountMenu = [...document.querySelectorAll('span')].find(e => e.innerText.trim() === 'Account & settings'); (accountMenu?.closest('button') || accountMenu?.closest('a') || accountMenu)?.click();"
+    },
+    {
+      "action": "sleep",
+      "duration": 1000
+    },
+    {
+      "action": "runJs",
+      "script": "const billingItem = [...document.querySelectorAll('span')].find(e => e.innerText.trim() === 'Billing'); (billingItem?.closest('a') || billingItem)?.click();"
+    },
+    {
+      "action": "waitForNetworkIdle",
+      "timeout": 10000
+    },
+    {
+      "action": "runJs",
+      "script": "const el = [...document.querySelectorAll('a, button, span')].find(e => e.innerText.trim() === 'Invoice History'); (el?.closest('a') || el)?.click();"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://*.stripe.com/**",
+      "timeout": 15000
+    },
+    {
+      "action": "extract",
+      "variable": "stripeUrl",
+      "script": "window.location.href"
+    },
+    {
+      "action": "runSnippet",
+      "snippet": "getInvoicesFromStripeBillingPortal",
+      "args": {
+        "url": "{{stripeUrl}}"
+      }
+    }
+  ]
+}

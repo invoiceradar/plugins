@@ -11,8 +11,8 @@
       "url": "https://pipedream.com/settings/billing"
     },
     {
-      "action": "checkURL",
-      "url": "https://pipedream.com/settings/billing"
+      "action": "runJs",
+      "script": "document.cookie.includes('pdli=')"
     }
   ],
   "startAuth": [
@@ -21,8 +21,8 @@
       "url": "https://pipedream.com/auth/login"
     },
     {
-      "action": "waitForURL",
-      "url": "https://pipedream.com/*"
+      "action": "waitForCondition",
+      "script": "document.cookie.includes('pdli=')"
     }
   ],
   "getDocuments": [
@@ -31,12 +31,16 @@
       "url": "https://pipedream.com/settings/billing"
     },
     {
-      "action": "waitForElement",
-      "selector": "[data-pd-t='subscribe button: manage billing']"
+      "action": "sleep",
+      "duration": 3000
     },
     {
       "action": "click",
       "selector": "[data-pd-t='subscribe button: manage billing']"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://payments.pipedream.com/**"
     },
     {
       "action": "extract",

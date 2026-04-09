@@ -42,6 +42,10 @@
       "waitForNetworkIdle": true
     },
     {
+      "action": "waitForElement",
+      "selector": "[data-qahook='invoiceItem']"
+    },
+    {
       "action": "extractAll",
       "selector": "[data-qahook='invoiceItem']",
       "forEach": [

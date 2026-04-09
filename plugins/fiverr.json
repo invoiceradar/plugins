@@ -11,7 +11,9 @@
     },
     {
       "action": "waitForElement",
-      "selector": ".main-content"
+      "selector": ".main-content",
+      "optional": true,
+      "timeout": 4000
     },
     {
       "action": "checkElementExists",

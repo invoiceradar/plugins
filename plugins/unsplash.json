@@ -1,0 +1,53 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "unsplash",
+  "name": "Unsplash",
+  "description": "Unsplash is a platform for freely usable images and photo subscriptions.",
+  "homepage": "https://unsplash.com",
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://unsplash.com/account",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkURL",
+      "url": "https://unsplash.com/**/account"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://unsplash.com/login"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "a[href^='/@']",
+      "timeout": 120000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://unsplash.com/account/subscriptions/manage",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://billing.unsplash.com/**",
+      "timeout": 30000
+    },
+    {
+      "action": "extract",
+      "script": "window.location.href",
+      "variable": "url"
+    },
+    {
+      "action": "runSnippet",
+      "snippet": "getInvoicesFromStripeBillingPortal",
+      "args": {
+        "url": "{{url}}"
+      }
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "1blu",
+  "name": "1blu",
+  "description": "1blu is a German web hosting and internet service provider.",
+  "homepage": "https://www.1blu.de",
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://ksb.1blu.de/invoices/"
+    },
+    {
+      "action": "checkURL",
+      "url": "https://ksb.1blu.de/invoices/"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://ksb.1blu.de/invoices/"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "a[href='/logout']",
+      "timeout": 120000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://ksb.1blu.de/invoices/"
+    },
+    {
+      "action": "waitForElement",
+      "selector": "#grid tbody tr",
+      "timeout": 30000
+    },
+    {
+      "action": "extractAll",
+      "selector": "#grid tbody tr",
+      "fields": {
+        "id": {
+          "selector": "td:nth-child(3)"
+        },
+        "date": {
+          "selector": "td:nth-child(1)",
+          "transform": "(d) => d.split('.').reverse().join('-')"
+        },
+        "total": {
+          "selector": "td:nth-child(4)"
+        }
+      },
+      "forEach": [
+        {
+          "action": "downloadPdf",
+          "url": "https://ksb.1blu.de/invoice/Beleg_{{item.id}}.pdf",
+          "document": "{{item}}"
+        }
+      ]
+    }
+  ]
+}
