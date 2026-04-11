@@ -1,0 +1,80 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "blau",
+  "name": "blau.de",
+  "description": "blau.de Mein Blau Kundenportal (Telefónica Germany)",
+  "homepage": "https://www.blau.de",
+  "configSchema": {},
+  "autofill": {
+    "username": true,
+    "password": {
+      "selector": "input[autocomplete='current-password']"
+    },
+    "submit": false
+  },
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.blau.de/user/auth2/rechnungen/",
+      "waitForNetworkIdle": true,
+      "description": "Navigate to the Rechnungen page. If not logged in, blau.de will redirect to login-ciam."
+    },
+    {
+      "action": "checkURL",
+      "url": "https://www.blau.de/user/auth2/rechnungen/",
+      "description": "Verify we are on the Rechnungen page and were not redirected to the login page."
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.blau.de/user/auth2/rechnungen/",
+      "description": "Open the Rechnungen page. If not logged in, blau.de redirects to the ForgeRock XUI login page."
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://www.blau.de/user/auth2/rechnungen/",
+      "timeout": 180000,
+      "description": "Wait up to 3 minutes for the user to complete the login and be redirected back to Rechnungen."
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://www.blau.de/user/auth2/rechnungen/",
+      "waitForNetworkIdle": true,
+      "description": "Navigate to the Rechnungen page to establish an authenticated session context."
+    },
+    {
+      "action": "extract",
+      "variable": "account",
+      "script": "(async () => {\n  const base = 'https://www.blau.de/scs/bff/scs-207-customer-master-data-bff/customer-master-data/v1';\n  const r = await fetch(base + '/onload/multiple/invoiceContent', { credentials: 'include' });\n  const j = await r.json();\n  const bill = j.billingAccountList[0];\n  return {\n    billingAccountId: bill.billAccountNumber,\n    msisdn: bill.contractDetails[0].msisdn\n  };\n})()",
+      "description": "Fetch the billing account number and MSISDN from the customer master data API."
+    },
+    {
+      "action": "extractAll",
+      "variable": "invoice",
+      "script": "(async () => {\n  const base = 'https://www.blau.de/scs/bff/scs-207-customer-master-data-bff/customer-master-data/v1';\n  const acct = '{{account.billingAccountId}}';\n  const msisdn = '{{account.msisdn}}';\n  const r = await fetch(\n    base + '/onload/invoiceContent?subscribeType=prepaid&billingAccountId=' + acct + '&msisdn=' + msisdn + '&documentType=fisinvoice',\n    { credentials: 'include' }\n  );\n  const j = await r.json();\n  const invoices = (j.monthlyInvoices || []).concat(j.oldMonthlyInvoices || []);\n  return invoices.map(inv => {\n    const parts = inv.billDate.split('.');\n    const isoDate = parts[2] + '-' + parts[1] + '-' + parts[0];\n    return {\n      id: inv.billId,\n      date: isoDate,\n      total: inv.billAmount\n    };\n  });\n})()",
+      "forEach": [
+        {
+          "action": "extract",
+          "variable": "pdfData",
+          "script": "(async () => {\n  const base = 'https://www.blau.de/scs/bff/scs-207-customer-master-data-bff/customer-master-data/v1';\n  const r = await fetch(\n    base + '/downloadDocument/PRINTSHOP:{{invoice.id}}',\n    { credentials: 'include' }\n  );\n  const j = await r.json();\n  if (j.attachment && j.attachment[0] && j.attachment[0].content) {\n    return j.attachment[0].content;\n  }\n  throw new Error('No PDF attachment in response');\n})()",
+          "description": "Fetch the invoice PDF as base64 via the PRINTSHOP download endpoint."
+        },
+        {
+          "action": "downloadBase64Pdf",
+          "base64": "{{pdfData}}",
+          "document": {
+            "id": "{{invoice.id}}",
+            "date": "{{invoice.date}}",
+            "total": "{{invoice.total}}",
+            "type": "invoice"
+          },
+          "description": "Save the base64-encoded PDF as an invoice document."
+        }
+      ],
+      "description": "Fetch all monthly invoices from the invoiceContent API and download each PDF."
+    }
+  ]
+}
