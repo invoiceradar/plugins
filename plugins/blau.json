@@ -15,27 +15,27 @@
   "checkAuth": [
     {
       "action": "navigate",
-      "url": "https://www.blau.de/user/auth2/rechnungen/",
+      "url": "https://www.blau.de/user/auth/account-overview/",
       "waitForNetworkIdle": true,
-      "description": "Navigate to the Rechnungen page. If not logged in, blau.de will redirect to login-ciam."
+      "description": "Navigate to account overview — this page redirects to login when the session has expired."
     },
     {
       "action": "checkURL",
-      "url": "https://www.blau.de/user/auth2/rechnungen/",
-      "description": "Verify we are on the Rechnungen page and were not redirected to the login page."
+      "url": "https://www.blau.de/user/auth/account-overview/",
+      "description": "Verify we landed on account-overview and were not redirected to the login page."
     }
   ],
   "startAuth": [
     {
       "action": "navigate",
-      "url": "https://www.blau.de/user/auth2/rechnungen/",
-      "description": "Open the Rechnungen page. If not logged in, blau.de redirects to the ForgeRock XUI login page."
+      "url": "https://www.blau.de/user/auth/account-overview/",
+      "description": "Open account overview. If not logged in, blau.de redirects to the ForgeRock XUI login page."
     },
     {
       "action": "waitForURL",
-      "url": "https://www.blau.de/user/auth2/rechnungen/",
+      "url": "https://www.blau.de/user/auth/account-overview/",
       "timeout": 180000,
-      "description": "Wait up to 3 minutes for the user to complete the login and be redirected back to Rechnungen."
+      "description": "Wait up to 3 minutes for the user to complete login and be redirected back to account overview."
     }
   ],
   "getDocuments": [
