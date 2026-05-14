@@ -33,31 +33,16 @@
       "url": "https://apps.abacus.ai/chatllm/admin/billing/"
     },
     {
-      "action": "waitForElement",
-      "selector": "div > div > table:nth-child(9)"
-    },    
-    {
       "action": "extractAll",
-      "selector": "div > div > table:nth-child(9) tbody tr",
+      "script": "fetch('https://abacus.ai/api/v0/_listInvoices', { method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded', 'x-abacus-org-host': 'apps' }, credentials: 'include' }).then(r => r.json()).then(r => r.result.filter(i => i.lifecycle === 'PAID').map(i => ({ id: i.invoiceId, date: i.createdAt.slice(0, 10), total: (i.total / 100).toFixed(2) + ' USD' })))",
       "variable": "invoice",
-      "fields": {
-        "random": {
-            "selector": "td:nth-child(1)",
-            "transform": "(id) => `${id}_${Math.floor(Math.random() * 1000000)}`"
-        },
-        "date": "td:nth-child(1)",
-        "total": "td:nth-child(2)"
-      },
       "forEach": [
         {
-          "action": "click",
-          "selector": "td:nth-child(4) > div > button"
-        },
-        {
-          "action": "waitForPdfDownload",
+          "action": "downloadPdf",
+          "url": "https://abacus.ai/api/v0/_downloadChatllmTeamsInvoicePdf?invoiceId={{invoice.id}}",
           "document": {
             "type": "invoice",
-            "id": "{{invoice.date}}#{{index}}",
+            "id": "{{invoice.id}}",
             "date": "{{invoice.date}}",
             "total": "{{invoice.total}}"
           }
