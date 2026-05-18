@@ -45,11 +45,8 @@
       "url": "https://console.scaleway.com/billing/payment"
     },
     {
-      "action": "sleep",
-      "duration": 2000
-    },
-    {
-      "action": "waitForNetworkIdle"
+      "action": "waitForCondition",
+      "script": "document.querySelector('table tbody') !== null"
     },
     {
       "action": "if",
