@@ -69,7 +69,7 @@
         {
           "action": "extract",
           "variable": "base64Pdf",
-          "script": "fetch('https://cloud.digitalocean.com/graphql?i={{config.teamId}}', {\n  method: 'POST',\n  credentials: 'include',\n  headers: {\n    'accept': '*/*',\n    'accept-language': 'en',\n    'apollographql-client-name': 'ui-billing',\n    'apollographql-client-version': '2025.12.10-d315ece2fbf9f4e3aa5a7f0eb5c5ec215e29c59a',\n    'content-type': 'application/json'\n  },\n  body: JSON.stringify({\n    operationName: 'getInvoicePDF',\n    variables: {\n      request: {\n        invoice_uuid: '{{item.invoice_uuid}}',\n      },\n    },\n    query: `query getInvoicePDF($request: GetInvoicePDFRequest) {\n  download: getInvoicePDF(GetInvoicePDFRequest: $request) {\n    content_type\n    filename\n    data\n    __typename\n  }\n}`,\n  }),\n})\n  .then((res) => res.json())\n  .then((result) => result.data.download.data)",
+          "script": "fetch('https://cloud.digitalocean.com/v2/customers/do:team:{{config.teamId}}/invoices/{{item.invoice_uuid}}/pdf', {\n  credentials: 'include',\n  headers: {\n    'x-context-id': '{{config.teamId}}',\n    'x-context-urn': 'do:team:{{config.teamId}}'\n  }\n})\n  .then((res) => res.arrayBuffer())\n  .then((buf) => {\n    const bytes = new Uint8Array(buf);\n    let binary = '';\n    const chunk = 0x8000;\n    for (let i = 0; i < bytes.length; i += chunk) {\n      binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk));\n    }\n    return btoa(binary);\n  })",
           "scopeSelector": true
         },
         {
