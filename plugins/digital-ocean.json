@@ -56,7 +56,7 @@
       ]
     }
   ],
-   "getDocuments": [
+  "getDocuments": [
     {
       "action": "navigate",
       "url": "https://cloud.digitalocean.com/projects?i={{config.teamId}}"
