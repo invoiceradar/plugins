@@ -37,7 +37,7 @@
     },
     {
       "action": "extractAll",
-      "selector": ".invoice-container .invoice-list li",
+      "selector": ".invoice-container .invoice-list li:has(a[href$='pdf'])",
       "fields": {
         "id": {
           "selector": "span.invoice-number"
