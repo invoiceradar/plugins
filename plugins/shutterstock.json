@@ -46,12 +46,9 @@
       "selector": "table > tbody > tr",
       "forEach": [
         {
-          "action": "click",
-          "selector": "a[data-automation$='_link']"
-        },
-        {
-          "action": "waitForURL",
-          "url": "https://www.shutterstock.com/de/account/invoice/*"
+          "action": "navigate",
+          "url": "https://www.shutterstock.com/de/account/invoice/{{item.invoiceNumber}}",
+          "waitForNetworkIdle": true
         },
         {
           "action": "printPdf",
