@@ -30,7 +30,7 @@
     },
     {
       "action": "waitForElement",
-      "selector": "form, input[type='email'], input[type='password']"
+      "selector": "a[href='/logout']"
     }
   ],
   "getDocuments": [
