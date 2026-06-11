@@ -1,0 +1,89 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "wir-machen-druck",
+  "name": "WIRmachenDRUCK",
+  "description": "Lädt Rechnungen aus dem WIRmachenDRUCK-Konto. Liest die Bestellübersicht, öffnet jede Auftragsdetailseite und lädt die zugehörige Rechnungs-PDF.",
+  "homepage": "https://www.wir-machen-druck.de",
+  "autofill": true,
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.wir-machen-druck.de/konto_index.htm",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkURL",
+      "url": "https://www.wir-machen-druck.de/konto_index.htm*"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://www.wir-machen-druck.de/konto_login.htm"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://www.wir-machen-druck.de/konto_index.htm*",
+      "timeout": 120000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://www.wir-machen-druck.de/konto_tracking.htm",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "waitForElement",
+      "selector": ".tracking-order-body",
+      "timeout": 30000
+    },
+    {
+      "action": "extractAll",
+      "selector": ".tracking-order-body:has(a[href*='konto_tracking_detail.htm'])",
+      "variable": "item",
+      "pagination": {
+        "selector": ".pagination a.page-link:has(i.fa-chevron-right):not(.disable-paginate)",
+        "behavior": "paginateThenProcess",
+        "waitForSelector": ".tracking-order-body"
+      },
+      "fields": {
+        "detailUrl": {
+          "selector": "a[href*='konto_tracking_detail.htm']",
+          "attribute": "href"
+        },
+        "date": {
+          "selector": ".order-label-value-container",
+          "transform": "(t) => { const m = t.match(/Eingangsdatum:\\s*(\\d{2})\\.(\\d{2})\\.(\\d{4})/); return m ? m[3] + '-' + m[2] + '-' + m[1] : ''; }"
+        }
+      },
+      "forEach": [
+        {
+          "action": "navigate",
+          "url": "{{item.detailUrl}}",
+          "waitForNetworkIdle": true
+        },
+        {
+          "action": "extract",
+          "variable": "invoiceNo",
+          "script": "(() => { const b = document.querySelector('button[onclick*=\"showRechnung\"]'); if (!b) return ''; const m = (b.getAttribute('onclick') || '').match(/showRechnung\\(\\s*'([^']+)'/); return m ? m[1] : ''; })()"
+        },
+        {
+          "action": "if",
+          "script": "'{{invoiceNo}}' !== ''",
+          "then": [
+            {
+              "action": "downloadPdf",
+              "url": "https://www.wir-machen-druck.de/auftrag_rechnung.htm?j={{invoiceNo}}&",
+              "document": {
+                "type": "invoice",
+                "id": "{{invoiceNo}}",
+                "date": "{{item.date}}"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

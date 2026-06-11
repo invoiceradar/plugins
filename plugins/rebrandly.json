@@ -1,0 +1,67 @@
+{
+  "$schema": "https://raw.githubusercontent.com/invoiceradar/plugins/main/schema.json",
+  "id": "rebrandly",
+  "name": "Rebrandly",
+  "description": "Lädt Rechnungen aus dem Rebrandly-Konto. Die Rechnungsübersicht verlinkt auf Stripe-Rechnungsseiten, von denen die PDFs geladen werden.",
+  "homepage": "https://www.rebrandly.com",
+  "autofill": true,
+  "checkAuth": [
+    {
+      "action": "navigate",
+      "url": "https://app.rebrandly.com/settings/billing-details/invoice",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "checkURL",
+      "url": "https://app.rebrandly.com/settings/billing-details/invoice*"
+    }
+  ],
+  "startAuth": [
+    {
+      "action": "navigate",
+      "url": "https://oauth.rebrandly.com/Account/Login?ReturnUrl=%2Fconnect%2Fauthorize%2Fcallback%3Fclient_id%3D1FEB3DDD-8AC7-4F83-A2B3-ED4EB558DFA2%26redirect_uri%3Dhttps%253A%252F%252Fapp.rebrandly.com%26state%3DeyJwYXRoIjoiL2xpbmtzIn0%253D%26response_type%3Dcode%26scope%3Drbapi%2520offline_access%2520rbapikeys%2520rbinvites%2520rbdowngrade"
+    },
+    {
+      "action": "waitForURL",
+      "url": "https://app.rebrandly.com/**",
+      "timeout": 120000
+    }
+  ],
+  "getDocuments": [
+    {
+      "action": "navigate",
+      "url": "https://app.rebrandly.com/settings/billing-details/invoice",
+      "waitForNetworkIdle": true
+    },
+    {
+      "action": "waitForElement",
+      "selector": "li.BillingHistoryRow a[href*='invoice.stripe.com']",
+      "timeout": 30000
+    },
+    {
+      "action": "extractAll",
+      "selector": "li.BillingHistoryRow:has(a[href*='invoice.stripe.com'])",
+      "fields": {
+        "id": "a[href*='invoice.stripe.com']",
+        "url": {
+          "selector": "a[href*='invoice.stripe.com']",
+          "attribute": "href"
+        },
+        "date": {
+          "selector": ".col-sm-2 .BillingHistoryRow__text",
+          "transform": "(d) => { const m = d.trim().match(/(\\d{2})-(\\d{2})-(\\d{4})/); return m ? m[3] + '-' + m[1] + '-' + m[2] : d.trim(); }"
+        },
+        "total": ".end-sm .BillingHistoryRow__text"
+      },
+      "forEach": [
+        {
+          "action": "runSnippet",
+          "snippet": "getInvoiceFromStripeUrl",
+          "args": {
+            "url": "{{item.url}}"
+          }
+        }
+      ]
+    }
+  ]
+}
