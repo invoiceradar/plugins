@@ -39,8 +39,13 @@
       "url": "https://{{config.workspace-id}}.slack.com/admin/billing/history"
     },
     {
+      "action": "extract",
+      "variable": "billingAccess",
+      "script": "(() => {\n  const text = document.body?.innerText || ''\n\n  if (text.includes('Only') && text.includes('workspace owners can view this page')) {\n    throw new Error('Slack billing history is only available to workspace owners. Please sign in with a Slack workspace owner account.')\n  }\n\n  if (!window.boot_data?.api_token) {\n    throw new Error('Slack billing API token not found. Make sure you are signed in and can access billing history.')\n  }\n\n  return true\n})()"
+    },
+    {
       "action": "extractAll",
-      "script": "(async () => {\n  const formData = new FormData()\n  formData.append('token', boot_data.api_token)\n  formData.append('limit', 50) // 50 items is an API limit\n\n  const data = await fetch(\n    'https://{{config.workspace-id}}.slack.com/api/payments.billing.history.list',\n    { method: 'POST', body: formData },\n  ).then((res) => res.json())\n\n  return Array.from(\n    data.billing_items\n      .filter((item) => item.invoice && item.invoice.hosted_url)\n      .map((item) => item.invoice.hosted_url),\n  )\n})()",
+      "script": "(async () => {\n  const apiToken = window.boot_data?.api_token\n  if (!apiToken) {\n    throw new Error('Slack billing API token not found. Make sure you are signed in and can access billing history.')\n  }\n\n  const formData = new FormData()\n  formData.append('token', apiToken)\n  formData.append('limit', 50) // 50 items is an API limit\n\n  const response = await fetch(\n    'https://{{config.workspace-id}}.slack.com/api/payments.billing.history.list',\n    { method: 'POST', body: formData },\n  )\n\n  if (!response.ok) {\n    throw new Error(`Slack billing history request failed: HTTP ${response.status}`)\n  }\n\n  const data = await response.json()\n\n  if (data.ok === false) {\n    const reason = data.error ? ` (${data.error})` : ''\n    throw new Error(`Slack billing history API rejected the request${reason}. Please sign in with a Slack workspace owner account.`)\n  }\n\n  if (!Array.isArray(data.billing_items)) {\n    throw new Error('Slack billing history API response did not include billing_items. Please sign in with a Slack workspace owner account that can access billing history.')\n  }\n\n  return data.billing_items\n    .filter((item) => item.invoice && item.invoice.hosted_url)\n    .map((item) => item.invoice.hosted_url)\n})()",
       "variable": "url",
       "forEach": [
         {
