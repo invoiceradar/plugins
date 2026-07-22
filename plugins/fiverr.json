@@ -17,7 +17,7 @@
     },
     {
       "action": "runJs",
-      "script": "window.location.pathname.startsWith('/billing') && !document.querySelector(\"[name='user_id'], iframe[title='Human verification challenge']\")"
+      "script": "!document.querySelector(\"[name='user_id'], iframe[title='Human verification challenge']\")"
     }
   ],
   "startAuth": [
@@ -32,7 +32,7 @@
     },
     {
       "action": "waitForCondition",
-      "script": "window.location.pathname === '/' && !document.querySelector(\"[name='user_id'], iframe[title='Human verification challenge']\")",
+      "script": "!document.querySelector(\"[name='user_id'], iframe[title='Human verification challenge']\")",
       "timeout": 120000
     }
   ],
