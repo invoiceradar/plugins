@@ -7,7 +7,7 @@
   "checkAuth": [
     {
       "action": "navigate",
-      "url": "https://www.fiverr.com/login"
+      "url": "https://www.fiverr.com/billing"
     },
     {
       "action": "waitForElement",
@@ -16,8 +16,8 @@
       "timeout": 4000
     },
     {
-      "action": "checkElementExists",
-      "selector": "[name='user_id']"
+      "action": "runJs",
+      "script": "window.location.pathname.startsWith('/billing') && !document.querySelector(\"[name='user_id']\") && !document.querySelector(\"iframe[title='Human verification challenge'], meta[http-equiv='status'][content*='403']\") && document.title !== 'It needs a human touch'"
     }
   ],
   "startAuth": [
@@ -32,7 +32,7 @@
     },
     {
       "action": "waitForCondition",
-      "script": "window.location.pathname === '/'",
+      "script": "window.location.pathname === '/' && !document.querySelector(\"[name='user_id']\") && !document.querySelector(\"iframe[title='Human verification challenge'], meta[http-equiv='status'][content*='403']\") && document.title !== 'It needs a human touch'",
       "timeout": 120000
     }
   ],
