@@ -7,7 +7,7 @@
   "checkAuth": [
     {
       "action": "navigate",
-      "url": "https://www.fiverr.com/login"
+      "url": "https://www.fiverr.com/billing"
     },
     {
       "action": "waitForElement",
@@ -16,8 +16,8 @@
       "timeout": 4000
     },
     {
-      "action": "checkElementExists",
-      "selector": "[name='user_id']"
+      "action": "runJs",
+      "script": "!document.querySelector(\"[name='user_id'], iframe[title='Human verification challenge']\")"
     }
   ],
   "startAuth": [
@@ -32,7 +32,7 @@
     },
     {
       "action": "waitForCondition",
-      "script": "window.location.pathname === '/'",
+      "script": "!document.querySelector(\"[name='user_id'], iframe[title='Human verification challenge']\")",
       "timeout": 120000
     }
   ],
