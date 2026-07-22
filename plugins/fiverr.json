@@ -17,7 +17,7 @@
     },
     {
       "action": "runJs",
-      "script": "window.location.pathname.startsWith('/billing') && !document.querySelector(\"[name='user_id']\") && !document.querySelector(\"iframe[title='Human verification challenge'], meta[http-equiv='status'][content*='403']\") && document.title !== 'It needs a human touch'"
+      "script": "window.location.pathname.startsWith('/billing') && !document.querySelector(\"[name='user_id'], iframe[title='Human verification challenge']\")"
     }
   ],
   "startAuth": [
@@ -32,7 +32,7 @@
     },
     {
       "action": "waitForCondition",
-      "script": "window.location.pathname === '/' && !document.querySelector(\"[name='user_id']\") && !document.querySelector(\"iframe[title='Human verification challenge'], meta[http-equiv='status'][content*='403']\") && document.title !== 'It needs a human touch'",
+      "script": "window.location.pathname === '/' && !document.querySelector(\"[name='user_id'], iframe[title='Human verification challenge']\")",
       "timeout": 120000
     }
   ],
