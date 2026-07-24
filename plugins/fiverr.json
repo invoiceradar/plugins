@@ -11,13 +11,13 @@
     },
     {
       "action": "waitForElement",
-      "selector": ".main-content",
+      "selector": "a[href^='/logout'], a[href^='/login'], iframe[title='Human verification challenge']",
       "optional": true,
       "timeout": 4000
     },
     {
       "action": "runJs",
-      "script": "!document.querySelector(\"[name='user_id'], iframe[title='Human verification challenge']\")"
+      "script": "!!document.querySelector(\"a[href^='/logout']\") &&\n  !document.querySelector(\"iframe[title='Human verification challenge']\")"
     }
   ],
   "startAuth": [
@@ -26,13 +26,8 @@
       "url": "https://www.fiverr.com/login"
     },
     {
-      "action": "waitForElement",
-      "selector": "[name='user_id']",
-      "timeout": 120000
-    },
-    {
       "action": "waitForCondition",
-      "script": "!document.querySelector(\"[name='user_id'], iframe[title='Human verification challenge']\")",
+      "script": "!!document.querySelector(\"a[href^='/logout']\") &&\n  !document.querySelector(\"iframe[title='Human verification challenge']\")",
       "timeout": 120000
     }
   ],
@@ -50,7 +45,7 @@
     {
       "action": "extract",
       "variable": "invoiceData",
-      "script": "(() => {\n  const context = '{{isPro}}' === 'true' ? 'team' : 'user'\n\n  return fetch(\n    `/perseus/financial-dashboard/api/billing/get-invoices?pageSize=250&pageNumber=1&contextType=${context}`,\n    {\n      headers: {\n        accept: 'application/json',\n        'accept-language': 'en',\n        'x-requested-with': 'XMLHttpRequest',\n      },\n      method: 'GET',\n      mode: 'cors',\n      credentials: 'include',\n    },\n  )\n    .then((r) => r.json())\n    .then((data) =>\n      data.paged_results.map((r) => ({\n        ...r,\n        total_amount: r.total_amount / 100,\n      })),\n    )\n})()",
+      "script": "(() => {\n  const context = '{{isPro}}' === 'true' ? 'team' : 'user'\n\n  return fetch(\n    `/perseus/financial-dashboard/api/billing/get-invoices?pageSize=250&pageNumber=1&contextType=${context}`,\n    {\n      headers: {\n        accept: 'application/json',\n        'accept-language': 'en',\n        'x-requested-with': 'XMLHttpRequest',\n      },\n      method: 'GET',\n      mode: 'cors',\n      credentials: 'include',\n    },\n  )\n    .then((r) => r.json())\n    .then((data) =>\n      data.paged_results.map((r) => ({\n        ...r,\n        total_amount: r.total_amount / 100,\n        type: r.transaction_type.toLowerCase(),\n      })),\n    )\n})()",
       "scopeSelector": true
     },
     {
@@ -59,35 +54,15 @@
       "variable": "invoice",
       "forEach": [
         {
-          "action": "if",
-          "script": "'{{invoice.transaction_type}}' === 'INVOICE'",
-          "then": [
-            {
-              "action": "downloadPdf",
-              "url": "https://www.fiverr.com{{invoice.download_url}}",
-              "document": {
-                "type": "invoice",
-                "id": "{{invoice.id}}",
-                "date": "{{invoice.transaction_date}}",
-                "total": "{{invoice.total_amount}}",
-                "currency": "{{invoice.currency}}"
-              }
-            }
-          ],
-          "else": [
-            {
-              "action": "downloadPdf",
-              "url": "https://www.fiverr.com{{invoice.download_url}}",
-              "document": {
-                "type": "refund",
-                "id": "{{invoice.id}}",
-                "date": "{{invoice.transaction_date}}",
-                "total": "{{invoice.total_amount}}",
-                "currency": "{{invoice.currency}}"
-              }
-            }
-          ],
-          "scopeSelector": true
+          "action": "downloadPdf",
+          "url": "https://www.fiverr.com{{invoice.download_url}}",
+          "document": {
+            "type": "{{invoice.type}}",
+            "id": "{{invoice.id}}",
+            "date": "{{invoice.transaction_date}}",
+            "total": "{{invoice.total_amount}}",
+            "currency": "{{invoice.currency}}"
+          }
         }
       ]
     }
