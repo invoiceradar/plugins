@@ -11,8 +11,8 @@
       "url": "https://mein.ionos.de/account/billing/invoices"
     },
     {
-      "action": "checkURL",
-      "url": "https://mein.ionos.de/account/billing/invoices"
+      "action": "checkElementExists",
+      "selector": "#oao-customer"
     }
   ],
   "startAuth": [
@@ -28,8 +28,13 @@
   ],
   "getDocuments": [
     {
+      "action": "extract",
+      "variable": "accountOrigin",
+      "script": "window.location.origin"
+    },
+    {
       "action": "navigate",
-      "url": "https://mein.ionos.de/account/billing/invoices"
+      "url": "{{accountOrigin}}/account/billing/invoices"
     },
     {
       "action": "waitForElement",
