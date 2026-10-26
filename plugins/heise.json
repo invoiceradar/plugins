@@ -32,12 +32,12 @@
     },
     {
       "action": "waitForElement",
-      "selector": "iframe[src*='selfservice.plenigo.com']",
+      "selector": "iframe[src*='selfservice.frisbii-media.com']",
       "timeout": 30000
     },
     {
       "action": "runJs",
-      "script": "(() => { const src = document.querySelector('iframe[src*=\"selfservice.plenigo.com\"]').src; const session = new URL(src).searchParams.get('session'); window.location.href = 'https://selfservice.plenigo.com/de/invoices?sessionId=' + session; })()"
+      "script": "(() => { const src = document.querySelector('iframe[src*=\"selfservice.frisbii-media.com\"]').src; const session = new URL(src).searchParams.get('session'); window.location.href = 'https://selfservice.frisbii-media.com/de/invoices?sessionId=' + session; })()"
     },
     {
       "action": "waitForElement",
@@ -66,7 +66,7 @@
       "forEach": [
         {
           "action": "downloadPdf",
-          "url": "https://selfservice.plenigo.com{{item.pdfHref}}",
+          "url": "https://selfservice.frisbii-media.com{{item.pdfHref}}",
           "document": "{{item}}"
         }
       ]
