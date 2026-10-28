@@ -48,7 +48,7 @@
     {
       "action": "extract",
       "variable": "account",
-      "script": "(async () => {\n  const base = 'https://www.blau.de/scs/bff/scs-207-customer-master-data-bff/customer-master-data/v1';\n  const r = await fetch(base + '/onload/multiple/invoiceContent', { credentials: 'include' });\n  const j = await r.json();\n  const bill = j.billingAccountList[0];\n  return {\n    billingAccountId: bill.billAccountNumber,\n    msisdn: bill.contractDetails[0].msisdn\n  };\n})()",
+      "script": "(async () => {\n  const base = 'https://www.blau.de/scs/bff/scs-207-customer-master-data-bff/customer-master-data/v1';\n  const r = await fetch(base + '/onload/multiple/invoiceContent', { credentials: 'include' });\n  const j = await r.json();\n  const bill = (j.billingAccountList || [])[0];\n  if (!bill) throw new Error('No billing account found in response');\n  return {\n    billingAccountId: bill.billAccountNumber,\n    msisdn: bill.contractDetails[0].msisdn\n  };\n})()",
       "description": "Fetch the billing account number and MSISDN from the customer master data API."
     },
     {
