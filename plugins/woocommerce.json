@@ -22,8 +22,9 @@
       "url": "https://woocommerce.com/sso?next=%2F"
     },
     {
-      "action": "waitForURL",
-      "url": "https://woocommerce.com/my-dashboard*"
+      "action": "waitForCondition",
+      "timeout": 10000,
+      "script": "(new RegExp(\"^https:\\\\/\\\\/woocommerce\\\\.com\\\\/my\\\\-dashboard.*?$\", \"\").test(location.href)) || (location.origin === \"https://woocommerce.com\" && ((() => { try { return document.querySelector(\"body.logged-in\") !== null } catch { return false } })()))"
     }
   ],
   "getDocuments": [
