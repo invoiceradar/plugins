@@ -34,13 +34,14 @@
     {
       "action": "waitForElement",
       "selector": "table tbody tr:has(a[href*='invoice'])",
-      "iframe": "billing"
+      "iframe": "_developer/billing",
+      "timeout": 60000
     },
     {
       "action": "extractAll",
       "selector": "table tbody tr",
       "variable": "invoice",
-      "iframe": "billing",
+      "iframe": "_developer/billing",
       "fields": {
         "id": {
           "selector": "td:nth-child(6) a[href*='invoice']",
