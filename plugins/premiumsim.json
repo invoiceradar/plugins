@@ -50,12 +50,27 @@
       },
       "forEach": [
         {
-          "action": "downloadPdf",
-          "url": "{{invoice.url}}",
-          "document": {
-            "type": "invoice",
-            "id": "{{invoice.id}}",
-            "date": "{{invoice.date}}"
+          "action": "extractAll",
+          "variable": "invoice",
+          "forEach": [
+            {
+              "document": {
+                "id": "{{invoice.id}}",
+                "date": "{{invoice.date}}",
+                "type": "invoice"
+              },
+              "action": "downloadPdf",
+              "url": "{{invoice.url}}"
+            }
+          ],
+          "selector": "#tab-nac > div > div:has(details > summary)",
+          "fields": {
+            "id": "details > summary",
+            "date": "details > summary",
+            "url": {
+              "selector": "details > div > div > p:nth-child(1) > a",
+              "attribute": "href"
+            }
           }
         }
       ]
