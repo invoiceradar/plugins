@@ -67,9 +67,38 @@
           "script": "'{{item.pdfLink}}' !== ''",
           "then": [
             {
-              "action": "downloadPdf",
-              "url": "https://mein.ionos.de{{item.pdfLink}}",
-              "document": "{{item}}"
+              "action": "extractAll",
+              "selector": "table.table.table--responsive.table--has-toolbar#table__0 tbody tr",
+              "fields": {
+                "id": {
+                  "selector": "td:nth-child(5) a",
+                  "attribute": "href",
+                  "transform": "(url) => url ? url.split('ref=')[1] : null"
+                },
+                "date": {
+                  "selector": "td:nth-child(1)"
+                },
+                "total": {
+                  "selector": "td:nth-child(2) p"
+                },
+                "pdfLink": {
+                  "selector": "td:nth-child(5) a",
+                  "attribute": "href"
+                }
+              },
+              "forEach": [
+                {
+                  "action": "if",
+                  "script": "'{{item.pdfLink}}' !== '' && (async()=>{try{const r=await fetch('{{item.pdfLink}}');const c=r.headers.get('content-type')||'';return r.ok&&(c.includes('octet')||c.includes('pdf'))}catch(e){return false}})()",
+                  "then": [
+                    {
+                      "document": "{{item}}",
+                      "action": "downloadPdf",
+                      "url": "https://mein.ionos.de{{item.pdfLink}}"
+                    }
+                  ]
+                }
+              ]
             }
           ]
         }
