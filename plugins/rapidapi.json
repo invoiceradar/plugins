@@ -60,9 +60,34 @@
       },
       "forEach": [
         {
-          "action": "downloadPdf",
-          "url": "{{invoice.url}}",
-          "document": "{{invoice}}"
+          "action": "extractAll",
+          "variable": "invoice",
+          "pagination": {
+            "behavior": "paginateThenProcess",
+            "selector": ".ant-pagination-next:not(.ant-pagination-disabled)"
+          },
+          "forEach": [
+            {
+              "document": "{{invoice}}",
+              "action": "downloadPdf",
+              "url": "{{invoice.url}}"
+            }
+          ],
+          "selector": "table tbody tr:has(a[href*='invoice'])",
+          "fields": {
+            "id": {
+              "selector": "td:nth-child(6) a[href*='invoice']",
+              "attribute": "href",
+              "transform": "(url) => url?.match(/\\/invoice\\/([^/?]+)/)?.[1]"
+            },
+            "date": "td:nth-child(5)",
+            "total": "td:nth-child(3)",
+            "url": {
+              "selector": "td:nth-child(6) a[href*='invoice']",
+              "attribute": "href"
+            }
+          },
+          "iframe": "_developer/billing"
         }
       ]
     }
