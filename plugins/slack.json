@@ -28,9 +28,9 @@
       "url": "https://{{config.workspace-id}}.slack.com"
     },
     {
-      "action": "waitForURL",
-      "url": "/ssb/redirect?entry_point=workspace_signin",
-      "timeout": 120000
+      "action": "waitForCondition",
+      "timeout": 120000,
+      "script": "(new RegExp(\"^\\\\/ssb\\\\/redirect.entry_point=workspace_signin$\", \"\").test(location.href.slice(location.origin.length))) || (location.origin === \"https://app.slack.com\" && (new RegExp(\"^https:\\\\/\\\\/app\\\\.slack\\\\.com\\\\/client\\\\/.*?$\", \"\").test(location.href)))"
     }
   ],
   "getDocuments": [
