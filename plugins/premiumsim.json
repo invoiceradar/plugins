@@ -34,17 +34,20 @@
     },
     {
       "action": "waitForElement",
-      "selector": "#tab-nac"
+      "selector": "#ddInvoicePeriods"
     },
     {
       "action": "extractAll",
-      "selector": "#tab-nac > div > div",
+      "selector": "details.c-panel-v1",
       "variable": "invoice",
       "fields": {
-        "id": "details > summary",
-        "date": "details > summary",
+        "id": {
+          "selector": "a",
+          "attribute": "href"
+        },
+        "date": "summary",
         "url": {
-          "selector": "details > div > div > p:nth-child(1) > a",
+          "selector": "a",
           "attribute": "href"
         }
       },
@@ -53,9 +56,9 @@
           "action": "downloadPdf",
           "url": "{{invoice.url}}",
           "document": {
-            "type": "invoice",
             "id": "{{invoice.id}}",
-            "date": "{{invoice.date}}"
+            "date": "{{invoice.date}}",
+            "type": "invoice"
           }
         }
       ]
