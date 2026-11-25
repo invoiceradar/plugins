@@ -39,13 +39,19 @@
       "selector": "table.main tbody tr",
       "forEach": [
         {
-          "action": "downloadPdf",
-          "url": "{{item.url}}",
-          "document": {
-            "id": "{{item.id}}",
-            "date": "{{item.date}}",
-            "total": "{{item.amount}}"
-          }
+          "action": "if",
+          "script": "(() => { const m = '{{item.url}}'.match(/[?&]e=(\\d+)/); return !m || Number(m[1]) * 1000 > Date.now(); })()",
+          "then": [
+            {
+              "action": "downloadPdf",
+              "url": "{{item.url}}",
+              "document": {
+                "id": "{{item.id}}",
+                "date": "{{item.date}}",
+                "total": "{{item.amount}}"
+              }
+            }
+          ]
         }
       ],
       "fields": {
